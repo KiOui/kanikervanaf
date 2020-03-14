@@ -5,6 +5,10 @@ import sys
 
 
 def main():
+    """
+    Starts Django
+    :return: None
+    """
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "kanikervanaf.settings")
     try:
         from django.core.management import execute_from_command_line
