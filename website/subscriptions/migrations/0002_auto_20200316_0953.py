@@ -7,35 +7,68 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('subscriptions', '0001_initial'),
+        ("subscriptions", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='SubscriptionCategory',
+            name="SubscriptionCategory",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=1024)),
-                ('slug', models.SlugField()),
-                ('parent', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='children', to='subscriptions.SubscriptionCategory')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=1024)),
+                ("slug", models.SlugField()),
+                (
+                    "parent",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="children",
+                        to="subscriptions.SubscriptionCategory",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Subscription category',
-                'verbose_name_plural': 'Subscription categories',
-                'unique_together': {('slug', 'parent')},
+                "verbose_name": "Subscription category",
+                "verbose_name_plural": "Subscription categories",
+                "unique_together": {("slug", "parent")},
             },
         ),
         migrations.CreateModel(
-            name='SearchTerm',
+            name="SearchTerm",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=1024)),
-                ('subscription', models.ManyToManyField(to='subscriptions.Subscription')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=1024)),
+                (
+                    "subscription",
+                    models.ManyToManyField(to="subscriptions.Subscription"),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='subscription',
-            name='category',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='subscriptions.SubscriptionCategory'),
+            model_name="subscription",
+            name="category",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="subscriptions.SubscriptionCategory",
+            ),
         ),
     ]

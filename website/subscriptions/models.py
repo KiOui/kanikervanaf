@@ -17,7 +17,9 @@ class Subscription(models.Model):
     support_phone_number = PhoneNumberField(blank=True)
     cancellation_number = PhoneNumberField(blank=True)
     amount_used = models.PositiveIntegerField(default=1)
-    category = models.ForeignKey('SubscriptionCategory', null=True, blank=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey(
+        "SubscriptionCategory", null=True, blank=True, on_delete=models.SET_NULL
+    )
 
 
 class SubscriptionCategory(models.Model):
@@ -25,14 +27,20 @@ class SubscriptionCategory(models.Model):
 
     name = models.CharField(max_length=1024)
     slug = models.SlugField()
-    parent = models.ForeignKey('self', blank=True, null=True, related_name='children', on_delete=models.SET_NULL)
+    parent = models.ForeignKey(
+        "self",
+        blank=True,
+        null=True,
+        related_name="children",
+        on_delete=models.SET_NULL,
+    )
 
     class Meta:
         """
         Enforcing that there can not be two categories under a parent with same slug
         """
 
-        unique_together = ('slug', 'parent')
+        unique_together = ("slug", "parent")
         verbose_name = "Subscription category"
         verbose_name_plural = "Subscription categories"
 
@@ -45,4 +53,4 @@ class SubscriptionSearchTerm(models.Model):
     """Additional search terms for a Subscription"""
 
     name = models.CharField(max_length=1024)
-    subscription = models.ManyToManyField('Subscription')
+    subscription = models.ManyToManyField("Subscription")

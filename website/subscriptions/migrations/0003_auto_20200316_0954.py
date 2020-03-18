@@ -6,12 +6,11 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('subscriptions', '0002_auto_20200316_0953'),
+        ("subscriptions", "0002_auto_20200316_0953"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='SearchTerm',
-            new_name='SubscriptionSearchTerm',
+            old_name="SearchTerm", new_name="SubscriptionSearchTerm",
         ),
     ]
