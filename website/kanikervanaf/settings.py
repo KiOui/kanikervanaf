@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "kanikervanaf",
     "phonenumber_field",
     "subscriptions",
+    "users",
 ]
 
 MIDDLEWARE = [
