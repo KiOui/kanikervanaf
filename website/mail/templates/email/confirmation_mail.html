@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<html style="font-family: &quot;Roboto&quot;;">
+<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+<style>
+
+    html{
+        font-family: "Roboto";
+    }
+    body{
+        margin: 0px;
+        padding: 0px;
+    }
+
+    div.header {
+        width: calc(100% - 30px);
+        color: white;
+        background-color: #34af99;
+        padding: 15px;
+    }
+
+    img.logo{
+        width: 10%;
+        max-width: 60px;
+    }
+
+    div.top-header{
+
+        width: calc(100%-30px);
+        display: flex;
+        align-items: center;
+    }
+
+    div.top-header a{
+        padding-left: 5px;
+        font-weight: 900;
+        font-size: 1.5em;
+        line-height: 1.2em;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+    }
+
+    div.bottom-header p{
+        margin: 0px;
+    }
+
+    div.flex-column{
+        max-width: 400px;
+        min-width: 300px;
+        justify-content: space-between;
+        padding: 5px;
+        flex: 1;
+    }
+
+    div.text{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 15px;
+        align-items: stretch;
+        width: calc(100%-30px);
+    }
+
+    div.salutation{
+        padding: 15px;
+        padding-top:30px;
+        width: calc(100%-30px);
+        font-size: 30px;
+        text-align: center;
+    }
+
+    a.button:hover {
+        opacity: 0.8;
+        cursor:pointer;
+    }
+
+    a.button{
+        background-color: #34af99;
+        padding: 1em 2em;
+        color: white;
+        font-size: 30px;
+        border-radius: 500px;
+    }
+
+    div.button-container{
+        padding: 15px;
+        display:flex;
+        justify-content: center;
+    }
+
+    div.greeting{
+        text-align:center;
+    }
+
+    div.footer{
+        text-align: center;
+        padding-top:30px;
+        font-size:10px;
+        width: calc(100%-30px);
+        text-align: center;
+    }
+
+</style>
+
+<header>
+    <title> Verificatiemail </title>
+</header>
+<body style="margin: 0px;padding: 0px;">
+<div class="header" style="width: calc(100% - 30px);color: white;background-color: #34af99;padding: 15px;">
+    <div class="top-header" style="width: calc(100%-30px);display: flex;align-items: center;">
+        <img class="logo" width="60" src="https://kanikervanaf.nl/wp-content/uploads/logo.png" style="width: 10%;max-width: 60px;">
+        <a style="padding-left: 5px;font-weight: 900;font-size: 1.5em;line-height: 1.2em;-webkit-font-smoothing: antialiased;text-rendering: optimizeLegibility;">Kanikervanaf.nl</a>
+    </div>
+    <div class="bottom-header">
+        <p style="margin: 0px;">Eenvoudig abonnementen opzeggen</p>
+    </div>
+</div>
+<div class="salutation" style="padding: 15px;padding-top: 30px;width: calc(100%-30px);font-size: 30px;text-align: center;">
+    Hallo {{ firstname }}!
+</div>
+
+
+
+<div class="text" style="display: flex;flex-wrap: wrap;justify-content: center;padding: 15px;align-items: stretch;width: calc(100%-30px);">
+    <div class="flex-column" style="max-width: 400px;min-width: 300px;justify-content: space-between;padding: 5px;flex: 1;">
+        <strong>Opzegmails verzonden!</strong> <br>
+        {% if forward %}
+            <p>We hebben de opzegmails naar u verstuurd! Ze zullen zometeen in uw inbox aankomen. U hoeft deze mails alleen nog maar door te sturen naar het mailadres bovenaan de mail! Wij hebben zojuist ook uw persoonlijke gegevens van onze server verwijderd. Bedankt voor het gebruik maken van kanikervanaf.nl!
+            </p>
+        {% else %}
+            <p>We hebben de opzegmails verstuurd! U bent toegevoegd in de CC van elke opzegmail, ze zullen zometeen ook in uw inbox aankomen. Wij hebben zojuist ook uw persoonlijke gegevens van onze server verwijderd. Bedankt voor het gebruik maken van kanikervanaf.nl!
+            </p>
+        {% endif %}
+        {% if send_emails %}
+            <h5>Verzonden emails</h5>
+            <ul>
+            {% for subscription in send_emails %}
+                <li>{{ subscription.name }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        {% if unsend_emails %}
+            <h5>Niet verzonden emails (wij hebben nog geen email adres van deze partij)</h5>
+            <ul>
+            {% for subscription in unsend_emails %}
+                <li>{{ subscription.name }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        <p>Heeft u nog feedback voor ons? Mist u een abonnement op onze website? Help anderen en <a href="mailto:klantenservice@kanikervanaf.nl">stuur ons een email!</a>
+
+        </p></div>
+</div>
+
+<div class="greeting" style="text-align: center;">
+    Met vriendelijke groet,<br> <strong>Kanikervanaf.nl!</strong>
+</div>
+
+<div class="footer" style="text-align: center;padding-top: 30px;font-size: 10px;width: calc(100%-30px);">
+    Deze e-mail is automatisch gegenereerd door kanikervanaf.nl. Antwoorden is niet mogelijk. <br> <a href="http://www.kanikervanaf.nl/FAQ"> FAQ </a> - <a href="http://www.kanikervanaf.nl/privacybeleid"> Privacybeleid </a>
+</div>
+
+</body>
+
+</html>

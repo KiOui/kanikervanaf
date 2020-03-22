@@ -20,6 +20,11 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path("", TemplateView.as_view(template_name="index.html"), name="home"),
     path("admin/", admin.site.urls),
-    path("subscriptions/", include(("subscriptions.urls", "subscriptions"), namespace="subscriptions")),
+    path(
+        "subscriptions/",
+        include(("subscriptions.urls", "subscriptions"), namespace="subscriptions"),
+    ),
     path("users/", include(("users.urls", "users"), namespace="users")),
+    path("import/", include(("import.urls", "import"), namespace="import")),
+    path("mail/", include(("mail.urls", "mail"), namespace="mail")),
 ]

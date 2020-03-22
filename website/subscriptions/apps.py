@@ -2,6 +2,6 @@ from django.apps import AppConfig
 
 
 class SubscriptionsConfig(AppConfig):
-    """Appconfig for Subscriptions."""
+    """Appconfig for subscriptions app."""
 
     name = "subscriptions"

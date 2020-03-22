@@ -1,0 +1,18 @@
+{% if forward_address %}
+Doorsturen naar: {{ forward_address }}
+{% endif %}
+Geachte heer/mevrouw,
+
+Hierbij wil ik graag mijn abonnement bij uw dienst opzeggen. Het gaat hierbij om {{ subscription }}. Ik zeg mijn abonnement op per eerst mogelijke datum. Hierbij houd ik rekening met de opzegtermijn. Mijn gegevens:
+
+Voornaam: {{ firstname }}
+{% if lastname %}Achternaam: {{ lastname }}{% endif %}
+{% if address %}Adres: {{ address }}{% endif %}
+{% if postalcode %}Postcode: {{ postalcode }}{% endif %}
+{% if residence %}Woonplaats: {{ residence }}{% endif %}
+
+Ik vraag u vriendelijk om een bevestiging van mijn opzegging per e-mail. Uw bevestiging zie ik graag binnen twee weken tegemoet.
+
+Met vriendelijke groet,
+
+{{ firstname }}{% if lastname %} {{ lastname }}{% endif %}

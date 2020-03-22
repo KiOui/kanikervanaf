@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+{% block page %}
+    <div class="container mt-5">
+        {% if succeeded %}
+            <h1 class="text-center mb-5"><strong>Verificatie verzonden!</strong></h1>
+            <p class="text-center">De verificatiemail is verzonden naar het door jouw opgegeven email adres. Klik op de link
+            in de verificatiemail om uw opzegmails te ontvangen.</p>
+            <a class="text-centered" href="{% url "home" %}">Terug naar homepagina</a>
+        {% else %}
+            <h1 class="text-center mb-5"><strong>Verificatie verzenden mislukt!</strong></h1>
+            <p class="text-center">Het verzenden van de verificatiemail is mislukt, heb je het juist email-adres ingevuld?</p>
+            <a class="text-centered" href="{% url 'users:enter' %}">Terug naar mijn gegevens</a>
+        {% endif %}
+    </div>
+{% endblock %}
+{% if succeeded %}
+    {% block js %}
+        <script src="{% static 'kanikervanaf/js/general.js' %}"></script>
+        <script>
+            eraseAll();
+        </script>
+    {% endblock %}
+{% endif %}

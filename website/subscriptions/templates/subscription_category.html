@@ -1,0 +1,38 @@
+{% extends 'sidebar.html' %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'subscriptions/css/categories.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <h3 class="mb-5"><strong>Selecteer abonnementen</strong></h3>
+        <p>
+            Zoek hieronder de abonnementen die u op wil zeggen of kies ze uit in de onderstaande top vijf
+            per categorie. Aangeklikte abonnementen zullen verschijnen in de lijst met abonnementen die u
+            op wilt zeggen. U kunt op volgende klikken als u minimaal één abonnement hebt geselecteerd.
+        </p>
+        <p>
+            Een email symbool (<i class="fas fa-at"></i>) achter een abonnement betekend dat wij de gegevens
+            van het bedrijf hebben om een e-mail op te kunnen stellen. Een brief symbool
+            (<i class="fas fa-envelope"></i>) betekend dat wij de gegevens van het bedrijf hebben om een
+            opzegbrief te kunnen genereren. De e-mails en opzegbrieven worden in stap 3 naar u verstuurd
+            via e-mail.
+        </p>
+    </div>
+    <input id="searchfor" type="text" maxlength="75" autocorrect="off" spellcheck="false" autocomplete="off"
+           autocapitalize="off" placeholder="Zoek een abonnement..." class="container-fluid">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md category-column">
+                {% include 'subscription_one_category.html' with category=category show_more=False %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block sidebar %}
+    {% include "subscription_list.html" with next_page="users:enter" button_id="subscription-disable-button-no-items" %}
+{% endblock %}
+{% block js %}
+     <script src="{% static 'kanikervanaf/js/general.js' %}"></script>
+     <script src="{% static 'subscriptions/js/categories.js' %}"></script>
+{% endblock %}

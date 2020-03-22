@@ -1,4 +1,36 @@
-{% extends "base.html" %}
-{% block page %}
+{% extends "sidebar.html" %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid">
+        <h3 class="mb-5"><strong>Persoonlijke gegevens</strong></h3>
+        <p>
+            Vul hieronder uw persoonlijke gegevens in. Wij hebben uw gegevens nodig zodat wij uw persoonlijke
+            opzegmails kunnen opstellen. Uw gegevens worden pas door de server verwerkt bij het verzenden van de
+            verificatiemail. Nadat u uw mailadres heeft bevestigd worden uw gegevens direct verwijderd.
+        </p>
+        <form>
+            {% csrf_token %}
+            <label for="email">Uw e-mail:</label>
+            <input type="email" name="email" id="email"><br>
+            <label for="firstname">Voornaam:</label>
+            <input type="text" name="firstname" id="firstname"><br>
+            <label for="lastname">Achternaam:</label>
+            <input type="text" name="lastname" id="lastname"><br>
+            <label for="address">Adres:</label>
+            <input type="text" name="address" id="address"><br>
+            <label for="postalcode">Postcode:</label>
+            <input type="text" name="postalcode" id="postalcode"><br>
+            <label for="residence">Plaats:</label>
+            <input type="text" name="residence" id="residence"><br>
+		</form>
+    </div>
+{% endblock %}
 
+{% block sidebar %}
+    {% include "subscription_list.html" with next_page="subscriptions:summary" button_id="subscription-disable-button-no-details" %}
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'kanikervanaf/js/general.js' %}"></script>
+    <script src="{% static 'users/js/details.js' %}"></script>
 {% endblock %}
