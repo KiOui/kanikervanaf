@@ -1,0 +1,22 @@
+<h2>{{ category.name }}</h2>
+{% if show_more %}
+    <a href="{% url "subscriptions:overview_category"  id=category.id%}">
+        Bekijk meer {{ category.name }}
+    </a>
+{% endif %}
+{% for item in category.top %}
+    <div class="menu-link">
+        <input type="checkbox" class="normal-checkbox" name="checkbox-category-list"
+               onchange="toggle_checkbox(this, {{ item.id }}, {{ item.price }}, '{{ item.name }}', {{ item.can_email|lower }}, {{ item.can_generate_pdf|lower }})"
+               id="checkbox-{{ item.id }}"/>
+        <label for="checkbox-{{ item.id }}">{{ item.name }}</label>
+        <div class="icons">
+            {% if item.can_email %}
+                <i class="fas fa-at"></i>
+            {% endif %}
+            {% if item.can_generate_pdf %}
+                <i class="far fa-envelope"></i>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}

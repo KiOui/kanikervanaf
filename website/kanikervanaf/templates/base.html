@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}Kanikervanaf{% endblock %}
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="{% static 'kanikervanaf/img/favicon.png' %}"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    {% block styles %}{% endblock %}
+    <script src="https://kit.fontawesome.com/4e8cabe8e2.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/"><img src="{% static 'kanikervanaf/img/logo.png' %}" height="50"/></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Home
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="{% url "home" %}">Home</a>
+                        <a class="dropdown-item" href="#">Contact</a>
+                        <a class="dropdown-item" href="#">FAQ</a>
+                        <a class="dropdown-item" href="#">Vraag abonnement aan</a>
+                    </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "subscriptions:overview" %}">1. Selecteer abonnementen</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "users:enter" %}">2. Voer uw gegevens in</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url "subscriptions:summary" %}">3. Versturen</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% block page %}{% endblock %}
+    <footer class="page-footer font-small pt-4">
+        <div class="footer-copyright text-center py-3">© 2020 Copyright:
+            <a href="/">kanikervanaf.nl</a>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    {%  block js %}{%  endblock %}
+</body>
+</html>

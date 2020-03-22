@@ -1,0 +1,30 @@
+Hallo {{ firstname }}!
+
+Opzegmails verzonden!
+
+We hebben de opzegmails verstuurd!
+
+{% if forward %}
+    We hebben de opzegmails naar u verstuurd! Ze zullen zometeen in uw inbox aankomen. U hoeft deze mails alleen nog maar door te sturen naar het mailadres bovenaan de mail! Wij hebben zojuist ook uw persoonlijke gegevens van onze server verwijderd. Bedankt voor het gebruik maken van kanikervanaf.nl!
+{% else %}
+    We hebben de opzegmails verstuurd! U bent toegevoegd in de CC van elke opzegmail, ze zullen zometeen ook in uw inbox aankomen. Wij hebben zojuist ook uw persoonlijke gegevens van onze server verwijderd. Bedankt voor het gebruik maken van kanikervanaf.nl!
+{% endif %}
+
+{% if send_emails %}
+    Verzonden emails
+    {% for subscription in send_emails %}
+        - {{ subscription.name }}
+    {% endfor %}
+{% endif %}
+{% if unsend_emails %}
+    Niet verzonden emails (wij hebben nog geen email adres van deze partij)
+    {% for subscription in unsend_emails %}
+        - {{ subscription.name }}
+    {% endfor %}
+{% endif %}
+
+Heeft u nog feedback voor ons? Mist u een abonnement op onze website? Help anderen en stuur ons een email (klantenservice@kanikervanaf.nl)!
+
+Met vriendelijke groet,
+
+Kanikervanaf.nl!

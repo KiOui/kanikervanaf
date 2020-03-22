@@ -1,0 +1,21 @@
+Hallo {{ firstname }}!
+Aanvraag ontvangen!
+We hebben je aanvraag voor opzegmails ontvangen!
+
+Deze mail is bedoeld ter verificatie van dit e-mailadres, zodra dit gelukt is versturen we meteen jouw opzegmails. Door naar de volgende link te gaan weten wij genoeg, en kun jij je abonnementen opzeggen:
+
+{{ verification_url }}
+
+Verwijdering persoonsgegevens
+We hebben in de opzegmail ook een sectie toegevoegd met een verzoek tot verwijdering van gegevens . Dit houdt in het kort in dat de organisatie alle persoonlijke gegevens die ze van je verzameld hebben per wet moeten verwijderen.
+
+Veel organisaties zijn geneigd om na een aantal maanden nog een keer contact op te nemen om te proberen je weer over te halen om lid te worden. Dit is nu niet meer mogelijk.
+
+Met vriendelijke groet,
+
+Kanikervanaf.nl!
+
+---
+
+Deze e-mail is automatisch gegenereerd door kanikervanaf.nl. Antwoorden is niet mogelijk.
+Was deze mail niet voor jou bedoeld? Dan hoef je verder niets te doen.

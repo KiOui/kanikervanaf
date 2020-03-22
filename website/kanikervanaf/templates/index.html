@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{%  block page %}
+<div class="container">
+    <h1 class="text-center mt-5 mb-5">Zeg uw abonnementen op in 3 simpele stappen</h1>
+    <div class="text-center">
+        <button type="button" class="mt-3 mb-3 btn btn-primary"
+                onclick="location.href='{% url "subscriptions:overview" %}';">
+            Begin hier! <i class="fas fa-angle-double-right"></i>
+        </button>
+    </div>
+    <h5 class="text-center mt-3 mb-3"><strong>Waarom kanikervanaf.nl?</strong></h5>
+    <p class="text-center mb-5">
+        Elke dag worden we verleid om geld uit geven. Online worden we verleid te klikken op een mooie aanbieding, op
+        straat krijgen we een gratis krant aangeboden, via de post wordt ons een mooie straatprijs voorgespiegeld
+        (stel dat uw buurman wel een miljoen wint en u niets krijgt!). Het is heel lastig en het wordt ons heel lastig
+        gemaakt om hier elke keer weer “NEE” tegen te zeggen. Voordat je het weet heb je ingestemd en zit je vervolgens
+        aan een abonnement vast. Opzeggen blijkt vaak lastig omdat verkopers allemaal trucs hebben bedacht om opzeggen
+        te ontmoedigen. Wij willen hier verandering in brengen! Door de trucs van de verkopers ook te gebruiken, alleen
+        dan om u van uw abonnementen af te helpen!
+    </p>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm text-center">
+                <div class="container-fluid text-center">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h5 class="mt-2 mb-2">Vink uw abonnement aan</h5>
+                <p>
+                    Vink uw abonnementen snel en gemakkelijk aan. Abonnementen die u selecteert zullen worden opgezegd.
+                </p>
+            </div>
+            <div class="col-sm text-center">
+                <div class="container-fluid text-center">
+                    <i class="fas fa-list-ul"></i>
+                </div>
+                <h5 class="mt-2 mb-2">Vul persoonlijke gegevens in</h5>
+                <p>
+                    Vul uw persoonlijke gegevens in. Wij gebruiken uw gegevens om de opzegmails op te stellen. Hierna
+                    zullen ze direct worden verwijderd.
+                </p>
+            </div>
+            <div class="col-sm text-center">
+                <div class="container-fluid text-center">
+                    <i class="fas fa-share-square"></i>
+                </div>
+                <h5 class="mt-2 mb-2">De opzegmails worden automatisch verzonden!</h5>
+                <p>
+                    Wij versturen de opzegmails automatisch namens u.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid mt-5 mb-5">
+        <h1 class="text-center"><strong>De nieuwe manier van opzeggen</strong></h1>
+        <p class="text-center mt-4 mb-4">
+            Kanikervanaf.nl is de nieuwe manier van opzeggen! Geen gedoe meer met het opstellen van verschillende mails
+            en brieven, nooit meer zoeken naar de contactgegevens van bedrijven omdat u van een dienst af wilt.
+            Kanikervanaf.nl maakt opzeggen super eenvoudig en is helemaal gratis!
+        </p>
+    </div>
+    <div class="row mb-5">
+        <div class="col">
+            <div>
+                <h5><strong>Waarom kanikervanaf.nl?</strong></h5>
+                <p>
+                    Elke dag worden we verleid om geld uit geven. Online worden we verleid te klikken op een mooie
+                    aanbieding, op straat krijgen we een gratis krant aangeboden, via de post wordt ons een mooie
+                    straatprijs voorgespiegeld (stel dat uw buurman wel een miljoen wint en u niets krijgt!). Het is heel
+                    lastig en het wordt ons heel lastig gemaakt om hier elke keer weer “NEE” tegen te zeggen. Voordat je het
+                    weet heb je ingestemd en zit je vervolgens aan een abonnement vast.
+                    <br>
+                    Soms heb je ook bewust gekozen om een abonnement te nemen. Het is verstandig om te sporten dus waarom
+                    niet bij de nieuwe sportschool in de buurt? Maar na de eerste weken fanatiek te zijn gaan sporten merk
+                    je dat je steeds minder vaak gaat en uiteindelijk ga je misschien helemaal niet meer.
+                </p>
+            </div>
+        </div>
+        <div class="col">
+            <div>
+                <h5><strong>Nou dan zeg je toch gewoon je abonnement op?</strong></h5>
+                <p>
+                    Juist! Dat dacht ik ook maar wat blijkt? Dat is vaak nog helemaal niet zo eenvoudig. De bedrijven
+                    die abonnementen verkopen hebben allerlei trucs bedacht om het opzeggen te ontmoedigen en lastig
+                    te maken. Dit doen ze door allerlei drempels in te bouwen. Bijvoorbeeld: Voor opzeggen moet u
+                    bellen. Dat geeft hen de kans om u op andere gedachten te brengen en u een alternatief aan te
+                    bieden. Vervolgens is het weer heel moeilijk om hier weer “NEE” op te zeggen.
+                    <br>
+                    Bedrijven hebben marketeers in dienst die strategieën bedenken om u als klant binnen te halen en
+                    dan, nog belangrijker: binnen te houden. Daarbij kijken ze heel goed naar menselijk gedrag. En
+                    daar maken ze op een listige manier gebruik van. U wordt door hen beïnvloed zonder dat u het direct
+                    door heeft.
+                </p>
+            </div>
+        </div>
+        <div class="w-100"></div>
+        <div class="col">
+            <div>
+                <h5><strong>Hoe werkt dat dan?</strong></h5>
+                <p>
+                    Er zijn verschillende technieken die gebruikt worden. Als u daar meer over wilt weten, dan raden we
+                    aan het boek “Influence” (in het Nederlands: “Invloed”) van Robert Cialdini eens te lezen of te
+                    beluisteren. Hierin wordt uitgelegd hoe beïnvloedingstechnieken werken en hoe ze worden toegepast.
+                    Enkele voorbeelden: Als u “Ja” heeft gezegd tegen een gratis proefperiode van een krant of
+                    tijdschrift dan is de kans heel groot dat u na de gratis periode overstapt op een betaald
+                    abonnement. Persoonlijk opzeggen bij een persoon vinden mensen moeilijker dan via een mail. Dat
+                    komt omdat we dan een persoon tegenover ons hebben die ook vaak heel aardig is (die wordt daar
+                    op geselecteerd en in getraind). Hierdoor wordt een drempel opgeworpen om op te zeggen.
+                    <br>
+                    Loterijen gebruiken vaak het argument dat er binnenkort een “enorme prijs” gaat vallen of dat
+                    volgende maand er “dubbele winstkansen” zijn. Nu opzeggen is dus misschien niet handig omdat je dan
+                    het risico loopt dat je niets wint. De angst om iets te verliezen wordt hier gebruikt. Bij goede
+                    doelen speelt vaak schuldgevoel een grote rol. Toen u begon met doneren gaf dat u een goed gevoel:
+                    U hielp mee de wereld een stukje beter te maken. Als u nu stopt doet u het tegenovergestelde.
+                </p>
+            </div>
+        </div>
+        <div class="col">
+            <div>
+                <h5><strong>Wat is het effect?</strong></h5>
+                <p>
+                    Het effect is dat heel veel mensen onnodige abonnementen hebben en erger: zich niet bewust zijn van
+                    het aantal abonnementen dat ze hebben. Het NIBUD heeft dit onderzocht: 91% van de Nederlanders
+                    onderschat het aantal abonnementen waaraan betaald wordt (
+                    <a href="https://www.nibud.nl/consumenten/grip-op-abonnementen/">meer informatie</a>). Er is dus
+                    veel geld te besparen door onnodige abonnementen op te zeggen.
+                </p>
+            </div>
+        </div>
+        <div class="w-100"></div>
+        <div class="col">
+            <div>
+                <h5><strong>Hoe dan?</strong></h5>
+                <p>
+                    Let op! We zeggen niet dat abonnementen niet deugen. Het gaat hier om de abonnementen die u niet
+                    echt nodig heeft en waar u eigenlijk wel vanaf zou willen. Bij kanikervanaf.nl willen we dat
+                    mogelijk maken. Hiervoor gebruiken we dezelfde beïnvloedingstechnieken als de marketeers van
+                    bedrijven die abonnementen verkopen…. <strong>maar dan om ervoor te zorgen dat u er vanaf komt!
+                    </strong> Met andere woorden: We bestrijden hen met hun eigen wapens. We maken opzeggen
+                    laagdrempelig. We willen zorgen dat het in de toekomst net zo makkelijk wordt om een abonnement op
+                    te zeggen dan er een af te sluiten.
+                </p>
+            </div>
+        </div>
+        <div class="col"></div>
+    </div>
+</div>
+{% endblock %}
