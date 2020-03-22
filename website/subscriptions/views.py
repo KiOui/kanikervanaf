@@ -44,11 +44,23 @@ class ListCategoryView(TemplateView):
         """
         if SubscriptionCategory.objects.filter(id=kwargs.get("id")).count() > 0:
             category = SubscriptionCategory.objects.get(id=kwargs.get("id"))
-            category.top = Subscription.top_category(category, max_items=0)
+            category_path = category.get_path_to_me()
+            subcategories = SubscriptionCategory.objects.filter(
+                parent=category
+            ).order_by("name")
+            if subcategories.count() > 0:
+                category.subcategories = subcategories
+            category.top = Subscription.top_category(
+                category, max_items=0, order_by="name"
+            )
             for item in category.top:
                 item.can_email = item.can_email()
                 item.can_generate_pdf = item.can_generate_pdf()
-            return render(request, self.template_name, {"category": category})
+            return render(
+                request,
+                self.template_name,
+                {"category": category, "category_path": category_path},
+            )
         else:
             return redirect("subscriptions:overview")
 
@@ -94,3 +106,47 @@ def verification_send(request):
             return HttpResponseRedirect(reverse("mail:verification_send_failed"))
     else:
         return HttpResponse(status=500)
+
+
+class RequestView(TemplateView):
+    """Request view for sending in a subscription request."""
+
+    template_name = "request.html"
+
+
+def search_database(request):
+    """
+    Search all Subscription objects for a specific Subscription.
+
+    :param request: the request, containing a POST parameter query
+    :return: all objects
+    """
+    if request.method == "POST":
+        query = request.POST.get("query", "")
+        request_id = request.POST.get("id", "")
+        try:
+            maximum = int(request.POST.get("maximum", 5))
+        except ValueError:
+            maximum = 5
+        subscriptions = Subscription.objects.filter(name__contains=query).order_by(
+            "-amount_used"
+        )[:maximum]
+        converted_set = convert_list_to_json(subscriptions)
+        json_list = {"items": converted_set, "id": request_id}
+        json_response = json.dumps(json_list)
+        return HttpResponse(json_response, content_type="application/json")
+    else:
+        return HttpResponseRedirect(reverse("home"))
+
+
+def convert_list_to_json(subscriptions):
+    """
+    Convert a list with subscriptions to a JSON compatible dictionary.
+
+    :param subscriptions: a list of subscriptions to convert
+    :return: a JSON string with the list of subscriptions converted to JSON
+    """
+    json_list = []
+    for subscription in subscriptions:
+        json_list.append(subscription.to_json())
+    return json_list

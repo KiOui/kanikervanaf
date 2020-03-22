@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block page %}
+<div class="container">
+    <h1>Contact</h1>
+    <p>Heeft u vragen voor ons? Kloppen onze gegevens niet? Stel uw vraag in het feedback formulier hieronder! U kunt
+        ook zelf een mail sturen naar klantenservice@kanikervanaf.nl.</p>
+    <p>Wilt u een abonnement wat u mist aanvragen zodat wij het op onze site kunnen zetten, doe dit dan
+        <a href="{% url "subscriptions:request" %}">hier</a>.</p>
+</div>
+{% endblock %}

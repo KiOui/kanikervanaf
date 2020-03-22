@@ -83,8 +83,8 @@ function set_list(list) {
 }
 
 function refresh_all() {
-	if (typeof get_search === "function") {
-		get_search();
+	if (typeof renew_search === "function") {
+		renew_search();
 	}
 	if (typeof renew_list === "function") {
 		renew_list();
@@ -95,111 +95,6 @@ function refresh_all() {
 	if (typeof disable_buttons === "function") {
 		disable_buttons();
 	}
-}
-
-function get_price(id, callback /*, args */) {
-	let args = Array.prototype.slice.call(arguments, 2);
-	jQuery(function($) {
-	let data = {
-		'action': 'deregister_categories',
-		'option': "price",
-		'id': id
-	};
-	$.ajax({type: 'POST', url:ajax_vars.ajax_url, data, dataType:'json', asynch: true, success:
-		function(returnedData) {
-			if (returnedData.error) {
-				console.log(returnedData.errormsg);
-			}
-			else {
-				args.unshift(returnedData.price);
-				callback.apply(this, args);
-			}
-
-		}}).fail(function() {
-			console.log("Error while getting the price of " + id);
-		});
-	});
-}
-
-function get_post_details(id, callback) {
-	let args = Array.prototype.slice.call(arguments, 1);
-	jQuery(function($) {
-		let data = {
-			'action': 'deregister_categories',
-			'option': "details",
-			'id': id
-		};
-		$.ajax({type: 'POST', url:ajax_vars.ajax_url, data, dataType:'json', asynch: true, success:
-				function(returnedData) {
-					if (returnedData.error) {
-						console.log(returnedData.errormsg);
-					}
-					else {
-						args.unshift(returnedData.details);
-						callback.apply(this, args);
-					}
-
-				}}).fail(function() {
-			console.log("Error while getting the details of " + id);
-		});
-	});
-}
-
-function query_total_price(list, callback /*, args */) {
-	let args = Array.prototype.slice.call(arguments, 2);
-	list = JSON.stringify(list);
-	jQuery(function($) {
-		let data = {
-			'action': 'deregister_categories',
-			'option': 'total_price',
-			'list': list
-		};
-		$.ajax({type: 'POST', url:ajax_vars.ajax_url, data, dataType:'json', asynch: true, success:
-		function(returnedData) {
-			if (returnedData.error) {
-				console.log(returnedData.errormsg);
-			}
-			else {
-				args.unshift(returnedData.total);
-				callback.apply(this, args);
-			}
-
-		}}).fail(function() {
-			console.log("Error while getting search results for query " + search);
-		});
-		return "";
-	});
-}
-
-function query_id(id, callback /*, args */) {
-	let args = Array.prototype.slice.call(arguments, 2);
-	jQuery(function($) {
-		let data = {
-			'action': 'deregister_categories',
-			'option': 'data',
-			'id': id
-		};
-		$.ajax({type: 'POST', url:ajax_vars.ajax_url, data, dataType:'json', asynch: true, success:
-		function(returnedData) {
-			if (returnedData.error) {
-				console.log(returnedData.errormsg);
-			}
-			else {
-				if (returnedData.name !== "") {
-					args.unshift(returnedData.data.price);
-					args.unshift(id);
-					args.unshift(returnedData.data.name);
-					callback.apply(this, args);
-				}
-				else {
-					console.log("Error, id " + id + " does not exist.");
-				}
-			}
-
-		}}).fail(function() {
-			console.log("Error while getting search results for query " + search);
-		});
-	});
 }
 
 function setCookie(name,value,days) {

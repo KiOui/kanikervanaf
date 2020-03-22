@@ -19,8 +19,13 @@
             via e-mail.
         </p>
     </div>
-    <input id="searchfor" type="text" maxlength="75" autocorrect="off" spellcheck="false" autocomplete="off"
+    <div>
+        <input id="searchfor" type="text" maxlength="75" autocorrect="off" spellcheck="false" autocomplete="off"
            autocapitalize="off" placeholder="Zoek een abonnement..." class="container-fluid">
+        <div id="selection-container-id">
+
+        </div>
+    </div>
     <div class="container-fluid">
         <div class="row">
             {% for category in categories %}
@@ -39,4 +44,8 @@
 {% block js %}
     <script src="{% static 'kanikervanaf/js/general.js' %}"></script>
     <script src="{% static 'subscriptions/js/categories.js' %}"></script>
+    <script src="{% static 'subscriptions/js/search.js' %}"></script>
+    <script>
+        SEARCH_URL = "{% url 'subscriptions:search' %}";
+    </script>
 {% endblock %}
