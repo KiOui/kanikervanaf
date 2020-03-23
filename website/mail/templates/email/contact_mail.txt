@@ -1,0 +1,16 @@
+Hallo!
+
+Een gebruiker van kanikervanaf.nl heeft het contactformulier ingevuld. Hieronder de gegevens van de gebruiker.
+
+Naam gebruiker:
+{{ name }}
+E-mail adres gebruiker:
+{{ email }}
+Titel:
+{{ title }}
+Bericht:
+{{ message|safe }}
+
+Met vriendelijke groet,
+
+Kanikervanaf.nl!

@@ -26,11 +26,11 @@
 
         </div>
     </div>
-    <div class="container-fluid">
+    <div class="container-fluid mt-5">
         <div class="row">
             {% for category in categories %}
                 {% if category.top|length > 0 %}
-                    <div class="col-md category-column">
+                    <div class="col-md category-column mb-3">
                         {% include 'subscription_one_category.html' with category=category show_more=True %}
                     </div>
                 {% endif %}

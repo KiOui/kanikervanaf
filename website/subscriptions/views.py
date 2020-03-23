@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from .models import Subscription, SubscriptionCategory
 from .services import handle_verification_request
 from django.urls import reverse
-from mail.services import send_verification_email
+from mail.services import send_verification_email, send_request_email
 
 
 class ListView(TemplateView):
@@ -112,6 +112,35 @@ class RequestView(TemplateView):
     """Request view for sending in a subscription request."""
 
     template_name = "request.html"
+
+    def get(self, request, **kwargs):
+        """
+        GET request function for request view.
+
+        :param request: the request
+        :param kwargs: keyword arguments
+        :return: the request.html page
+        """
+        return render(request, self.template_name)
+
+    def post(self, request, **kwargs):
+        """
+        POST request function for the request view.
+
+        :param request: the request
+        :param kwargs: keyword arguments
+        :return: a render of the request.html page, either with a succeeded or failed message indicating if the request
+        was send successfully or not
+        """
+        name = request.POST.get("name", "")
+        email = request.POST.get("email", "")
+        subscription = request.POST.get("subscription", "")
+        message = request.POST.get("message", "")
+
+        if send_request_email(name, email, subscription, message):
+            return render(request, self.template_name, {"succeeded": True})
+        else:
+            return render(request, self.template_name, {"failed": True})
 
 
 def search_database(request):

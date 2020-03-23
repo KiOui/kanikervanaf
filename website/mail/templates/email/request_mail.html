@@ -96,7 +96,7 @@
 </style>
 
 <header>
-    <title> Verificatiemail </title>
+    <title> Abonnement aangevraagd </title>
 </header>
 <body style="margin: 0px;padding: 0px;">
 <div class="header" style="width: calc(100% - 30px);color: white;background-color: #34af99;padding: 15px;">
@@ -120,13 +120,13 @@
         <p>Een gebruiker van kanikervanaf.nl heeft een abonnement aangevraagd. Hieronder staan de gegevens die de gebruiker heeft ingevuld.
         </p>
         <strong>Naam abonnement:</strong> <br>
-        <p>__subscription__</p>
+        <p>{{ subscription }}</p>
         <strong>Naam gebruiker:</strong> <br>
-        <p>__name__</p>
+        <p>{{ name }}</p>
         <strong>E-mail adres:</strong> <br>
-        <p>__email_address__</p>
+        <p>{{ email }}_</p>
         <strong>Extra informatie:</strong> <br>
-        <p>__extra_information__</p>
+        <p>{{ message|safe }}</p>
         </div>
 </div>
 
