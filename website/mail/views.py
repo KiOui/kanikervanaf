@@ -1,3 +1,4 @@
+from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from subscriptions.models import QueuedMailList
@@ -16,7 +17,7 @@ def verify(request, **kwargs):
     try:
         mail_list = QueuedMailList.objects.get(token=token)
     except QueuedMailList.DoesNotExist:
-        return render(request, "mails_send.html")
+        return HttpResponseNotFound()
 
     if handle_deregister_request(mail_list):
         return render(request, "mails_send.html", {"succeeded": True})

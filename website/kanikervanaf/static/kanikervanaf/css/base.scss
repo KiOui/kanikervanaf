@@ -27,3 +27,15 @@ input {
   margin-left: 5px;
   margin-right: 5px;
 }
+
+.message-ok {
+  background-color: #34af99;
+  padding: 5px;
+  color: white;
+}
+
+.message-error {
+  background-color: #ff3232;
+  padding: 5px;
+  color: white;
+}

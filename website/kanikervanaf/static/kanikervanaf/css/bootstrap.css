@@ -1677,14 +1677,14 @@ pre code {
 .table td {
   padding: 0.75rem;
   vertical-align: top;
-  border-top: 1px solid black;
+  border-top: 1px solid #dee2e6;
 }
 .table thead th {
   vertical-align: bottom;
-  border-bottom: 2px solid black;
+  border-bottom: 2px solid #dee2e6;
 }
 .table tbody + tbody {
-  border-top: 2px solid black;
+  border-top: 2px solid #dee2e6;
 }
 
 .table-sm th,
@@ -1693,11 +1693,11 @@ pre code {
 }
 
 .table-bordered {
-  border: 1px solid black;
+  border: 1px solid #dee2e6;
 }
 .table-bordered th,
 .table-bordered td {
-  border: 1px solid black;
+  border: 1px solid #dee2e6;
 }
 .table-bordered thead th,
 .table-bordered thead td {
@@ -1902,7 +1902,7 @@ pre code {
 .table .thead-light th {
   color: #495057;
   background-color: #e9ecef;
-  border-color: black;
+  border-color: #dee2e6;
 }
 
 .table-dark {
@@ -5423,7 +5423,7 @@ a.close.disabled {
   align-items: flex-start;
   justify-content: space-between;
   padding: 1rem 1rem;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #dee2e6;
   border-top-left-radius: calc(0.3rem - 1px);
   border-top-right-radius: calc(0.3rem - 1px);
 }
@@ -5449,7 +5449,7 @@ a.close.disabled {
   align-items: center;
   justify-content: flex-end;
   padding: 0.75rem;
-  border-top: 1px solid black;
+  border-top: 1px solid #dee2e6;
   border-bottom-right-radius: calc(0.3rem - 1px);
   border-bottom-left-radius: calc(0.3rem - 1px);
 }
@@ -6082,23 +6082,23 @@ button.bg-dark:focus {
 }
 
 .border {
-  border: 1px solid black !important;
+  border: 1px solid #dee2e6 !important;
 }
 
 .border-top {
-  border-top: 1px solid black !important;
+  border-top: 1px solid #dee2e6 !important;
 }
 
 .border-right {
-  border-right: 1px solid black !important;
+  border-right: 1px solid #dee2e6 !important;
 }
 
 .border-bottom {
-  border-bottom: 1px solid black !important;
+  border-bottom: 1px solid #dee2e6 !important;
 }
 
 .border-left {
-  border-left: 1px solid black !important;
+  border-left: 1px solid #dee2e6 !important;
 }
 
 .border-0 {
@@ -9867,12 +9867,12 @@ h3 {
 .table-dark td,
 .table-dark thead th,
 .table-dark tbody + tbody {
-    border-color: black;
+    border-color: #dee2e6;
   }
 
   .table .thead-dark th {
     color: inherit;
-    border-color: black;
+    border-color: #dee2e6;
   }
 }
 .navbar-light {
@@ -9890,6 +9890,18 @@ input {
   border: 1px solid #595959;
   margin-left: 5px;
   margin-right: 5px;
+}
+
+.message-ok {
+  background-color: #34af99;
+  padding: 5px;
+  color: white;
+}
+
+.message-error {
+  background-color: #ff3232;
+  padding: 5px;
+  color: white;
 }
 
 /*# sourceMappingURL=bootstrap.css.map */

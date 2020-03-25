@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "users",
     "import",
     "mail",
+    "pdfgenerator",
 ]
 
 MIDDLEWARE = [

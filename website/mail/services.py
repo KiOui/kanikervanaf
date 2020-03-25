@@ -3,6 +3,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from smtplib import SMTPException
 from subscriptions.models import QueuedMailList
+from pdfgenerator.services import render_deregister_letter
 
 
 def send_verification_email(first_name, email_address, verification_url):
@@ -42,7 +43,7 @@ def send_verification_email(first_name, email_address, verification_url):
 
 
 def send_summary_email(
-    succeeded_mails, failed_mails, user_information, direct_send=False
+    succeeded_mails, failed_mails, succeeded_letters, failed_letters, pdfs, user_information, direct_send=False
 ):
     """
     Send a summary email.
@@ -74,6 +75,8 @@ def send_summary_email(
         [user_information.email_address],
     )
     msg.attach_alternative(html_content, "text/html")
+    for pdf in pdfs:
+        msg.attach(None, pdf, "application/pdf")
 
     try:
         msg.send()
@@ -84,6 +87,27 @@ def send_summary_email(
     return True
 
 
+def create_deregister_letters(mail_list):
+    """
+    Creates deregister letters.
+
+    :param mail_list: the mail list to create the letters for
+    :return: a tuple with (succeeded_letters, failed_letters, pdfs) with a list of succeeded letters, failed letters
+    and created pdfs
+    """
+    succeeded = list()
+    failed = list()
+    pdfs = list()
+    for item in mail_list.item_list.iterator():
+        if item.can_generate_pdf():
+            pdfs.append(render_deregister_letter(mail_list.user_information, item))
+            succeeded.append(item)
+        else:
+            failed.append(item)
+
+    return succeeded, failed, pdfs
+
+
 def handle_deregister_request(mail_list):
     """
     Handle a deregister request.
@@ -92,8 +116,9 @@ def handle_deregister_request(mail_list):
     :return: True if the summary email was send successfully, False otherwise
     """
     succeeded_mails, failed_mails = send_deregister_emails(mail_list)
+    succeeded_letters, failed_letters, pdfs = create_deregister_letters(mail_list)
     retvalue = send_summary_email(
-        succeeded_mails, failed_mails, mail_list.user_information
+        succeeded_mails, failed_mails, succeeded_letters, failed_letters, pdfs, mail_list.user_information
     )
     for subscription in mail_list.item_list.iterator():
         subscription.deregistered()

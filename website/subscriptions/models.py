@@ -3,6 +3,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 from users.models import UserInformation
 import secrets
 import datetime
+import pytz
+from django.conf import settings
 
 
 class Subscription(models.Model):
@@ -66,16 +68,31 @@ class Subscription(models.Model):
         :return: True if there is enough information to generate a PDF file, False otherwise
         """
         return (
-            self.support_reply_number is not None
-            and self.support_postal_code is not None
-            and self.support_reply_number != ""
-            and self.support_postal_code != ""
-        ) or (
-            self.correspondence_address is not None
-            and self.correspondence_postal_code is not None
-            and self.correspondence_address != ""
-            and self.correspondence_postal_code != ""
-        )
+                       self.support_reply_number is not None
+                       and self.support_postal_code is not None
+                       and self.support_reply_number != ""
+                       and self.support_postal_code != ""
+               ) or (
+                       self.correspondence_address is not None
+                       and self.correspondence_postal_code is not None
+                       and self.correspondence_address != ""
+                       and self.correspondence_postal_code != ""
+               )
+
+    def get_address_information(self):
+        """
+        Get the address information of a subscription.
+
+        First uses the support address (if complete), then uses the correspondence address
+        :return: a tuple (address, postal_code, residence)
+        """
+        if (self.support_reply_number is not None
+                and self.support_postal_code is not None
+                and self.support_reply_number != ""
+                and self.support_postal_code != ""):
+            return self.support_reply_number, self.support_postal_code, self.support_city
+        else:
+            return self.correspondence_address, self.correspondence_postal_code, self.correspondence_city
 
     def deregistered(self):
         """
@@ -238,8 +255,9 @@ class QueuedMailList(models.Model):
         :return: None
         """
         mail_lists = QueuedMailList.objects.all()
-        remove_after = datetime.datetime.now() - datetime.timedelta(minutes=15)
-        for mail_list in mail_lists:
+        timezone = pytz.timezone(settings.TIME_ZONE)
+        remove_after = timezone.localize(datetime.datetime.now() - datetime.timedelta(minutes=15))
+        for mail_list in mail_lists.iterator():
             if mail_list.created <= remove_after:
                 mail_list.user_information.delete()
                 mail_list.delete()

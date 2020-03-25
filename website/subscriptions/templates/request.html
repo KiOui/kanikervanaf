@@ -2,9 +2,9 @@
 {% block page %}
 <div class="container">
     {% if succeeded %}
-        <p>Uw aanvraag is verzonden!</p>
+        <p class="container-fluid message-ok">Uw aanvraag is verzonden!</p>
     {% elif failed %}
-        <p>Er is iets misgegaan met het verzenden van uw aanvraag.</p>
+        <p class="container-fluid message-error">Er is iets misgegaan met het verzenden van uw aanvraag.</p>
     {% endif %}
     <h1>Vraag abonnement aan</h1>
     <p>Mist u een abonnement op onze website? Vraag hieronder een abonnement aan, dan plaatsen wij hem op onze site!</p>

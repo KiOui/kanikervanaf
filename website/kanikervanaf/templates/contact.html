@@ -2,9 +2,9 @@
 {% block page %}
 <div class="container">
     {% if succeeded %}
-        <p>Uw contactbericht is verzonden!</p>
+        <p class="container-fluid message-ok">Uw contactbericht is verzonden!</p>
     {% elif failed %}
-        <p>Er is iets misgegaan met het verzenden van uw contactbericht.</p>
+        <p class="container-fluid message-error">Er is iets misgegaan met het verzenden van uw contactbericht.</p>
     {% endif %}
     <h1>Contact</h1>
     <p>Heeft u vragen voor ons? Kloppen onze gegevens niet? Stel uw vraag in het feedback formulier hieronder! U kunt
