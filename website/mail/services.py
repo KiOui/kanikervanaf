@@ -43,7 +43,13 @@ def send_verification_email(first_name, email_address, verification_url):
 
 
 def send_summary_email(
-    succeeded_mails, failed_mails, succeeded_letters, failed_letters, pdfs, user_information, direct_send=False
+    succeeded_mails,
+    failed_mails,
+    succeeded_letters,
+    failed_letters,
+    pdfs,
+    user_information,
+    direct_send=False,
 ):
     """
     Send a summary email.
@@ -63,6 +69,8 @@ def send_summary_email(
         "forward": not direct_send,
         "send_emails": succeeded_mails,
         "unsend_emails": failed_mails,
+        "send_letters": succeeded_letters,
+        "unsend_letters": failed_letters,
     }
 
     html_content = template.render(context)
@@ -89,7 +97,7 @@ def send_summary_email(
 
 def create_deregister_letters(mail_list):
     """
-    Creates deregister letters.
+    Create deregister letters.
 
     :param mail_list: the mail list to create the letters for
     :return: a tuple with (succeeded_letters, failed_letters, pdfs) with a list of succeeded letters, failed letters
@@ -118,7 +126,12 @@ def handle_deregister_request(mail_list):
     succeeded_mails, failed_mails = send_deregister_emails(mail_list)
     succeeded_letters, failed_letters, pdfs = create_deregister_letters(mail_list)
     retvalue = send_summary_email(
-        succeeded_mails, failed_mails, succeeded_letters, failed_letters, pdfs, mail_list.user_information
+        succeeded_mails,
+        failed_mails,
+        succeeded_letters,
+        failed_letters,
+        pdfs,
+        mail_list.user_information,
     )
     for subscription in mail_list.item_list.iterator():
         subscription.deregistered()
