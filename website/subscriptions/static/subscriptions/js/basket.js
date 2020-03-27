@@ -25,7 +25,7 @@ function create_basket_item(name, id, price, can_email, can_letter) {
 function create_basket(list) {
 	if (list.length === 0) {
 		selectionItemList.innerHTML = "Er staan nog geen abonnementen in deze lijst, kies wat abonnementen uit om op te zeggen!";
-		selectionItemTotal.innerHTML = "<p class='text-big'>Uw besparing</p>Minimaal bespaard bedrag per jaar:<p class='text-big newline'>€0,00</p><div class='border'></div>";
+		selectionItemTotal.innerHTML = "€0,00";
 	}
 	else {
 		let total = 0;
@@ -53,10 +53,10 @@ function update_total_price(price) {
 	if (price > 0) {
 		price = price.toFixed(2);
 		price = price.toString().replace('.', ',');
-		selectionItemTotal.innerHTML = "<p class='text-big'>Uw besparing</p>Minimaal bespaard bedrag per jaar:<p class='text-big newline'> €" + price + "</p><div class='border'></div>";
+		selectionItemTotal.innerHTML = "€ " + price;
 	}
 	else {
-		selectionItemTotal.innerHTML = "<p class='text-big'>Uw besparing</p>Minimaal bespaard bedrag per jaar:<p class='text-big newline'>€0,00</p><div class='border'></div>";
+		selectionItemTotal.innerHTML = "€0,00";
 	}
 }
 

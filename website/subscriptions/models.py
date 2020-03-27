@@ -3,6 +3,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 from users.models import UserInformation
 import secrets
 import datetime
+import pytz
+from django.conf import settings
 
 
 class Subscription(models.Model):
@@ -33,7 +35,7 @@ class Subscription(models.Model):
         return self.name
 
     @staticmethod
-    def top_category(category, max_items=5, order_by="name"):
+    def top_category(category, max_items=5, order_by=None):
         """
         Get the top of a category.
 
@@ -42,12 +44,14 @@ class Subscription(models.Model):
         :param order_by: the order by which to order the items
         :return: a list of Subscription objects being the top of a category
         """
-        if max_items == 0:
-            return Subscription.objects.filter(category=category).order_by(order_by)
+        queryset = Subscription.objects.filter(category__in=category.get_family_tree())
+        if order_by is not None:
+            queryset = queryset.order_by(order_by)
+
+        if max_items != 0:
+            return queryset[:max_items]
         else:
-            return Subscription.objects.filter(category=category).order_by(order_by)[
-                :max_items
-            ]
+            return queryset
 
     def can_email(self):
         """
@@ -75,6 +79,31 @@ class Subscription(models.Model):
             and self.correspondence_postal_code != ""
         )
 
+    def get_address_information(self):
+        """
+        Get the address information of a subscription.
+
+        First uses the support address (if complete), then uses the correspondence address
+        :return: a tuple (address, postal_code, residence)
+        """
+        if (
+            self.support_reply_number is not None
+            and self.support_postal_code is not None
+            and self.support_reply_number != ""
+            and self.support_postal_code != ""
+        ):
+            return (
+                self.support_reply_number,
+                self.support_postal_code,
+                self.support_city,
+            )
+        else:
+            return (
+                self.correspondence_address,
+                self.correspondence_postal_code,
+                self.correspondence_city,
+            )
+
     def deregistered(self):
         """
         Update the amount of times the subscription has been deregistered.
@@ -84,6 +113,20 @@ class Subscription(models.Model):
         """
         self.amount_used += 1
         self.save()
+
+    def to_json(self):
+        """
+        Convert this object to a JSON compatible dictionary.
+
+        :return: a dictionary containing the name, id, price, ability to email and ability to generate a PDF.
+        """
+        return {
+            "name": self.name,
+            "id": self.id,
+            "price": float(self.price),
+            "can_email": self.can_email(),
+            "can_letter": self.can_generate_pdf(),
+        }
 
 
 class SubscriptionCategory(models.Model):
@@ -122,6 +165,46 @@ class SubscriptionCategory(models.Model):
         :return: a set with all top level categories
         """
         return SubscriptionCategory.objects.filter(parent=None)
+
+    def get_children(self):
+        """
+        Get all the children of a category.
+
+        :return: a QuerySet with all children of the category
+        """
+        return SubscriptionCategory.objects.filter(parent=self)
+
+    def get_family_tree(self, already_visited=None):
+        """
+        Get all family members of a category.
+
+        :param already_visited: against infinite recursion
+        :return: a list with all family members of a category.
+        """
+        if already_visited is None:
+            already_visited = [self]
+        elif self in already_visited:
+            return []
+        else:
+            already_visited.append(self)
+
+        children = [x for x in self.get_children()]
+        for child in children:
+            children = children + child.get_family_tree(already_visited=already_visited)
+
+        return [self] + children
+
+    def get_path_to_me(self):
+        """
+        Get a list of all parents of this category.
+
+        :return: a list where the first category is a top level category and the next ones the children to the category
+        where this function is called upon
+        """
+        if self.parent is None:
+            return [self]
+        else:
+            return self.parent.get_path_to_me() + [self]
 
 
 class SubscriptionSearchTerm(models.Model):
@@ -182,8 +265,11 @@ class QueuedMailList(models.Model):
         :return: None
         """
         mail_lists = QueuedMailList.objects.all()
-        remove_after = datetime.datetime.now() - datetime.timedelta(minutes=15)
-        for mail_list in mail_lists:
+        timezone = pytz.timezone(settings.TIME_ZONE)
+        remove_after = timezone.localize(
+            datetime.datetime.now() - datetime.timedelta(minutes=15)
+        )
+        for mail_list in mail_lists.iterator():
             if mail_list.created <= remove_after:
                 mail_list.user_information.delete()
                 mail_list.delete()

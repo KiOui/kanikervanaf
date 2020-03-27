@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block page %}
+<div class="container">
+    {% if succeeded %}
+        <p class="container-fluid message-ok">Uw contactbericht is verzonden!</p>
+    {% elif failed %}
+        <p class="container-fluid message-error">Er is iets misgegaan met het verzenden van uw contactbericht.</p>
+    {% endif %}
+    <h1>Contact</h1>
+    <p>Heeft u vragen voor ons? Kloppen onze gegevens niet? Stel uw vraag in het feedback formulier hieronder! U kunt
+        ook zelf een mail sturen naar klantenservice@kanikervanaf.nl.</p>
+    <p>Wilt u een abonnement wat u mist aanvragen zodat wij het op onze site kunnen zetten, doe dit dan
+        <a href="{% url "subscriptions:request" %}">hier</a>.</p>
+    <form method="POST">
+        {% csrf_token %}
+        <label for="name">Naam</label>
+        <input id="name" name="name" type="text" class="container-fluid"/>
+        <label for="email">Email adres</label>
+        <input id="email" name="email" type="email" class="container-fluid"/>
+        <label for="title">Titel</label>
+        <input id="title" name="title" class="container-fluid"/>
+        <label for="message">Bericht</label>
+        <textarea id="message" name="message" class="container-fluid"></textarea>
+        <input class="mt-3 mb-3 btn btn-primary" type="submit" value="Verzenden"/>
+    </form>
+    <script>
+        tinymce.init({
+            selector: '#message'
+        });
+    </script>
+</div>
+{% endblock %}

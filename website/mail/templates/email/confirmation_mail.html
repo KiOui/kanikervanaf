@@ -146,6 +146,22 @@
             {% endfor %}
             </ul>
         {% endif %}
+        {% if send_letters %}
+            <h5>Gegenereerde brieven</h5>
+            <ul>
+            {% for subscription in send_letters %}
+                <li>{{ subscription.name }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        {% if unsend_letters %}
+            <h5>Niet gegenereerde brieven (wij hebben nog geen adres van deze partij)</h5>
+            <ul>
+            {% for subscription in unsend_letters %}
+                <li>{{ subscription.name }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
         <p>Heeft u nog feedback voor ons? Mist u een abonnement op onze website? Help anderen en <a href="mailto:klantenservice@kanikervanaf.nl">stuur ons een email!</a>
 
         </p></div>

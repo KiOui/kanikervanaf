@@ -22,6 +22,18 @@ We hebben de opzegmails verstuurd!
         - {{ subscription.name }}
     {% endfor %}
 {% endif %}
+{% if send_letters %}
+    Gegenereerde brieven
+    {% for subscription in send_letters %}
+        - {{ subscription.name }}
+    {% endfor %}
+{% endif %}
+{% if unsend_letters %}
+    Niet gegenereerde brieven (wij hebben nog geen adres van deze partij)
+    {% for subscription in unsend_letters %}
+        - {{ subscription.name }}
+    {% endfor %}
+{% endif %}
 
 Heeft u nog feedback voor ons? Mist u een abonnement op onze website? Help anderen en stuur ons een email (klantenservice@kanikervanaf.nl)!
 

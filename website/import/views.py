@@ -4,7 +4,7 @@ import json
 import html
 from django.views.generic import TemplateView
 from subscriptions.models import Subscription, SubscriptionCategory
-from kanikervanaf.settings import IMPORT_URL
+from django.conf import settings
 from django.shortcuts import render
 from django.template.defaultfilters import slugify
 
@@ -40,7 +40,7 @@ def import_all():
 
     print("Starting item import...")
     r = requests.post(
-        IMPORT_URL, data={"action": "deregister_categories", "option": "all"}
+        settings.IMPORT_URL, data={"action": "deregister_categories", "option": "all"}
     )
     names = json.loads(html.unescape(r.text))
     print("Got all names from the server!")
@@ -81,7 +81,7 @@ def import_categories(category=False):
     """
     if category:
         r = requests.post(
-            IMPORT_URL,
+            settings.IMPORT_URL,
             data={
                 "action": "deregister_categories",
                 "option": "childs",
@@ -90,7 +90,8 @@ def import_categories(category=False):
         )
     else:
         r = requests.post(
-            IMPORT_URL, data={"action": "deregister_categories", "option": "childs"}
+            settings.IMPORT_URL,
+            data={"action": "deregister_categories", "option": "childs"},
         )
     data = json.loads(html.unescape(r.text))
     for new_category in data:
@@ -140,12 +141,12 @@ def import_item(name):
     :return: None
     """
     r = requests.post(
-        IMPORT_URL,
+        settings.IMPORT_URL,
         data={"action": "deregister_categories", "option": "details", "name": name},
     )
     data = json.loads(html.unescape(r.text))
     r = requests.post(
-        IMPORT_URL,
+        settings.IMPORT_URL,
         data={"action": "deregister_categories", "option": "category_of", "name": name},
     )
     categories = json.loads(html.unescape(r.text))

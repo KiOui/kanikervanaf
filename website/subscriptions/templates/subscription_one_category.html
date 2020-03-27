@@ -1,8 +1,31 @@
-<h2>{{ category.name }}</h2>
+<h3>{{ category.name }}</h3>
+{% if category_path %}
+    {% for parent in category_path %}
+        {% if forloop.first %}
+            <a href="{% url "subscriptions:overview" %}">
+                Start
+            </a>
+        {% endif %}
+        >
+        <a href="{% url "subscriptions:overview_category" id=parent.id %}">
+            {{ parent.name }}
+        </a>
+    {% endfor %}
+{% endif %}
 {% if show_more %}
-    <a href="{% url "subscriptions:overview_category"  id=category.id%}">
+    <a href="{% url "subscriptions:overview_category"  id=category.id %}">
         Bekijk meer {{ category.name }}
     </a>
+{% endif %}
+{%  if category.subcategories %}
+    <h5>Subcategorieën</h5>
+    <ul>
+        {% for subcategory in category.subcategories %}
+            <li><a href="{% url "subscriptions:overview_category"  id=subcategory.id %}">
+                {{ subcategory.name }}
+            </a></li>
+        {% endfor %}
+    </ul>
 {% endif %}
 {% for item in category.top %}
     <div class="menu-link">

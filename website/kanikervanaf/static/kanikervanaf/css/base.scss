@@ -1,0 +1,41 @@
+
+$navbar-light-color: #fff;
+$navbar-light-disabled-color: grey;
+$navbar-light-hover-color: rgba(255,255,255,0.4);
+
+$theme-colors: (
+  "primary": #34af99
+);
+
+$font-family-base: "Roboto";
+
+@import "bootstrap/bootstrap";
+
+.navbar-light {
+  background-color: #34af99;
+}
+
+.footer-copyright {
+  background-color: black;
+  color: white;
+}
+
+input {
+  border-radius: 5px;
+  padding: 3px;
+  border: 1px solid #595959;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.message-ok {
+  background-color: #34af99;
+  padding: 5px;
+  color: white;
+}
+
+.message-error {
+  background-color: #ff3232;
+  padding: 5px;
+  color: white;
+}

@@ -10,18 +10,18 @@
         </p>
         <form>
             {% csrf_token %}
-            <label for="email">Uw e-mail:</label>
-            <input type="email" name="email" id="email"><br>
-            <label for="firstname">Voornaam:</label>
-            <input type="text" name="firstname" id="firstname"><br>
+            <label for="email"><strong>Uw e-mail:</strong></label>
+            <input type="email" name="email" id="email" class="container-fluid"><br>
+            <label for="firstname"><strong>Voornaam:</strong></label>
+            <input type="text" name="firstname" id="firstname" class="container-fluid"><br>
             <label for="lastname">Achternaam:</label>
-            <input type="text" name="lastname" id="lastname"><br>
+            <input type="text" name="lastname" id="lastname" class="container-fluid"><br>
             <label for="address">Adres:</label>
-            <input type="text" name="address" id="address"><br>
+            <input type="text" name="address" id="address" class="container-fluid"><br>
             <label for="postalcode">Postcode:</label>
-            <input type="text" name="postalcode" id="postalcode"><br>
+            <input type="text" name="postalcode" id="postalcode" class="container-fluid"><br>
             <label for="residence">Plaats:</label>
-            <input type="text" name="residence" id="residence"><br>
+            <input type="text" name="residence" id="residence" class="container-fluid"><br>
 		</form>
     </div>
 {% endblock %}

@@ -1,8 +1,9 @@
 from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives
-from kanikervanaf.settings import EMAIL_HOST_USER
+from django.conf import settings
 from smtplib import SMTPException
 from subscriptions.models import QueuedMailList
+from pdfgenerator.services import render_deregister_letter
 
 
 def send_verification_email(first_name, email_address, verification_url):
@@ -25,7 +26,10 @@ def send_verification_email(first_name, email_address, verification_url):
     html_content = template.render(context)
 
     msg = EmailMultiAlternatives(
-        "Kanikervanaf: verificatie", text_content, EMAIL_HOST_USER, [email_address]
+        "Kanikervanaf: verificatie",
+        text_content,
+        settings.EMAIL_HOST_USER,
+        [email_address],
     )
     msg.attach_alternative(html_content, "text/html")
 
@@ -39,7 +43,13 @@ def send_verification_email(first_name, email_address, verification_url):
 
 
 def send_summary_email(
-    succeeded_mails, failed_mails, user_information, direct_send=False
+    succeeded_mails,
+    failed_mails,
+    succeeded_letters,
+    failed_letters,
+    pdfs,
+    user_information,
+    direct_send=False,
 ):
     """
     Send a summary email.
@@ -59,6 +69,8 @@ def send_summary_email(
         "forward": not direct_send,
         "send_emails": succeeded_mails,
         "unsend_emails": failed_mails,
+        "send_letters": succeeded_letters,
+        "unsend_letters": failed_letters,
     }
 
     html_content = template.render(context)
@@ -67,10 +79,12 @@ def send_summary_email(
     msg = EmailMultiAlternatives(
         "Kanikervanaf.nl: Mails verzonden",
         text_content,
-        EMAIL_HOST_USER,
+        settings.EMAIL_HOST_USER,
         [user_information.email_address],
     )
     msg.attach_alternative(html_content, "text/html")
+    for pdf in pdfs:
+        msg.attach(None, pdf, "application/pdf")
 
     try:
         msg.send()
@@ -81,6 +95,27 @@ def send_summary_email(
     return True
 
 
+def create_deregister_letters(mail_list):
+    """
+    Create deregister letters.
+
+    :param mail_list: the mail list to create the letters for
+    :return: a tuple with (succeeded_letters, failed_letters, pdfs) with a list of succeeded letters, failed letters
+    and created pdfs
+    """
+    succeeded = list()
+    failed = list()
+    pdfs = list()
+    for item in mail_list.item_list.iterator():
+        if item.can_generate_pdf():
+            pdfs.append(render_deregister_letter(mail_list.user_information, item))
+            succeeded.append(item)
+        else:
+            failed.append(item)
+
+    return succeeded, failed, pdfs
+
+
 def handle_deregister_request(mail_list):
     """
     Handle a deregister request.
@@ -89,8 +124,14 @@ def handle_deregister_request(mail_list):
     :return: True if the summary email was send successfully, False otherwise
     """
     succeeded_mails, failed_mails = send_deregister_emails(mail_list)
+    succeeded_letters, failed_letters, pdfs = create_deregister_letters(mail_list)
     retvalue = send_summary_email(
-        succeeded_mails, failed_mails, mail_list.user_information
+        succeeded_mails,
+        failed_mails,
+        succeeded_letters,
+        failed_letters,
+        pdfs,
+        mail_list.user_information,
     )
     for subscription in mail_list.item_list.iterator():
         subscription.deregistered()
@@ -124,7 +165,7 @@ def send_deregister_emails(mail_list, direct_send=False):
                 msg = EmailMultiAlternatives(
                     "Kanikervanaf: {}".format(subscription.name),
                     deregister_email,
-                    EMAIL_HOST_USER,
+                    settings.EMAIL_HOST_USER,
                     [subscription.support_email],
                     cc=[mail_list.user_information.email_address],
                     reply_to=mail_list.user_information.email_address,
@@ -133,7 +174,7 @@ def send_deregister_emails(mail_list, direct_send=False):
                 msg = EmailMultiAlternatives(
                     "Kanikervanaf: {}".format(subscription.name),
                     deregister_email,
-                    EMAIL_HOST_USER,
+                    settings.EMAIL_HOST_USER,
                     [mail_list.user_information.email_address],
                 )
             try:
@@ -170,3 +211,87 @@ def create_deregister_email(user_information, subscription, forward_address=Fals
     }
 
     return template.render(context)
+
+
+def send_contact_email(name, email_address, title, message):
+    """
+    Construct and send a contact email.
+
+    :param name: the name of the person sending the contact email
+    :param email_address: the email-address of the person sending the contact email
+    :param title: the title of the contact email
+    :param message: the message of the contact email
+    :return: True if the sending succeeded, False otherwise
+    """
+    template = get_template("email/contact_mail.html")
+    template_text = get_template("email/contact_mail.txt")
+
+    context = {
+        "name": name,
+        "email": email_address,
+        "title": title,
+        "message": message,
+    }
+
+    html_content = template.render(context)
+    text_content = template_text.render(context)
+
+    msg = EmailMultiAlternatives(
+        "Kanikervanaf: Contactformulier",
+        text_content,
+        settings.EMAIL_HOST_USER,
+        ["klantenservice@kanikervanaf.nl"],
+        bcc=[email_address],
+        reply_to=[email_address],
+    )
+    msg.attach_alternative(html_content, "text/html")
+
+    try:
+        msg.send()
+    except SMTPException as e:
+        print(e)
+        return False
+
+    return True
+
+
+def send_request_email(name, email_address, subscription, message):
+    """
+    Construct and send a request email.
+
+    :param name: the name of the person sending the contact email
+    :param email_address: the email-address of the person sending the contact email
+    :param subscription: the subscription that the user requested
+    :param message: the message of the contact email
+    :return: True if the sending succeeded, False otherwise
+    """
+    template = get_template("email/request_mail.html")
+    template_text = get_template("email/request_mail.txt")
+
+    context = {
+        "name": name,
+        "email": email_address,
+        "subscription": subscription,
+        "message": message,
+    }
+
+    html_content = template.render(context)
+    text_content = template_text.render(context)
+
+    msg = EmailMultiAlternatives(
+        "Kanikervanaf: Abonnement aangevraagd",
+        text_content,
+        settings.EMAIL_HOST_USER,
+        ["klantenservice@kanikervanaf.nl"],
+        bcc=[email_address],
+        reply_to=[email_address],
+    )
+    msg.attach_alternative(html_content, "text/html")
+
+    try:
+        msg.send()
+    except SMTPException as e:
+        print(e)
+        return False
+
+    return True

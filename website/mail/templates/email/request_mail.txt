@@ -1,0 +1,16 @@
+Hallo!
+
+Een gebruiker van kanikervanaf.nl heeft een abonnement aangevraagd. Hieronder de gegevens van de gebruiker.
+
+Aangevraagd abonnement:
+{{ subscription }}
+Naam gebruiker:
+{{ name }}
+E-mail adres gebruiker:
+{{ email }}
+Bericht:
+{{ message|safe }}
+
+Met vriendelijke groet,
+
+Kanikervanaf.nl!
