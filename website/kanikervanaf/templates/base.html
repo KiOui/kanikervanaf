@@ -25,7 +25,7 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="{% url "home" %}" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Home
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -34,6 +34,26 @@
                         <a class="dropdown-item" href="{% url "faq" %}">FAQ</a>
                         <a class="dropdown-item" href="{% url "subscriptions:request" %}">Vraag abonnement aan</a>
                     </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarAccountMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {% if user.is_authenticated %}
+                            Mijn account
+                        {% else %}
+                            Account
+                        {% endif %}
+                    </a>
+                    {% if user.is_authenticated %}
+                        <div class="dropdown-menu" aria-labelledby="navbarAccountMenuLink">
+                            <a class="dropdown-item" href="{% url "users:account" %}">Overzicht</a>
+                            <a class="dropdown-item" href="{% url "users:logout" %}">Uitloggen</a>
+                        </div>
+                    {% else %}
+                        <div class="dropdown-menu" aria-labelledby="navbarAccountMenuLink">
+                            <a class="dropdown-item" href="{% url "users:login" %}">Log in</a>
+                            <a class="dropdown-item" href="{% url "users:forgot" %}">Wachtwoord vergeten</a>
+                        </div>
+                    {% endif %}
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url "subscriptions:overview" %}">1. Selecteer abonnementen</a>

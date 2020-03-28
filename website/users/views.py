@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
 
 from .forms import (
@@ -8,6 +8,7 @@ from .forms import (
     UserRegisterForm,
     PasswordForgotForm,
     PasswordResetForm,
+    UserUpdateForm,
 )
 from .models import User, PasswordReset
 from .services import generate_password_reset, send_reset_password
@@ -219,4 +220,50 @@ class ResetView(TemplateView):
                 return render(request, self.template_name, {"failed": True})
 
         context = {"form": form}
+        return render(request, self.template_name, context)
+
+
+class AccountView(LoginRequiredMixin, TemplateView):
+    """Account details page, requires logged in user."""
+
+    template_name = "account.html"
+
+    def get(self, request, **kwargs):
+        """
+        GET method for account details page.
+
+        :param request: the request
+        :param kwargs: keyword arguments
+        :return: a render of the accounts page with initial information filled in
+        """
+        initial = {}
+        form = UserUpdateForm(initial=initial)
+
+        context = {"form": form}
+
+        return render(request, self.template_name, context)
+
+    def post(self, request, **kwargs):
+        """
+        POST method for account details page.
+
+        Changes details of a user account
+        :param request: the request
+        :param kwargs: keyword arguments
+        :return: a render of the accounts page
+        """
+        form = UserUpdateForm(request.POST)
+
+        context = {"form": form}
+
+        if form.is_valid():
+            if request.user.check_password(form.cleaned_data.get("oldpassword")):
+                request.user.set_password(form.cleaned_data.get("password"))
+                request.user.save()
+                context["succeeded"] = True
+                return render(request, self.template_name, context)
+            else:
+                context["failed"] = True
+                return render(request, self.template_name, context)
+
         return render(request, self.template_name, context)

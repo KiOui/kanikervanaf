@@ -109,3 +109,27 @@ class UserRegisterForm(forms.ModelForm):
             raise forms.ValidationError("De wachtwoorden komen niet overeen")
 
         return cleaned_data
+
+
+class UserUpdateForm(forms.Form):
+    """Update user information form."""
+
+    oldpassword = forms.CharField(widget=forms.PasswordInput, label="Oud wachtwoord")
+    password = forms.CharField(widget=forms.PasswordInput, label="Wachtwoord")
+    password2 = forms.CharField(widget=forms.PasswordInput, label="Herhaal wachtwoord")
+
+    def clean(self):
+        """
+        Check if two passwords are the same and if the old password is not equal to the new password.
+
+        :return: the cleaned data
+        """
+        cleaned_data = super(UserUpdateForm, self).clean()
+        if cleaned_data.get("password") != cleaned_data.get("password2"):
+            raise forms.ValidationError("De wachtwoorden komen niet overeen")
+        elif cleaned_data.get("password") != cleaned_data.get("oldpassword"):
+            raise forms.ValidationError(
+                "Het nieuwe wachtwoord moet anders zijn dan het oude wachtwoord"
+            )
+
+        return cleaned_data
