@@ -32,3 +32,10 @@ div.center-button {
     display: flex;
     justify-content: center;
 }
+
+div.container-scroller {
+    position: sticky;
+    position: -webkit-sticky;
+    display: block;
+    top: 125px;
+}

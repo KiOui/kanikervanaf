@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'posts/css/container-posts.css' %}"/>
+{% endblock %}
+{% block page %}
+    <div class="container flex-container">
+        <div class="container-centered">
+            <h2><strong>Maak een bericht aan</strong></h2>
+            <p>Heeft u iets te delen met andere mensen die onze site bezoeken? Maak hieronder een bericht aan. Iedereen kan
+            daarna uw bericht terugvinden op onze berichtenpagina.</p>
+            <form method="POST" class="centered-form">
+                {% csrf_token %}
+                {{ form }}
+                {% if user.is_authenticated %}
+                    <p class="mt-3">Je bericht wordt geplaatst onder jouw account: {{ user.username }} |
+                        <a href="{% url "users:logout" %}">Uitloggen</a>
+                    </p>
+                {% else %}
+                    <p class="mt-3">Je bericht wordt anoniem geplaatst |
+                        <a href="{% url "users:login" %}">Inloggen</a>
+                    </p>
+                {% endif %}
+                <input type="submit" class="btn btn-primary" value="Opslaan"/>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        tinyMCE.init({
+          selector: "#post_content"
+        });
+    </script>
+{% endblock %}

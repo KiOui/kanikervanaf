@@ -7,6 +7,7 @@ from .models import Subscription, SubscriptionCategory
 from .services import handle_verification_request
 from django.urls import reverse
 from mail.services import send_verification_email, send_request_email
+from .forms import RequestForm
 
 
 class ListView(TemplateView):
@@ -121,7 +122,9 @@ class RequestView(TemplateView):
         :param kwargs: keyword arguments
         :return: the request.html page
         """
-        return render(request, self.template_name)
+        form = RequestForm(None)
+        context = {"form": form}
+        return render(request, self.template_name, context)
 
     def post(self, request, **kwargs):
         """
@@ -132,15 +135,22 @@ class RequestView(TemplateView):
         :return: a render of the request.html page, either with a succeeded or failed message indicating if the request
         was send successfully or not
         """
-        name = request.POST.get("name", "")
-        email = request.POST.get("email", "")
-        subscription = request.POST.get("subscription", "")
-        message = request.POST.get("message", "")
-
-        if send_request_email(name, email, subscription, message):
-            return render(request, self.template_name, {"succeeded": True})
+        form = RequestForm(request.POST)
+        context = {"form": form}
+        if form.is_valid():
+            name = form.cleaned_data.get("name")
+            email = form.cleaned_data.get("email")
+            subscription = form.cleaned_data.get("subscription_name")
+            message = form.cleaned_data.get("content")
+            context["form"] = RequestForm(None)
+            if send_request_email(name, email, subscription, message):
+                context["succeeded"] = True
+                return render(request, self.template_name, context)
+            else:
+                context["failed"] = True
+                return render(request, self.template_name, context)
         else:
-            return render(request, self.template_name, {"failed": True})
+            return render(request, self.template_name, context)
 
 
 def search_database(request):
