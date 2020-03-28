@@ -1,0 +1,111 @@
+from django import forms
+from django.contrib.auth import authenticate, get_user_model
+
+User = get_user_model()
+
+
+class PasswordForgotForm(forms.Form):
+    """Form for a forgotten password."""
+
+    email = forms.EmailField(label="Email adres")
+
+
+class PasswordResetForm(forms.Form):
+    """Form for a password reset."""
+
+    password = forms.CharField(widget=forms.PasswordInput, label="Nieuw wachtwoord")
+    password2 = forms.CharField(
+        widget=forms.PasswordInput, label="Herhaal nieuw wachtwoord"
+    )
+
+    def clean(self):
+        """
+        Check if two passwords are the same.
+
+        :return: the cleaned data
+        """
+        cleaned_data = super(PasswordResetForm, self).clean()
+        if cleaned_data.get("password") != cleaned_data.get("password2"):
+            raise forms.ValidationError("De wachtwoorden komen niet overeen")
+
+        return cleaned_data
+
+
+class UserLoginForm(forms.Form):
+    """Form for logging in."""
+
+    username = forms.EmailField(label="Email adres")
+    password = forms.CharField(widget=forms.PasswordInput, label="Wachtwoord")
+
+    def clean(self, *args, **kwargs):
+        """
+        Check if two passwords are the same.
+
+        :return: the cleaned data
+        """
+        username = self.cleaned_data.get("username")
+        password = self.cleaned_data.get("password")
+
+        if username and password:
+            user = authenticate(username=username, password=password)
+            if not user:
+                raise forms.ValidationError(
+                    "Deze gebruiker bestaat niet of het wachtwoord is incorrect"
+                )
+            elif not user.is_active:
+                raise forms.ValidationError("Deze gebruiker is inactief")
+        return super(UserLoginForm, self).clean()
+
+
+class UserRegisterForm(forms.ModelForm):
+    """Form for user registration."""
+
+    email = forms.EmailField(label="Email adres")
+    username = forms.CharField(label="Gebruikersnaam")
+    password = forms.CharField(widget=forms.PasswordInput, label="Wachtwoord")
+    password2 = forms.CharField(widget=forms.PasswordInput, label="Herhaal wachtwoord")
+
+    class Meta:
+        """Meta class for user registration."""
+
+        model = User
+        fields = ["username", "email", "password", "password2"]
+
+    def clean_email(self):
+        """
+        Check if email already exists in database.
+
+        :return: cleaned email or ValidationError
+        """
+        email = self.cleaned_data.get("email")
+
+        email_qs = User.objects.filter(email=email)
+        if email_qs.exists():
+            raise forms.ValidationError("Dit email-adres bestaat al")
+
+        return email
+
+    def clean_username(self):
+        """
+        Check if username already exists in database.
+
+        :return: cleaned username or ValidationError
+        """
+        username = self.cleaned_data.get("username")
+        username_qs = User.objects.filter(username=username)
+        if username_qs.exists():
+            raise forms.ValidationError("Deze gebruikersnaam bestaat al")
+
+        return username
+
+    def clean(self):
+        """
+        Check if two passwords are the same.
+
+        :return: the cleaned data
+        """
+        cleaned_data = super(UserRegisterForm, self).clean()
+        if cleaned_data.get("password") != cleaned_data.get("password2"):
+            raise forms.ValidationError("De wachtwoorden komen niet overeen")
+
+        return cleaned_data

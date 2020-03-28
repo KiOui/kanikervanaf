@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        Kanikervanaf: Wachtwoord vergeten
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/png" href="{% static 'kanikervanaf/img/favicon.png' %}"/>
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'kanikervanaf/css/bootstrap.css' %}"/>
+    <link rel="stylesheet" href="{% static 'users/css/centered-container.css' %}"/>
+    <script src="https://kit.fontawesome.com/4e8cabe8e2.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.tiny.cloud/1/sx4eugpieda3a9a2mjzq9xh0ht6h59prb6wgd8gd3yqcjif5/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-light sticky-top site-header mb-5">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/"><img src="{% static 'kanikervanaf/img/logo.png' %}" height="50"/></a>
+        </div>
+    </nav>
+    <div class="container-sm flex-container">
+        <div class="container-centered">
+            <h1>Wachtwoord herstellen</h1>
+            {% if succeeded %}
+                <p class="message-ok">Het wachtwoord is aangepast!</p>
+            {% elif failed %}
+                <p class="message-error">Het wachtwoord is niet aangepast</p>
+            {% else %}
+                <form method="POST" class="centered-form">
+                    {% csrf_token %}
+                    {{ form }}
+                    <input type="submit" class="btn btn-primary"/>
+                </form>
+            {% endif %}
+            <div class="container-fluid mb-3">
+                <a class="text-center" href="{% url "users:login" %}">Inloggen</a> |
+                <a class="text-center" href="{% url "users:register" %}">Registreren</a>
+            </div>
+            <a href="{% url "home" %}"> ← Terug naar Kanikervanaf.nl</a>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>

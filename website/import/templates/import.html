@@ -1,6 +1,16 @@
 {% extends 'base.html' %}
 {% block page %}
     <div class="container mt-5">
-        <h1>Import started, check the server log for more information.</h1>
+        {% if started %}
+            <h1>Importeren gestart, de server log laat meer informatie zien.</h1>
+        {% else %}
+        <h1>Klik op de knop om een import te starten</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <label for="import-url">URL om vanaf te importeren:</label>
+            <input class="container-fluid mb-3" id="import-url" type="text"/>
+            <input class="btn btn-primary" type="submit" value="Start importeren"/>
+        </form>
+        {% endif %}
     </div>
 {% endblock %}
