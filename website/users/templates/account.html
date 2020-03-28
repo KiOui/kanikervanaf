@@ -5,7 +5,12 @@
 {% endblock %}
 {% block content %}
     <div class="container-fluid">
-        <h2><strong>Account</strong></h2>
+        <h2><strong>Mijn account</strong></h2>
+        <ul>
+            <li>Gebruikersnaam: {{ user.username }}</li>
+            <li>Email-adres: {{ user.email }}</li>
+        </ul>
+        <h3>Account aanpassen</h3>
         {% if succeeded %}
             <p class="message-ok">Account bijgewerkt</p>
         {% elif failed %}
@@ -21,5 +26,6 @@
 {% block sidebar %}
     <ul>
         <li><a href="{% url "users:account" %}">Mijn account</a></li>
+        <li><a href="{% url "users:logout" %}">Uitloggen</a></li>
     </ul>
 {% endblock %}
