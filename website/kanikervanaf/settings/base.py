@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     "pdfgenerator",
 ]
 
+AUTH_USER_MODEL = "users.User"
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -93,6 +95,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 IMPORT_URL = "https://kanikervanaf.total5.nl/wp-admin/admin-ajax.php"
 
+LOGIN_URL = "/users/login"
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/

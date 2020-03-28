@@ -1,0 +1,25 @@
+{% extends "sidebar.html" %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'users/css/centered-container.css' %}"/>
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <h2><strong>Account</strong></h2>
+        {% if succeeded %}
+            <p class="message-ok">Account bijgewerkt</p>
+        {% elif failed %}
+            <p class="message-error">Account bijwerken mislukt</p>
+        {% endif %}
+        <form method="POST" class="centered-form">
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" class="btn btn-primary" value="Opslaan"/>
+        </form>
+    </div>
+{% endblock %}
+{% block sidebar %}
+    <ul>
+        <li><a href="{% url "users:account" %}">Mijn account</a></li>
+    </ul>
+{% endblock %}

@@ -16,6 +16,16 @@ class ImportFromWebsite(TemplateView):
         """
         GET request for the import view.
 
+        :param request: the request of the user
+        :param kwargs: keyword arguments
+        :return: a render of the import.html page
+        """
+        return render(request, "import.html")
+
+    def post(self, request, **kwargs):
+        """
+        POST request for the import view.
+
         This function starts the import_all function which starts the import process.
         :param request: the request of the user
         :param kwargs: keyword arguments
@@ -23,7 +33,8 @@ class ImportFromWebsite(TemplateView):
         """
         t = threading.Thread(target=import_all)
         t.start()
-        return render(request, "import.html")
+        context = {"started": True}
+        return render(request, "import.html", context)
 
 
 def import_all():
@@ -39,35 +50,33 @@ def import_all():
     print("Category import done!")
 
     print("Starting item import...")
-    r = requests.post(
-        settings.IMPORT_URL, data={"action": "deregister_categories", "option": "all"}
-    )
-    names = json.loads(html.unescape(r.text))
-    print("Got all names from the server!")
-    print("Importing them now in the background")
-    import_items(names)
+    import_items()
     print("Item import done!")
 
 
-def import_items(names):
+def import_items():
     """
     Start the import of the subscriptions in the Wordpress database.
 
     Items that are already in the Django database won't be imported
-    :param names: the names of the items to import
     :return: None
     """
-    for index, name in enumerate(names):
+    r = requests.post(
+        settings.IMPORT_URL,
+        data={"action": "deregister_categories", "option": "details_all"},
+    )
+    data = json.loads(html.unescape(r.text))
+    for index, object in enumerate(data):
         print("Completed {}/{}".format(index, len(names) - 1))
-        if Subscription.objects.filter(name=name).count() == 0:
+        if Subscription.objects.filter(name=object["name"]).count() == 0:
             try:
-                import_item(name)
-                print("Imported {} successfully".format(name))
+                import_item(object)
+                print("Imported {} successfully".format(object["name"]))
             except Exception as e:
-                print("Import failed for {}".format(name))
+                print("Import failed for {}".format(object["name"]))
                 print(e)
         else:
-            print("Already imported {}".format(name))
+            print("Already imported {}".format(object["name"]))
 
 
 def import_categories(category=False):
@@ -131,45 +140,40 @@ def add_category(category_name, parent=False):
         print("Added {} as top level category".format(category_name))
 
 
-def import_item(name):
+def import_item(object):
     """
     Import one subscription into the Django database.
 
     If this function encounters that an item is associated with multiple categories, it will pick the first one that is
     not a top-level category.
-    :param name: the name of the item to import
+    :param object: the object to import
     :return: None
     """
-    r = requests.post(
-        settings.IMPORT_URL,
-        data={"action": "deregister_categories", "option": "details", "name": name},
-    )
-    data = json.loads(html.unescape(r.text))
-    r = requests.post(
-        settings.IMPORT_URL,
-        data={"action": "deregister_categories", "option": "category_of", "name": name},
-    )
-    categories = json.loads(html.unescape(r.text))
+    categories = object["categories"]
 
     if len(categories) == 1:
         category = categories[0]
         Subscription.objects.create(
-            name=data["name"],
-            price=data["price"],
-            support_email=data["mail"],
-            support_reply_number=data["mail_answer_number"],
-            support_postal_code=data["mail_postal_code"],
-            support_city=data["mail_city"],
-            correspondence_address=data["correspondence_address"],
-            correspondence_postal_code=data["correspondence_postal_code"],
-            correspondence_city=data["correspondence_city"],
-            support_phone_number=data["phone_number"],
-            cancellation_number=data["phone_number_free"],
-            amount_used=data["used"],
+            name=object["name"],
+            price=object["price"],
+            support_email=object["mail"],
+            support_reply_number=object["mail_answer_number"],
+            support_postal_code=object["mail_postal_code"],
+            support_city=object["mail_city"],
+            correspondence_address=object["correspondence_address"],
+            correspondence_postal_code=object["correspondence_postal_code"],
+            correspondence_city=object["correspondence_city"],
+            support_phone_number=object["phone_number"],
+            cancellation_number=object["phone_number_free"],
+            amount_used=object["used"],
             category=SubscriptionCategory.objects.get(name=category),
         )
     elif len(categories) > 1:
-        print("Found multiple categories for {}\nNamely: {}".format(name, categories))
+        print(
+            "Found multiple categories for {}\nNamely: {}".format(
+                object["name"], categories
+            )
+        )
         category = categories[0]
         for c in categories:
             obj = SubscriptionCategory.objects.get(name=c)
@@ -178,32 +182,32 @@ def import_item(name):
                 break
         print("Choosing {}".format(category))
         Subscription.objects.create(
-            name=data["name"],
-            price=data["price"],
-            support_email=data["mail"],
-            support_reply_number=data["mail_answer_number"],
-            support_postal_code=data["mail_postal_code"],
-            support_city=data["mail_city"],
-            correspondence_address=data["correspondence_address"],
-            correspondence_postal_code=data["correspondence_postal_code"],
-            correspondence_city=data["correspondence_city"],
-            support_phone_number=data["phone_number"],
-            cancellation_number=data["phone_number_free"],
-            amount_used=data["used"],
+            name=object["name"],
+            price=object["price"],
+            support_email=object["mail"],
+            support_reply_number=object["mail_answer_number"],
+            support_postal_code=object["mail_postal_code"],
+            support_city=object["mail_city"],
+            correspondence_address=object["correspondence_address"],
+            correspondence_postal_code=object["correspondence_postal_code"],
+            correspondence_city=object["correspondence_city"],
+            support_phone_number=object["phone_number"],
+            cancellation_number=object["phone_number_free"],
+            amount_used=object["used"],
             category=SubscriptionCategory.objects.get(name=category),
         )
     else:
         Subscription.objects.create(
-            name=data["name"],
-            price=data["price"],
-            support_email=data["mail"],
-            support_reply_number=data["mail_answer_number"],
-            support_postal_code=data["mail_postal_code"],
-            support_city=data["mail_city"],
-            correspondence_address=data["correspondence_address"],
-            correspondence_postal_code=data["correspondence_postal_code"],
-            correspondence_city=data["correspondence_city"],
-            support_phone_number=data["phone_number"],
-            cancellation_number=data["phone_number_free"],
-            amount_used=data["used"],
+            name=object["name"],
+            price=object["price"],
+            support_email=object["mail"],
+            support_reply_number=object["mail_answer_number"],
+            support_postal_code=object["mail_postal_code"],
+            support_city=object["mail_city"],
+            correspondence_address=object["correspondence_address"],
+            correspondence_postal_code=object["correspondence_postal_code"],
+            correspondence_city=object["correspondence_city"],
+            support_phone_number=object["phone_number"],
+            cancellation_number=object["phone_number_free"],
+            amount_used=object["used"],
         )
