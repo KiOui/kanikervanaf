@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth import authenticate, get_user_model
+from captcha.fields import ReCaptchaField
+from captcha.widgets import ReCaptchaV3
 
 User = get_user_model()
 
@@ -8,6 +10,7 @@ class PasswordForgotForm(forms.Form):
     """Form for a forgotten password."""
 
     email = forms.EmailField(label="Email adres")
+    captcha = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
 
 
 class PasswordResetForm(forms.Form):
@@ -17,6 +20,7 @@ class PasswordResetForm(forms.Form):
     password2 = forms.CharField(
         widget=forms.PasswordInput, label="Herhaal nieuw wachtwoord"
     )
+    captcha = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
 
     def clean(self):
         """
@@ -36,6 +40,7 @@ class UserLoginForm(forms.Form):
 
     username = forms.EmailField(label="Email adres")
     password = forms.CharField(widget=forms.PasswordInput, label="Wachtwoord")
+    captcha = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
 
     def clean(self, *args, **kwargs):
         """
@@ -64,6 +69,7 @@ class UserRegisterForm(forms.ModelForm):
     username = forms.CharField(label="Gebruikersnaam")
     password = forms.CharField(widget=forms.PasswordInput, label="Wachtwoord")
     password2 = forms.CharField(widget=forms.PasswordInput, label="Herhaal wachtwoord")
+    captcha = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
 
     class Meta:
         """Meta class for user registration."""
@@ -117,6 +123,7 @@ class UserUpdateForm(forms.Form):
     oldpassword = forms.CharField(widget=forms.PasswordInput, label="Oud wachtwoord")
     password = forms.CharField(widget=forms.PasswordInput, label="Wachtwoord")
     password2 = forms.CharField(widget=forms.PasswordInput, label="Herhaal wachtwoord")
+    captcha = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
 
     def clean(self):
         """

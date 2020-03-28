@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from mail.services import send_contact_email
+from .forms import ContactForm
 
 
 class IndexView(TemplateView):
@@ -28,7 +29,9 @@ class ContactView(TemplateView):
         :param kwargs: keyword arguments
         :return: the contact.html page
         """
-        return render(request, self.template_name)
+        form = ContactForm(None)
+        context = {"form": form}
+        return render(request, self.template_name, context)
 
     def post(self, request, **kwargs):
         """
@@ -39,12 +42,19 @@ class ContactView(TemplateView):
         :return: a render of the contact.html page, either with a succeeded or failed message indicating if the request
         was send successfully or not
         """
-        name = request.POST.get("name", "")
-        email = request.POST.get("email", "")
-        title = request.POST.get("title", "")
-        message = request.POST.get("message", "")
-
-        if send_contact_email(name, email, title, message):
-            return render(request, self.template_name, {"succeeded": True})
+        form = ContactForm(request.POST)
+        context = {"form": form}
+        if form.is_valid():
+            name = form.cleaned_data.get("name")
+            email = form.cleaned_data.get("email")
+            title = form.cleaned_data.get("title")
+            message = form.cleaned_data.get("content")
+            context["form"] = ContactForm(None)
+            if send_contact_email(name, email, title, message):
+                context["succeeded"] = True
+                return render(request, self.template_name, context)
+            else:
+                context["failed"] = True
+                return render(request, self.template_name, context)
         else:
-            return render(request, self.template_name, {"failed": True})
+            return render(request, self.template_name, context)

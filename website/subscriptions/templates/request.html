@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'kanikervanaf/css/fluid-input.css' %}"/>
+{% endblock %}
 {% block page %}
 <div class="container">
     {% if succeeded %}
@@ -10,19 +14,12 @@
     <p>Mist u een abonnement op onze website? Vraag hieronder een abonnement aan, dan plaatsen wij hem op onze site!</p>
     <form method="POST">
         {% csrf_token %}
-        <label for="subscription"><strong>Naam van het abonnement:</strong></label>
-        <input required id="subscription" name="subscription" type="text" class="container-fluid"/>
-        <label for="name">Uw naam:</label>
-        <input id="name" name="name" type="text" class="container-fluid"/>
-        <label for="email">Uw e-mail adres:</label>
-        <input id="email" name="email" type="email" class="container-fluid"/>
-        <label for="message">Eventuele opmerkingen:</label>
-        <textarea id="message" name="message" class="container-fluid"></textarea>
+        {{ form }}
         <input class="mt-3 mb-3 btn btn-primary" type="submit" value="Verzenden"/>
     </form>
     <script>
         tinymce.init({
-            selector: '#message'
+            selector: '#request_content'
         });
     </script>
 </div>

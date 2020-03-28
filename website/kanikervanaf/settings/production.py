@@ -23,3 +23,6 @@ DEBUG = False
 ALLOWED_HOSTS = ["kanikervanaf.total5.nl", "kanikervanaf.nl"]
 
 SESSION_COOKIE_SECURE = True
+
+RECAPTCHA_PUBLIC_KEY = "MyRecaptchaKey123"
+RECAPTCHA_PRIVATE_KEY = "MyRecaptchaPrivateKey456"

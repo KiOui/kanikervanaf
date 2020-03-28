@@ -30,11 +30,13 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "kanikervanaf",
     "phonenumber_field",
+    "captcha",
     "subscriptions",
     "users",
     "import",
     "mail",
     "pdfgenerator",
+    "posts",
 ]
 
 AUTH_USER_MODEL = "users.User"
@@ -119,3 +121,5 @@ STATIC_URL = "/static/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 MEDIA_URL = "/media/"
+
+RECAPTCHA_REQUIRED_SCORE = 0.85
