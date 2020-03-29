@@ -167,7 +167,7 @@ def search_database(request):
             maximum = int(request.POST.get("maximum", 5))
         except ValueError:
             maximum = 5
-        subscriptions = Subscription.objects.filter(name__contains=query).order_by(
+        subscriptions = Subscription.objects.filter(name__icontains=query).order_by(
             "-amount_used"
         )[:maximum]
         converted_set = convert_list_to_json(subscriptions)
