@@ -41,7 +41,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'file': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': '/kanikervanaf/log/django.log',
         },
@@ -49,7 +49,7 @@ LOGGING = {
     'loggers': {
         '': {
             'handlers': ['file'],
-            'level': 'INFO',
+            'level': 'DEBUG',
             'propagate': True,
         },
     },

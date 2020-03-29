@@ -106,6 +106,8 @@ def import_categories(import_url, category=False):
             import_url,
             data={"action": "deregister_categories", "option": "childs"},
         )
+    logger.info(r.text)
+    logger.info(r.status_code)
     data = json.loads(html.unescape(r.text))
     for new_category in data:
         if SubscriptionCategory.objects.filter(name=new_category).count() == 0:
