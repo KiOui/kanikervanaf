@@ -6,6 +6,9 @@ from django.views.generic import TemplateView
 from subscriptions.models import Subscription, SubscriptionCategory
 from django.shortcuts import render
 from django.template.defaultfilters import slugify
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ImportFromWebsite(TemplateView):
@@ -24,8 +27,6 @@ class ImportFromWebsite(TemplateView):
     def post(self, request, **kwargs):
         """
         POST request for the import view.
-
-        https://kanikervanaf.total5.nl/wp-admin/admin-ajax.php
 
         This function starts the import_all function which starts the import process.
         :param request: the request of the user
@@ -46,14 +47,14 @@ def import_all(import_url):
     The import url can be set in the settings file of the website
     :return: None
     """
-    print("Starting import...")
-    print("Starting category import...")
+    logger.info("Starting import for {}".format(import_url))
+    logger.info("Starting category import...")
     import_categories(import_url)
-    print("Category import done!")
+    logger.info("Category import done!")
 
-    print("Starting item import...")
+    logger.info("Starting item import...")
     import_items(import_url)
-    print("Item import done!")
+    logger.info("Item import done!")
 
 
 def import_items(import_url):
@@ -69,16 +70,16 @@ def import_items(import_url):
     )
     data = json.loads(html.unescape(r.text))
     for index, object in enumerate(data):
-        print("Completed {}/{}".format(index, len(data) - 1))
+        logger.info("Completed {}/{}".format(index, len(data) - 1))
         if Subscription.objects.filter(name=object["name"]).count() == 0:
             try:
                 import_item(object)
-                print("Imported {} successfully".format(object["name"]))
+                logger.info("Imported {} successfully".format(object["name"]))
             except Exception as e:
-                print("Import failed for {}".format(object["name"]))
-                print(e)
+                logger.error("Import failed for {}".format(object["name"]))
+                logger.error(e)
         else:
-            print("Already imported {}".format(object["name"]))
+            logger.info("Already imported {}".format(object["name"]))
 
 
 def import_categories(import_url, category=False):
@@ -114,7 +115,7 @@ def import_categories(import_url, category=False):
                 add_category(new_category)
                 import_categories(category=new_category)
         else:
-            print("Category {} already in the database".format(new_category))
+            logger.info("Category {} already in the database".format(new_category))
             import_categories(category=new_category)
 
 
@@ -137,9 +138,9 @@ def add_category(category_name, parent=False):
             name=category_name, slug=slugify(category_name),
         )
     if parent:
-        print("Added {} under {}".format(category_name, parent))
+        logger.info("Added {} under {}".format(category_name, parent))
     else:
-        print("Added {} as top level category".format(category_name))
+        logger.info("Added {} as top level category".format(category_name))
 
 
 def import_item(object):
@@ -171,7 +172,7 @@ def import_item(object):
             category=SubscriptionCategory.objects.get(name=category),
         )
     elif len(categories) > 1:
-        print(
+        logger.info(
             "Found multiple categories for {}\nNamely: {}".format(
                 object["name"], categories
             )
@@ -182,7 +183,7 @@ def import_item(object):
             if obj.parent is not None:
                 category = c
                 break
-        print("Choosing {}".format(category))
+        logger.info("Choosing {}".format(category))
         Subscription.objects.create(
             name=object["name"],
             price=object["price"],
