@@ -41,7 +41,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'file': {
-            'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': '/kanikervanaf/log/django.log',
         },
@@ -49,7 +49,7 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['file'],
-            'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
+            'level': 'DEBUG',
             'propagate': True,
         },
     },
