@@ -95,8 +95,6 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
 
-IMPORT_URL = "https://kanikervanaf.total5.nl/wp-admin/admin-ajax.php"
-
 LOGIN_URL = "/users/login"
 
 # Internationalization

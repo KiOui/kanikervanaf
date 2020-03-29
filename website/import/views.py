@@ -4,7 +4,6 @@ import json
 import html
 from django.views.generic import TemplateView
 from subscriptions.models import Subscription, SubscriptionCategory
-from django.conf import settings
 from django.shortcuts import render
 from django.template.defaultfilters import slugify
 
@@ -26,18 +25,21 @@ class ImportFromWebsite(TemplateView):
         """
         POST request for the import view.
 
+        https://kanikervanaf.total5.nl/wp-admin/admin-ajax.php
+
         This function starts the import_all function which starts the import process.
         :param request: the request of the user
         :param kwargs: keyword arguments
         :return: a render of the import.html page
         """
-        t = threading.Thread(target=import_all)
+        import_url = request.POST.get('import-url')
+        t = threading.Thread(target=import_all, args=(import_url,))
         t.start()
         context = {"started": True}
         return render(request, "import.html", context)
 
 
-def import_all():
+def import_all(import_url):
     """
     Start the import from a Wordpress hosted website with the deregister plugin.
 
@@ -46,15 +48,15 @@ def import_all():
     """
     print("Starting import...")
     print("Starting category import...")
-    import_categories(False)
+    import_categories(import_url)
     print("Category import done!")
 
     print("Starting item import...")
-    import_items()
+    import_items(import_url)
     print("Item import done!")
 
 
-def import_items():
+def import_items(import_url):
     """
     Start the import of the subscriptions in the Wordpress database.
 
@@ -62,12 +64,12 @@ def import_items():
     :return: None
     """
     r = requests.post(
-        settings.IMPORT_URL,
+        import_url,
         data={"action": "deregister_categories", "option": "details_all"},
     )
     data = json.loads(html.unescape(r.text))
     for index, object in enumerate(data):
-        print("Completed {}/{}".format(index, len(names) - 1))
+        print("Completed {}/{}".format(index, len(data) - 1))
         if Subscription.objects.filter(name=object["name"]).count() == 0:
             try:
                 import_item(object)
@@ -79,7 +81,7 @@ def import_items():
             print("Already imported {}".format(object["name"]))
 
 
-def import_categories(category=False):
+def import_categories(import_url, category=False):
     """
     Start the import of the categories in the Wordpress database.
 
@@ -90,7 +92,7 @@ def import_categories(category=False):
     """
     if category:
         r = requests.post(
-            settings.IMPORT_URL,
+            import_url,
             data={
                 "action": "deregister_categories",
                 "option": "childs",
@@ -99,7 +101,7 @@ def import_categories(category=False):
         )
     else:
         r = requests.post(
-            settings.IMPORT_URL,
+            import_url,
             data={"action": "deregister_categories", "option": "childs"},
         )
     data = json.loads(html.unescape(r.text))
