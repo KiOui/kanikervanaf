@@ -13,6 +13,8 @@ django-phonenumber-field = "^4.0.0"
 phonenumbers = "^8.11.5"
 requests = "^2.23.0"
 Weasyprint = "^51"
+django-recaptcha = "^2.0.6"
+uwsgi = "^2.0.18"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"
