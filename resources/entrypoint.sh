@@ -2,6 +2,10 @@
 
 set -e
 
+until pg_isready --host="${POSTGRES_HOST}" --username="${POSTGRES_USER}" --quiet; do
+    sleep 1;
+done
+
 touch -a /kanikervanaf/log/uwsgi.log
 touch -a /kanikervanaf/log/django.log
 
