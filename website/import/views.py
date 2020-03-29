@@ -87,6 +87,7 @@ def import_categories(import_url, category=False):
     Start the import of the categories in the Wordpress database.
 
     This function will recursively call itself when encountering new categories
+    :param import_url the url to import from
     :param category: the parent category, items requested from this category will be automatically placed under this
     parent
     :return: None
@@ -110,13 +111,13 @@ def import_categories(import_url, category=False):
         if SubscriptionCategory.objects.filter(name=new_category).count() == 0:
             if category:
                 add_category(new_category, parent=category)
-                import_categories(category=new_category)
+                import_categories(import_url, category=new_category)
             else:
                 add_category(new_category)
-                import_categories(category=new_category)
+                import_categories(import_url, category=new_category)
         else:
             logger.info("Category {} already in the database".format(new_category))
-            import_categories(category=new_category)
+            import_categories(import_url, category=new_category)
 
 
 def add_category(category_name, parent=False):

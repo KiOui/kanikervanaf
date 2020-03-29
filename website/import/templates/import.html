@@ -8,7 +8,7 @@
         <form method="POST">
             {% csrf_token %}
             <label for="import-url">URL om vanaf te importeren:</label>
-            <input class="container-fluid mb-3" id="import-url" type="text"/>
+            <input class="container-fluid mb-3" id="import-url" name="import-url" type="text"/>
             <input class="btn btn-primary" type="submit" value="Start importeren"/>
         </form>
         {% endif %}
