@@ -28,3 +28,21 @@ ALLOWED_HOSTS = []
 
 RECAPTCHA_PUBLIC_KEY = "6Le_FNAUAAAAAJM1S2Q7vdZAfz9U79sdjP0y52XH"
 RECAPTCHA_PRIVATE_KEY = "6Le_FNAUAAAAAKYHM-EVHUTq_A9SP4mbrlB0d7W4"
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
