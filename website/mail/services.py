@@ -35,11 +35,11 @@ def send_verification_email(first_name, email_address, verification_url):
         [email_address],
     )
     msg.attach_alternative(html_content, "text/html")
-    logger.error("sending email")
     try:
         msg.send()
     except SMTPException as e:
         logger.error(e)
+        logger.info("False")
         return False
 
     return True
