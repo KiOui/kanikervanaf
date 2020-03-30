@@ -54,3 +54,5 @@ LOGGING = {
         },
     },
 }
+
+GOOGLE_ANALYTICS_KEY = "UA-147533656-1"
