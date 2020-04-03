@@ -1,0 +1,22 @@
+.btn-home {
+    padding: 1em 2em;
+    font-size: 26pt;
+    border-radius: 200px;
+}
+
+.text-margin {
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+}
+
+@media (max-width: 576px) {
+    .btn-home {
+        font-size: 16pt;
+        padding: 0.5em 1em;
+    }
+
+    .text-margin {
+        margin-top: 5vh;
+        margin-bottom: 5vh;
+    }
+}
