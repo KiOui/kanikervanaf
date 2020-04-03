@@ -4,6 +4,9 @@ from django.conf import settings
 from smtplib import SMTPException
 from subscriptions.models import QueuedMailList
 from pdfgenerator.services import render_deregister_letter
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def send_verification_email(first_name, email_address, verification_url):
@@ -32,11 +35,12 @@ def send_verification_email(first_name, email_address, verification_url):
         [email_address],
     )
     msg.attach_alternative(html_content, "text/html")
-
+    logger.info("perparing send")
     try:
         msg.send()
+        logger.info("Send completed")
     except SMTPException as e:
-        print(e)
+        logger.error(e)
         return False
 
     return True
@@ -89,7 +93,7 @@ def send_summary_email(
     try:
         msg.send()
     except SMTPException as e:
-        print(e)
+        logger.error(e)
         return False
 
     return True
@@ -181,7 +185,7 @@ def send_deregister_emails(mail_list, direct_send=False):
                 msg.send()
                 succeeded.add(subscription)
             except SMTPException as e:
-                print(e)
+                logger.error(e)
                 failed.add(subscription)
         else:
             failed.add(subscription)
@@ -249,7 +253,7 @@ def send_contact_email(name, email_address, title, message):
     try:
         msg.send()
     except SMTPException as e:
-        print(e)
+        logger.error(e)
         return False
 
     return True
@@ -291,7 +295,7 @@ def send_request_email(name, email_address, subscription, message):
     try:
         msg.send()
     except SMTPException as e:
-        print(e)
+        logger.error(e)
         return False
 
     return True

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from kanikervanaf.settings.captchasettings import *
 
 from kanikervanaf.settings.base import *
 
@@ -24,5 +25,28 @@ ALLOWED_HOSTS = ["kanikervanaf.total5.nl", "kanikervanaf.nl"]
 
 SESSION_COOKIE_SECURE = True
 
-RECAPTCHA_PUBLIC_KEY = "MyRecaptchaKey123"
-RECAPTCHA_PRIVATE_KEY = "MyRecaptchaPrivateKey456"
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": os.environ.get("POSTGRES_HOST"),
+        "PORT": int(os.environ.get("POSTGRES_PORT", 5432)),
+        "NAME": os.environ.get("POSTGRES_NAME"),
+        "USER": os.environ.get("POSTGRES_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+    }
+}
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": "/kanikervanaf/log/django.log",
+        },
+    },
+    "loggers": {"": {"handlers": ["file"], "level": "DEBUG", "propagate": True,},},
+}
+
+GOOGLE_ANALYTICS_KEY = "UA-147533656-1"

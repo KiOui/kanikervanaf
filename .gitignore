@@ -6,3 +6,4 @@ venv/
 kanikervanaf.egg-info/
 db.sqlite3
 mailsettings.py
+captchasettings.py

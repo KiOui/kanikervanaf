@@ -8,6 +8,9 @@ from .services import handle_verification_request
 from django.urls import reverse
 from mail.services import send_verification_email, send_request_email
 from .forms import RequestForm
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ListView(TemplateView):
@@ -87,7 +90,8 @@ def verification_send(request):
         items = json.loads(
             urllib.parse.unquote(request.COOKIES.get("subscription_items"))
         )
-    except ValueError:
+    except ValueError as e:
+        logger.error(e)
         return HttpResponse(status=500)
 
     mail_list = handle_verification_request(details, items)
@@ -167,7 +171,7 @@ def search_database(request):
             maximum = int(request.POST.get("maximum", 5))
         except ValueError:
             maximum = 5
-        subscriptions = Subscription.objects.filter(name__contains=query).order_by(
+        subscriptions = Subscription.objects.filter(name__icontains=query).order_by(
             "-amount_used"
         )[:maximum]
         converted_set = convert_list_to_json(subscriptions)

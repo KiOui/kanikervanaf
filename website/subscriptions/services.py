@@ -1,5 +1,8 @@
 from .models import QueuedMailList, Subscription
 from users.models import UserInformation
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def store_subscription_list(subscription_list):
@@ -40,7 +43,8 @@ def handle_verification_request(user_information, subscription_list):
             return QueuedMailList.generate(
                 user_information_object, subscription_objects
             )
-        except Exception:
+        except Exception as e:
+            logger.error(e)
             user_information_object.delete()
             return False
     else:
