@@ -1,4 +1,4 @@
-from django.conf import settings # import the settings file
+from django.conf import settings  # import the settings file
 
 
 def google_analytics(request):
@@ -9,6 +9,6 @@ def google_analytics(request):
     :return: the google analytics key if it is defined
     """
     try:
-        return {'GOOGLE_ANALYTICS_KEY': settings.GOOGLE_ANALYTICS_KEY}
+        return {"GOOGLE_ANALYTICS_KEY": settings.GOOGLE_ANALYTICS_KEY}
     except AttributeError:
         return {}

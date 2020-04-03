@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('subscriptions', '0001_initial'),
+        ("subscriptions", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='subscription',
-            name='correspondence_postal_code',
+            model_name="subscription",
+            name="correspondence_postal_code",
             field=models.CharField(blank=True, max_length=64),
         ),
         migrations.AlterField(
-            model_name='subscription',
-            name='support_postal_code',
+            model_name="subscription",
+            name="support_postal_code",
             field=models.CharField(blank=True, max_length=64),
         ),
     ]

@@ -33,7 +33,7 @@ class ImportFromWebsite(TemplateView):
         :param kwargs: keyword arguments
         :return: a render of the import.html page
         """
-        import_url = request.POST.get('import-url')
+        import_url = request.POST.get("import-url")
         t = threading.Thread(target=import_all, args=(import_url,))
         t.start()
         context = {"started": True}
@@ -65,8 +65,7 @@ def import_items(import_url):
     :return: None
     """
     r = requests.post(
-        import_url,
-        data={"action": "deregister_categories", "option": "details_all"},
+        import_url, data={"action": "deregister_categories", "option": "details_all"},
     )
     data = json.loads(html.unescape(r.text))
     for index, object in enumerate(data):
@@ -103,8 +102,7 @@ def import_categories(import_url, category=False):
         )
     else:
         r = requests.post(
-            import_url,
-            data={"action": "deregister_categories", "option": "childs"},
+            import_url, data={"action": "deregister_categories", "option": "childs"},
         )
     logger.info(r.text)
     logger.info(r.status_code)
