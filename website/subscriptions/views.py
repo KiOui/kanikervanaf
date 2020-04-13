@@ -1,8 +1,10 @@
 import urllib.parse
 import json
+
+from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 from .models import Subscription, SubscriptionCategory
 from .services import handle_verification_request
 from django.urls import reverse
@@ -49,14 +51,49 @@ class ListCategoryView(TemplateView):
         if SubscriptionCategory.objects.filter(id=kwargs.get("id")).count() > 0:
             category = SubscriptionCategory.objects.get(id=kwargs.get("id"))
             category_path = category.get_path_to_me()
-            subcategories = SubscriptionCategory.objects.filter(
-                parent=category
-            ).order_by("name")
+            subcategories = category.get_subcategories()
             if subcategories.count() > 0:
                 category.subcategories = subcategories
             category.top = Subscription.top_category(
                 category, max_items=0, order_by="name"
             )
+            for item in category.top:
+                item.can_email = item.can_email()
+                item.can_generate_pdf = item.can_generate_pdf()
+            return render(
+                request,
+                self.template_name,
+                {"category": category, "category_path": category_path},
+            )
+        else:
+            return redirect("subscriptions:overview")
+
+
+class ListCategoryPageView(TemplateView):
+
+    template_name = "subscription_category_page.html"
+    paginate_by = 20
+
+    def get(self, request, **kwargs):
+        """
+        GET request function for list category view.
+
+        :param request: the request
+        :param kwargs: keyword arguments
+        :return: the subscription_category.html page with all subscriptions belonging to a specific category
+        """
+        if SubscriptionCategory.objects.filter(id=kwargs.get("id")).count() > 0:
+            category = SubscriptionCategory.objects.get(id=kwargs.get("id"))
+            category_path = category.get_path_to_me()
+            subcategories = category.get_subcategories()
+            if subcategories.count() > 0:
+                category.subcategories = subcategories
+            subscriptions = Subscription.top_category(
+                category, max_items=0, order_by="name"
+            )
+            page = kwargs.get("page")
+            paginator = Paginator(subscriptions, self.paginate_by)
+            category.top = paginator.get_page(page)
             for item in category.top:
                 item.can_email = item.can_email()
                 item.can_generate_pdf = item.can_generate_pdf()

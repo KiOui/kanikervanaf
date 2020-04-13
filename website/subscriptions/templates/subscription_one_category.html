@@ -7,13 +7,13 @@
             </a>
         {% endif %}
         >
-        <a href="{% url "subscriptions:overview_category" id=parent.id %}">
+        <a href="{% url "subscriptions:overview_category_page" id=parent.id page=1 %}">
             {{ parent.name }}
         </a>
     {% endfor %}
 {% endif %}
 {% if show_more %}
-    <a href="{% url "subscriptions:overview_category"  id=category.id %}">
+    <a href="{% url "subscriptions:overview_category_page"  id=category.id page=1 %}">
         Bekijk meer {{ category.name }}
     </a>
 {% endif %}
@@ -21,11 +21,16 @@
     <h5>Subcategorieën</h5>
     <ul>
         {% for subcategory in category.subcategories %}
-            <li><a href="{% url "subscriptions:overview_category"  id=subcategory.id %}">
+            <li><a href="{% url "subscriptions:overview_category_page"  id=subcategory.id page=1 %}">
                 {{ subcategory.name }}
             </a></li>
         {% endfor %}
     </ul>
+{% endif %}
+{% if pages %}
+    {% for page in pages %}
+        <a href="{% url 'subscriptions:overview_category_page' id=id page=page.page %}">{{ page.page_id }}</a>
+    {% endfor %}
 {% endif %}
 {% for item in category.top %}
     <div class="menu-link">

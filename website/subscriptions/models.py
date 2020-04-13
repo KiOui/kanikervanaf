@@ -157,6 +157,12 @@ class SubscriptionCategory(models.Model):
         """
         return self.name
 
+    def get_subcategories(self, order="name"):
+        subcategories = SubscriptionCategory.objects.filter(
+            parent=self
+        ).order_by(order)
+        return subcategories
+
     @staticmethod
     def get_top_level_categories():
         """
