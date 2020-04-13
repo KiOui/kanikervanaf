@@ -10,11 +10,11 @@ function in_list(list, id) {
 	return false;
 }
 
-function toggle_checkbox(checkbox, id, price, name, has_email, has_letter) {
+function toggle_checkbox(checkbox, id, price, name, has_email, has_letter, has_price) {
     let list = get_list();
     if (checkbox.checked) {
         if (!in_list(list, id)) {
-            list.push({"id": id, "price": price, "name": name, "has_email": has_email, "has_letter": has_letter});
+            list.push({"id": id, "price": price, "name": name, "has_email": has_email, "has_letter": has_letter, "has_price": has_price});
         }
     }
     else {
@@ -33,16 +33,16 @@ function toggle_checkbox(checkbox, id, price, name, has_email, has_letter) {
 function get_details() {
 	let cookie = getCookie(SUBSCRIPTION_DETAILS_COOKIE);
 	try {
-		var details = JSON.parse(cookie);
+		let details = JSON.parse(cookie);
+		if (details == null) {
+			return {};
+		}
+		else {
+			return details;
+		}
 	}
 	catch (error) {
 		return {};
-	}
-	if (details == null) {
-		return {};
-	}
-	else {
-		return details;
 	}
 }
 

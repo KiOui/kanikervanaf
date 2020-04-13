@@ -1,3 +1,4 @@
+{% load static %}
 <h3>{{ category.name }}</h3>
 {% if category_path %}
     {% for parent in category_path %}
@@ -7,39 +8,58 @@
             </a>
         {% endif %}
         >
-        <a href="{% url "subscriptions:overview_category" id=parent.id %}">
+        <a href="{% url "subscriptions:overview_category_page" id=parent.id page=1 %}">
             {{ parent.name }}
         </a>
     {% endfor %}
 {% endif %}
 {% if show_more %}
-    <a href="{% url "subscriptions:overview_category"  id=category.id %}">
+    <a href="{% url "subscriptions:overview_category_page"  id=category.id page=1 %}">
         Bekijk meer {{ category.name }}
     </a>
 {% endif %}
+{% if pages %}
+    {% for page in pages %}
+        <a href="{% url 'subscriptions:overview_category_page' id=id page=page.page %}">{{ page.page_id }}</a>
+    {% endfor %}
+{% endif %}
 {%  if category.subcategories %}
-    <h5>Subcategorieën</h5>
-    <ul>
+    <h5 class="mt-3">Subcategorieën</h5>
+    <ul id="subcategories-expandall">
         {% for subcategory in category.subcategories %}
-            <li><a href="{% url "subscriptions:overview_category"  id=subcategory.id %}">
+            <li {% if forloop.counter > 5 %}style="display: none;"{% endif %}>
+                <a href="{% url "subscriptions:overview_category_page"  id=subcategory.id page=1 %}">
                 {{ subcategory.name }}
             </a></li>
+            {% if forloop.counter == 5 %}
+                <a onclick="expand_all('subcategories-expandall', 'expandall-remove')" id='expandall-remove'
+                   class="btn btn-primary mt-1" style="color:white;">
+                    Laat all subcategorieën zien
+                </a>
+            {% endif %}
         {% endfor %}
     </ul>
 {% endif %}
-{% for item in category.top %}
-    <div class="menu-link">
-        <input type="checkbox" class="normal-checkbox" name="checkbox-category-list"
-               onchange="toggle_checkbox(this, {{ item.id }}, {{ item.price }}, '{{ item.name }}', {{ item.can_email|lower }}, {{ item.can_generate_pdf|lower }})"
-               id="checkbox-{{ item.id }}"/>
-        <label for="checkbox-{{ item.id }}">{{ item.name }}</label>
-        <div class="icons">
-            {% if item.can_email %}
-                <i class="fas fa-at"></i>
-            {% endif %}
-            {% if item.can_generate_pdf %}
-                <i class="far fa-envelope"></i>
-            {% endif %}
+<div class="container-fuild mb-3">
+    {% for item in category.top %}
+        <div class="menu-link">
+            <input type="checkbox" class="normal-checkbox" name="checkbox-category-list"
+                   onchange="toggle_checkbox(this, {{ item.id }}, {{ item.price }}, '{{ item.name }}',
+                           {{ item.can_email|lower }}, {{ item.can_generate_pdf|lower }}, {{ item.has_registered_price|lower }})"
+                   id="checkbox-{{ item.id }}"/>
+            <label for="checkbox-{{ item.id }}">{{ item.name }}</label>
+            <div class="icons">
+                {% if item.has_registered_price %}
+                    <i class="far fa-euro-sign"></i>
+                {% endif %}
+                {% if item.can_email %}
+                    <i class="fas fa-at"></i>
+                {% endif %}
+                {% if item.can_generate_pdf %}
+                    <i class="far fa-envelope"></i>
+                {% endif %}
+            </div>
         </div>
-    </div>
-{% endfor %}
+    {% endfor %}
+</div>
+<script src="{% static 'subscriptions/js/expandall.js' %}"></script>

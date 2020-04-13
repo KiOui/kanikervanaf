@@ -16,7 +16,7 @@
             van het bedrijf hebben om een e-mail op te kunnen stellen. Een brief symbool
             (<i class="fas fa-envelope"></i>) betekend dat wij de gegevens van het bedrijf hebben om een
             opzegbrief te kunnen genereren. De e-mails en opzegbrieven worden in stap 3 naar u verstuurd
-            via e-mail. Een euro symbool (<i class="fas fa-euro-sign"></i>) betekend dat wij een geregistreerde prijs
+            via e-mail. Een euro symbool (<i class="fas fa--sign"></i>) betekend dat wij een geregistreerde prijs
             hebben voor het abonnement, die prijs zult u in het totaal terug zien.
         </p>
     </div>
@@ -34,9 +34,26 @@
             </div>
         </div>
     </div>
+    <div class="container-fluid mt-3 text-center">
+        <span class="step-links">
+            {% if category.top.has_previous %}
+                <a href="{% url 'subscriptions:overview_category_page' id=category.id page=1 %}">&laquo; eerste</a>
+                <a href="{% url 'subscriptions:overview_category_page' id=category.id page=category.top.previous_page_number %}">vorige</a>
+            {% endif %}
+
+            <span class="current">
+                Pagina {{ category.top.number }} van {{ category.top.paginator.num_pages }}
+            </span>
+
+            {% if category.top.has_next %}
+                <a href="{% url 'subscriptions:overview_category_page' id=category.id page=category.top.next_page_number %}">volgende</a>
+                <a href="{% url 'subscriptions:overview_category_page' id=category.id page=category.top.paginator.num_pages %}">laatste &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
 {% endblock %}
 {% block sidebar %}
-    {% include "subscription_list.html" with next_page="users:enter" button_id="subscription-disable-button-no-items" %}
+    {% include "subscription_list.html" with next_page="users:enter" button_id="subscription-disable-button-no-items" scroller=True %}
 {% endblock %}
 {% block js %}
     <script src="{% static 'kanikervanaf/js/general.js' %}"></script>

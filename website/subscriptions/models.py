@@ -79,6 +79,14 @@ class Subscription(models.Model):
             and self.correspondence_postal_code != ""
         )
 
+    def has_registered_price(self):
+        """
+        Check if a subscription has a registered price.
+
+        :return: True if the price is registered in the database
+        """
+        return self.price != 0
+
     def get_address_information(self):
         """
         Get the address information of a subscription.
@@ -126,6 +134,7 @@ class Subscription(models.Model):
             "price": float(self.price),
             "can_email": self.can_email(),
             "can_letter": self.can_generate_pdf(),
+            "has_price": self.has_registered_price(),
         }
 
 
@@ -156,6 +165,16 @@ class SubscriptionCategory(models.Model):
         :return: a string with the name of the category
         """
         return self.name
+
+    def get_subcategories(self, order="name"):
+        """
+        Get the subcategories of this category.
+
+        :param order: how to order the subcategories
+        :return: a QuerySet of SubscriptionCategory objects
+        """
+        subcategories = SubscriptionCategory.objects.filter(parent=self).order_by(order)
+        return subcategories
 
     @staticmethod
     def get_top_level_categories():

@@ -1,22 +1,24 @@
 {% load static %}
-<h4 class="mb-2">Overzicht</h4>
-<h2>Uw besparing</h2>
-<div class="border"></div>
-<p>Minimaal bespaard bedrag per jaar:</p>
-<p id="subscriptions-list-total">€0,00</p>
-<div class="border"></div>
-<p id="subscriptions-list">Er staan nog geen abonnementen in deze lijst, kies wat abonnementen uit om op te zeggen!</p>
-<div class="center-button">
-    <button type="button" class="mt-3 mb-3 btn btn-primary" id="{{ button_id }}"
-            onclick='location.href="{% url next_page %}";'>
-        {% if button_text %}
-            {{ button_text }}
-        {% else %}
-            Volgende stap
-        {% endif %}
-        <i class="fas fa-angle-double-right"></i>
-    </button>
+<div {% if scroller %}class="container-scroller"{% endif %}>
+    <h4 class="mb-2">Overzicht</h4>
+    <h2>Uw besparing</h2>
+    <div class="border"></div>
+    <p>Minimaal bespaard bedrag per jaar:</p>
+    <p id="subscriptions-list-total">€0,00</p>
+    <div class="border"></div>
+    <div class="center-button">
+        <button type="button" class="mt-3 mb-3 btn btn-primary" id="{{ button_id }}"
+                onclick='location.href="{% url next_page %}";'>
+            {% if button_text %}
+                {{ button_text }}
+            {% else %}
+                Volgende stap
+            {% endif %}
+            <i class="fas fa-angle-double-right"></i>
+        </button>
+    </div>
+    <p id="subscriptions-list">Er staan nog geen abonnementen in deze lijst, kies wat abonnementen uit om op te zeggen!</p>
+    <script src="{% static 'subscriptions/js/basket.js' %}"></script>
+    <script src="{% static 'subscriptions/js/buttons.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'subscriptions/css/categories.css' %}"/>
 </div>
-<script src="{% static 'subscriptions/js/basket.js' %}"></script>
-<script src="{% static 'subscriptions/js/buttons.js' %}"></script>
-<link rel="stylesheet" href="{% static 'subscriptions/css/categories.css' %}"/>
