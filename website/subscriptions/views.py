@@ -70,6 +70,7 @@ class ListCategoryView(TemplateView):
 
 
 class ListCategoryPageView(TemplateView):
+    """Category view with pages."""
 
     template_name = "subscription_category_page.html"
     paginate_by = 20

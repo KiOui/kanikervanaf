@@ -12,7 +12,11 @@ from .views import (
 urlpatterns = [
     path("", ListView.as_view(), name="overview",),
     path("<int:id>", ListCategoryView.as_view(), name="overview_category",),
-    path("<int:id>/page/<int:page>", ListCategoryPageView.as_view(), name="overview_category_page",),
+    path(
+        "<int:id>/page/<int:page>",
+        ListCategoryPageView.as_view(),
+        name="overview_category_page",
+    ),
     path("summary", SummaryView.as_view(), name="summary",),
     path("send", verification_send, name="send",),
     path("search", search_database, name="search"),

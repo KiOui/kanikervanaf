@@ -158,9 +158,13 @@ class SubscriptionCategory(models.Model):
         return self.name
 
     def get_subcategories(self, order="name"):
-        subcategories = SubscriptionCategory.objects.filter(
-            parent=self
-        ).order_by(order)
+        """
+        Get the subcategories of this category.
+
+        :param order: how to order the subcategories
+        :return: a QuerySet of SubscriptionCategory objects
+        """
+        subcategories = SubscriptionCategory.objects.filter(parent=self).order_by(order)
         return subcategories
 
     @staticmethod
