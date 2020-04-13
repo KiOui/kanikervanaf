@@ -3,7 +3,7 @@
 {% block page %}
     <div class="container mt-5">
         <h1 class="text-center mb-5"><strong>Tijd om te versturen!</strong></h1>
-        {% include "subscription_list.html" with next_page="subscriptions:send" button_id="subscription-disable-button-no-all" button_text="Versturen" %}
+        {% include "subscription_list.html" with next_page="subscriptions:send" button_id="subscription-disable-button-no-all" button_text="Versturen" scroller=False %}
     </div>
 {% endblock %}
 {% block js %}

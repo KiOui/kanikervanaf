@@ -33,9 +33,14 @@ div.center-button {
     justify-content: center;
 }
 
-div.container-scroller {
-    position: sticky;
-    position: -webkit-sticky;
-    display: block;
-    top: 125px;
+@media screen and (min-width: 767px) {
+
+    div.container-scroller {
+        position: sticky;
+        position: -webkit-sticky;
+        display: block;
+        top: 125px;
+        overflow: scroll;
+        max-height: 75vh;
+    }
 }

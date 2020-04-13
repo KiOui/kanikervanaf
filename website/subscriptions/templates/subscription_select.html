@@ -40,7 +40,7 @@
 {% endblock %}
 {% block sidebar %}
     <div class="container-scroller">
-        {% include "subscription_list.html" with next_page="users:enter" button_id="subscription-disable-button-no-items" %}
+        {% include "subscription_list.html" with next_page="users:enter" button_id="subscription-disable-button-no-items" scroller=True %}
     </div>
 {% endblock %}
 {% block js %}
