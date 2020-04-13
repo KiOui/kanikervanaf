@@ -4,7 +4,7 @@ import json
 from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView
 from .models import Subscription, SubscriptionCategory
 from .services import handle_verification_request
 from django.urls import reverse
@@ -15,7 +15,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class ListView(TemplateView):
+class SubscriptionListView(TemplateView):
     """List view for subscriptions."""
 
     template_name = "subscription_select.html"
@@ -73,7 +73,7 @@ class ListCategoryPageView(TemplateView):
     """Category view with pages."""
 
     template_name = "subscription_category_page.html"
-    paginate_by = 20
+    paginate_by = 50
 
     def get(self, request, **kwargs):
         """

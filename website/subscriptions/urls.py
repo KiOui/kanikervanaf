@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import (
-    ListView,
+    SubscriptionListView,
     SummaryView,
     ListCategoryView,
     ListCategoryPageView,
@@ -10,7 +10,7 @@ from .views import (
 )
 
 urlpatterns = [
-    path("", ListView.as_view(), name="overview",),
+    path("", SubscriptionListView.as_view(), name="overview",),
     path("<int:id>", ListCategoryView.as_view(), name="overview_category",),
     path(
         "<int:id>/page/<int:page>",
