@@ -1,9 +1,16 @@
 let selectionItemList = document.getElementById('subscriptions-list');
 let selectionItemTotal = document.getElementById('subscriptions-list-total');
 
-function create_basket_item(name, id, price, can_email, can_letter) {
+function create_basket_item(name, id, price, can_email, can_letter, has_price) {
 
-    let menulink = `<div class="menu-link"><input type="checkbox" class="normal-checkbox" onchange="toggle_checkbox(this,${id},${price},\x27${name}\x27,${can_email},${can_letter});" checked id="checkbox-basket-${id}"></input><label for="checkbox-basket-${id}">__name__</label><div class="icons">__icon_email__ __icon_letter__</div></div>`;
+    let menulink = `<div class="menu-link"><input type="checkbox" class="normal-checkbox" onchange="toggle_checkbox(this,${id},${price},\x27${name}\x27,${can_email},${can_letter});" checked id="checkbox-basket-${id}"></input><label for="checkbox-basket-${id}">__name__</label><div class="icons">__icon_price__ __icon_email__ __icon_letter__</div></div>`;
+
+    if (has_price) {
+        menulink = menulink.replace("__icon_price__", "<i class='far fa-euro-sign'></i>");
+    }
+    else {
+		menulink = menulink.replace("__icon_price__", "");
+	}
 
     if (can_email) {
         menulink = menulink.replace("__icon_email__", "<i class='fas fa-at'></i>");
@@ -31,7 +38,7 @@ function create_basket(list) {
 		let total = 0;
 		let html = "U heeft de volgende abonnementen geselecteerd om op te zeggen:";
 		for (let i = 0; i < list.length; i++) {
-			html += create_basket_item(list[i].name, list[i].id, list[i].price, list[i].has_email, list[i].has_letter);
+			html += create_basket_item(list[i].name, list[i].id, list[i].price, list[i].has_email, list[i].has_letter, list[i].has_price);
 			if (list[i].price != null && !isNaN(list[i].price)) {
 				total = total + parseFloat(list[i].price);
 			}

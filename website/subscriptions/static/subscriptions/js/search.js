@@ -25,9 +25,16 @@ function renew_search() {
 	toggle_search_checkboxes(checkboxes, list);
 }
 
-function create_search_item(name, id, price, can_email, can_letter, in_list) {
+function create_search_item(name, id, price, can_email, can_letter, has_price, in_list) {
 
-    let menulink = `<div class="menu-link"><input name="checkbox-search-list" type="checkbox" class="normal-checkbox" onchange="toggle_checkbox(this,${id},${price},\x27${name}\x27,${can_email},${can_letter});" __checked__ id="checkbox-search-${id}"></input><label for="checkbox-search-${id}">__name__</label><div class="icons">__icon_email__ __icon_letter__</div></div>`;
+    let menulink = `<div class="menu-link"><input name="checkbox-search-list" type="checkbox" class="normal-checkbox" onchange="toggle_checkbox(this,${id},${price},\x27${name}\x27,${can_email},${can_letter},${has_price});" __checked__ id="checkbox-search-${id}"></input><label for="checkbox-search-${id}">__name__</label><div class="icons">__icon_price__ __icon_email__ __icon_letter__</div></div>`;
+
+    if (has_price) {
+        menulink = menulink.replace("__icon_price__", "<i class='far fa-euro-sign'></i>");
+    }
+    else {
+		menulink = menulink.replace("__icon_price__", "");
+	}
 
     if (can_email) {
         menulink = menulink.replace("__icon_email__", "<i class='fas fa-at'></i>");
@@ -92,7 +99,7 @@ function query(search, list) {
                 else {
                     let html = "";
                     for (let i = 0; i < data.length; i++) {
-                        html += create_search_item(data[i].name, data[i].id, data[i].price, data[i].can_email, data[i].can_letter, in_list(list, data[i].id));
+                        html += create_search_item(data[i].name, data[i].id, data[i].price, data[i].can_email, data[i].can_letter, data[i].has_price, in_list(list, data[i].id));
                     }
                     selectionBox.innerHTML = html;
                 }

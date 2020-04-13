@@ -79,6 +79,14 @@ class Subscription(models.Model):
             and self.correspondence_postal_code != ""
         )
 
+    def has_registered_price(self):
+        """
+        Check if a subscription has a registered price.
+
+        :return: True if the price is registered in the database
+        """
+        return self.price != 0
+
     def get_address_information(self):
         """
         Get the address information of a subscription.
@@ -126,6 +134,7 @@ class Subscription(models.Model):
             "price": float(self.price),
             "can_email": self.can_email(),
             "can_letter": self.can_generate_pdf(),
+            "has_price": self.has_registered_price(),
         }
 
 

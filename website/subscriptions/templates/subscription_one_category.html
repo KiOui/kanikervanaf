@@ -44,10 +44,14 @@
     {% for item in category.top %}
         <div class="menu-link">
             <input type="checkbox" class="normal-checkbox" name="checkbox-category-list"
-                   onchange="toggle_checkbox(this, {{ item.id }}, {{ item.price }}, '{{ item.name }}', {{ item.can_email|lower }}, {{ item.can_generate_pdf|lower }})"
+                   onchange="toggle_checkbox(this, {{ item.id }}, {{ item.price }}, '{{ item.name }}',
+                           {{ item.can_email|lower }}, {{ item.can_generate_pdf|lower }}, {{ item.has_registered_price|lower }})"
                    id="checkbox-{{ item.id }}"/>
             <label for="checkbox-{{ item.id }}">{{ item.name }}</label>
             <div class="icons">
+                {% if item.has_registered_price %}
+                    <i class="far fa-euro-sign"></i>
+                {% endif %}
                 {% if item.can_email %}
                     <i class="fas fa-at"></i>
                 {% endif %}

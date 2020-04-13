@@ -57,9 +57,6 @@ class ListCategoryView(TemplateView):
             category.top = Subscription.top_category(
                 category, max_items=0, order_by="name"
             )
-            for item in category.top:
-                item.can_email = item.can_email()
-                item.can_generate_pdf = item.can_generate_pdf()
             return render(
                 request,
                 self.template_name,
@@ -95,9 +92,6 @@ class ListCategoryPageView(TemplateView):
             page = kwargs.get("page")
             paginator = Paginator(subscriptions, self.paginate_by)
             category.top = paginator.get_page(page)
-            for item in category.top:
-                item.can_email = item.can_email()
-                item.can_generate_pdf = item.can_generate_pdf()
             return render(
                 request,
                 self.template_name,
