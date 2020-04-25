@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 
 from kanikervanaf.settings.base import *
+from kanikervanaf.settings.mailsettings import *
 
 
 # Quick-start development settings - unsuitable for production

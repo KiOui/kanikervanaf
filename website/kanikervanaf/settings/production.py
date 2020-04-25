@@ -11,8 +11,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-from kanikervanaf.settings.captchasettings import *
-
 from kanikervanaf.settings.base import *
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -49,4 +47,22 @@ LOGGING = {
     "loggers": {"": {"handlers": ["file"], "level": "DEBUG", "propagate": True,},},
 }
 
-GOOGLE_ANALYTICS_KEY = "UA-147533656-1"
+if os.environ.get("GOOGLE_ANALYTICS_KEY"):
+    GOOGLE_ANALYTICS_KEY = "UA-147533656-1"
+
+if os.environ.get("DJANGO_EMAIL_HOST"):
+    EMAIL_HOST = os.environ["DJANGO_EMAIL_HOST"]
+    EMAIL_PORT = os.environ["DJANGO_EMAIL_PORT"]
+    EMAIL_HOST_USER = os.environ.get("DJANGO_EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = os.environ.get("DJANGO_EMAIL_HOST_PASSWORD")
+    EMAIL_USE_TLS = os.environ.get("DJANGO_EMAIL_USE_TLS", False) == "True"
+    EMAIL_USE_SSL = os.environ.get("DJANGO_EMAIL_USE_SSL", False) == "True"
+
+if os.environ.get("DJANGO_RECAPTCHA_PUBLIC_KEY") and os.environ.get(
+    "DJANGO_RECAPTCHA_PRIVATE_KEY"
+):
+    RECAPTCHA_PUBLIC_KEY = os.environ["DJANGO_RECAPTCHA_PUBLIC_KEY"]
+    RECAPTCHA_PRIVATE_KEY = os.environ["DJANGO_RECAPTCHA_PRIVATE_KEY"]
+else:
+    RECAPTCHA_PUBLIC_KEY = ""
+    RECAPTCHA_PRIVATE_KEY = ""
