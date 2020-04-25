@@ -48,7 +48,7 @@ LOGGING = {
 }
 
 if os.environ.get("GOOGLE_ANALYTICS_KEY"):
-    GOOGLE_ANALYTICS_KEY = "UA-147533656-1"
+    GOOGLE_ANALYTICS_KEY = os.environ.get("GOOGLE_ANALYTICS_KEY")
 
 if os.environ.get("DJANGO_EMAIL_HOST"):
     EMAIL_HOST = os.environ["DJANGO_EMAIL_HOST"]
