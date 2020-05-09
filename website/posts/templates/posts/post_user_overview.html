@@ -1,0 +1,25 @@
+{% extends "sidebar.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container-sm">
+        <h2><strong>Uw berichten</strong></h2>
+        {% if page %}
+            {% for post in page %}
+                <div class="border mb-2"></div>
+                <div class="mb-2 container-fluid">
+                    <h5>{{ post.title }}</h5>
+                    <p class="font-italic">Status: {% if post.status == 0 %}Draft{% else %}Published{% endif %}</p>
+                    <p>{{ post.content|striptags|truncatechars:100 }}...</p>
+                    <a class="btn btn-primary" href="{% url "posts:details" post=post page=1 %}">Bekijk bericht</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>U heeft nog geen berichten.</p>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block sidebar %}
+    {% include 'account-sidebar.html' %}
+{% endblock %}

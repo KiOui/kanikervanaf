@@ -1,0 +1,80 @@
+{% extends "sidebar.html" %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'posts/css/container-posts.css' %}"/>
+{% endblock %}
+{% block content %}
+    <div class="container-sm mb-3">
+        <div class='btn btn-primary' onclick="window.history.back();"><i class="fas fa-arrow-left"></i> Terug</div>
+    </div>
+    <div class="container-sm mb-5">
+        <div class="mb-3">
+            <h2><strong>{{ post.title }}</strong></h2>
+            <p>Geplaatst door: {% if post.author %}{{ post.get_author }}{% else %}Anoniem{% endif %}</p>
+            <p>{{ post.content|safe }}</p>
+        </div>
+        <div class="border mb-2"></div>
+    </div>
+    <div class="container-sm">
+        <div class="mb-3">
+            <h3 class="mb-3"><strong>Reacties</strong></h3>
+            {% if page|length > 0 %}
+                {% for post in page %}
+                    <div class="mb-4">
+                        <p><strong>{{ post.title }}</strong></p>
+                        <p>{{ post.content|striptags }}</p>
+                        <p class="font-italic">Door {{ post.get_author }} op {{ post.post_date }}</p>
+                    </div>
+                    <div class="border mb-3"></div>
+                {% endfor %}
+            {% else %}
+                <p>Er zijn nog geen reacties op dit bericht.</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="container-sm">
+        <div class="container-fluid mt-3 text-center">
+            <span class="step-links">
+                {% if page.has_previous %}
+                    <a href="{% url 'posts:details' post=post page=1 %}">&laquo; eerste</a>
+                    <a href="{% url 'posts:details' post=post page=page.previous_page_number %}">vorige</a>
+                {% endif %}
+
+                <span class="current">
+                    Pagina {{ page.number }} van {{ page.paginator.num_pages }}
+                </span>
+
+                {% if page.has_next %}
+                    <a href="{% url 'posts:details' post=post page=page.next_page_number %}">volgende</a>
+                    <a href="{% url 'posts:details' post=post page=page.paginator.num_pages %}">laatste &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+{% endblock %}
+{% block sidebar %}
+    <div class="container-sm mb-5">
+        <h3><strong>Plaats een reactie</strong></h3>
+        <form method="POST" class="centered-form">
+            {% csrf_token %}
+            {{ form }}
+            {% if user.is_authenticated %}
+                <p class="mt-3">Je bericht wordt geplaatst onder jouw account: {{ user.username }} |
+                    <a href="{% url "users:logout" %}">Uitloggen</a>
+                </p>
+            {% else %}
+                <p class="mt-3">Je bericht wordt anoniem geplaatst |
+                    <a href="{% url "users:login" %}">Inloggen</a>
+                </p>
+            {% endif %}
+            <input type="submit" class="btn btn-primary" value="Reactie plaatsen"/>
+        </form>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        tinyMCE.init({
+          selector: "#post_content"
+        });
+    </script>
+{% endblock %}
