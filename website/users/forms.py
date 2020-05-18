@@ -134,7 +134,7 @@ class UserUpdateForm(forms.Form):
         cleaned_data = super(UserUpdateForm, self).clean()
         if cleaned_data.get("password") != cleaned_data.get("password2"):
             raise forms.ValidationError("De wachtwoorden komen niet overeen")
-        elif cleaned_data.get("password") != cleaned_data.get("oldpassword"):
+        elif cleaned_data.get("password") == cleaned_data.get("oldpassword"):
             raise forms.ValidationError(
                 "Het nieuwe wachtwoord moet anders zijn dan het oude wachtwoord"
             )
