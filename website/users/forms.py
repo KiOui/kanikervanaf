@@ -1,7 +1,11 @@
 from django import forms
 from django.contrib.auth import authenticate, get_user_model
+from django.contrib.auth.forms import UsernameField
 from captcha.fields import ReCaptchaField
 from captcha.widgets import ReCaptchaV3
+import random
+import string
+from .services import send_new_account
 
 User = get_user_model()
 
@@ -115,6 +119,56 @@ class UserRegisterForm(forms.ModelForm):
             raise forms.ValidationError("De wachtwoorden komen niet overeen")
 
         return cleaned_data
+
+
+class BackendUserCreationForm(forms.ModelForm):
+    """Form to create a user with a random password and send an email."""
+
+    class Meta:
+        """Meta class for BackendUserCreationForm."""
+
+        model = User
+        fields = [
+            "username",
+            "email",
+            "first_name",
+        ]
+        field_classes = {
+            "username": UsernameField,
+            "email": forms.CharField,
+            "first_name": forms.CharField,
+        }
+        help_texts = {
+            "email": "Let op! Er zal na het aanmaken van het account direct een email worden verstuurd naar "
+            "het email adres wat hier is opgegeven met daarin het wachtwoord en de gebruikersnaam."
+        }
+
+    def save(self, commit=True):
+        """
+        Generate a random password and send an email.
+
+        :param commit whether to commit or not
+        :return: the created user
+        """
+        user = super().save(commit=False)
+        password = self.generate_random_password()
+        user.set_password(password)
+        send_new_account(user, password)
+        if commit:
+            user.save()
+
+        return user
+
+    @staticmethod
+    def generate_random_password():
+        """
+        Generate a random password.
+
+        :return: a random 16 character password
+        """
+        return "".join(
+            random.choice(string.ascii_letters + string.digits) for x in range(16)
+        )
 
 
 class UserUpdateForm(forms.Form):

@@ -7,6 +7,33 @@ from django.urls import reverse
 from django.conf import settings
 
 
+def send_new_account(user, password):
+    """
+    Send a new account notification.
+
+    :param user: the newly created user
+    :return: True if the mail was sent successfully, False otherwise
+    """
+    template_text = get_template("email/new_account.txt")
+
+    context = {"user": user, "password": password}
+
+    text_content = template_text.render(context)
+
+    msg = EmailMultiAlternatives(
+        "Kanikervanaf: account aangemaakt",
+        text_content,
+        settings.EMAIL_HOST_USER,
+        [user.email],
+    )
+    try:
+        msg.send()
+    except SMTPException as e:
+        print(e)
+        return False
+    return True
+
+
 def send_reset_password(reset, request):
     """
     Send a password reset email.
