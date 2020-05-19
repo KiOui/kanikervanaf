@@ -16,6 +16,12 @@ class FAQView(TemplateView):
     template_name = "faq.html"
 
 
+class PrivacyPolicy(TemplateView):
+    """Frequently asked questions view."""
+
+    template_name = "privacy.html"
+
+
 class ContactView(TemplateView):
     """Contact view."""
 
