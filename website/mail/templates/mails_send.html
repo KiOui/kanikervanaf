@@ -4,14 +4,18 @@
     <div class="container mt-5">
         {% if succeeded %}
             <h1 class="text-center mb-5"><strong>Mails verzonden!</strong></h1>
-            <p class="text-center">De opzegmails zijn verzonden! Ze komen over enkele ogenblikken aan in je mailbox.</p>
-            <a class="text-centered" href="{% url "home" %}">Terug naar homepagina</a>
+            <p class="text-center">De opzegmails zijn verzonden! Ze komen over enkele ogenblikken aan in je mailbox.
+                <br>
+                <a class="btn btn-primary mt-3" href="{% url 'home' %}"><i class="fas fa-angle-double-left"></i> Terug naar homepagina</a>
+            </p>
         {% else %}
             <h1 class="text-center mb-5"><strong>Mails verzenden mislukt!</strong></h1>
             <p class="text-center">Het verzenden van de overzichtsmail is mislukt, het kan zijn dat je wel opzegmails in je mailbox ontvangt.
             Mocht er iets ontbreken, probeer het later dan opnieuw of neem contact met ons op via
-                <a href="mailto:klantenservice@kanikervanaf.nl">onze klantenservice</a></p>
-            <a class="text-centered" href="{% url 'home' %}">Terug naar homepagina</a>
+                <a href="mailto:klantenservice@kanikervanaf.nl">onze klantenservice</a>
+                <br>
+                <a class="btn btn-primary mt-3" href="{% url 'home' %}"><i class="fas fa-angle-double-left"></i> Terug naar homepagina</a>
+            </p>
         {% endif %}
     </div>
 {% endblock %}
