@@ -1,32 +1,32 @@
-let disableNoItems = document.getElementById('subscription-disable-button-no-items');
-let disableNoDetails = document.getElementById('subscription-disable-button-no-details');
-let disableNoAll = document.getElementById('subscription-disable-button-no-all');
+let disableNoItems = document.getElementsByClassName('subscription-disable-button-no-items');
+let disableNoDetails = document.getElementsByClassName('subscription-disable-button-no-details');
+let disableNoAll = document.getElementsByClassName('subscription-disable-button-no-all');
 
 function disable_buttons() {
 	let itemlist = get_list();
 	let details = get_details();
-	if (disableNoItems) {
+	if (disableNoItems.length > 0) {
 		if (itemlist.length > 0) {
-			disableNoItems.style.display = "inline-block";
+			set_style_list(disableNoItems, "display", "inline-block");
 		}
 		else {
-			disableNoItems.style.display = "none";
+			set_style_list(disableNoItems, "display", "none");
 		}
 	}
-	if (disableNoDetails) {
+	if (disableNoDetails.length > 0) {
 		if (details.email !== undefined && details.first_name !== undefined && details.email !== "" && details.first_name !== "") {
-			disableNoDetails.style.display = "inline-block";
+			set_style_list(disableNoDetails, "display", "inline-block");
 		}
 		else {
-			disableNoDetails.style.display = "none";
+			set_style_list(disableNoDetails, "display", "none");
 		}
 	}
-	if (disableNoAll) {
+	if (disableNoAll.length > 0) {
 		if (itemlist.length > 0 && details.email !== undefined && details.first_name !== undefined && details.email !== "" && details.first_name !== "") {
-			disableNoAll.style.display = "inline-block";
+			set_style_list(disableNoAll, "display", "inline-block");
 		}
 		else {
-			disableNoAll.style.display = "none";
+			set_style_list(disableNoAll, "display", "none");
 		}
 	}
 }
