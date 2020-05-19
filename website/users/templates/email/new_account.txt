@@ -1,0 +1,11 @@
+Hallo{% if user.first_name %} {% endif %}{{ user.first_name }}!
+
+Voor jou is een nieuw account aangemaakt op kanikervanaf.nl. Je kunt inloggen op https://kanikervanaf.nl/admin voor toegang tot de administratie van de website als je hiervoor bevoegd bent. Pas je wachtwoord aan op https://kanikervanaf.nl/users/account.
+
+Gebruikersnaam: {{ user.username }}
+Wachtwoord: {{ password }}
+E-mail adres: {{ user.email }}
+
+Met vriendelijke groet,
+
+Kanikervanaf.nl!
