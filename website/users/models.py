@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 import secrets
 import pytz
 import datetime
@@ -50,8 +50,8 @@ class UserManager(BaseUserManager):
         user = self.model(
             email=self.normalize_email(email),
             username=username,
-            admin=is_admin,
-            staff=is_staff,
+            is_superuser=is_admin,
+            is_staff=is_staff,
         )
         user.set_password(password)
         user.save(using=self._db)
@@ -82,14 +82,12 @@ class UserManager(BaseUserManager):
         )
 
 
-class User(AbstractBaseUser):
+class User(AbstractUser):
     """User object."""
 
     username = models.CharField(max_length=256, unique=True)
     email = models.EmailField(max_length=256, unique=True)
     active = models.BooleanField(default=True)
-    staff = models.BooleanField(default=False)
-    admin = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     objects = UserManager()
@@ -121,24 +119,6 @@ class User(AbstractBaseUser):
         :return: username
         """
         return self.username
-
-    @property
-    def is_staff(self):
-        """
-        Check if a user is a staff user.
-
-        :return: True if the user has staff access, False otherwise
-        """
-        return self.staff
-
-    @property
-    def is_admin(self):
-        """
-        Check if a user is an administrator.
-
-        :return: True if the user has administrative access, False otherwise
-        """
-        return self.admin
 
     def has_perm(self, perm_list, obj=None):
         """
