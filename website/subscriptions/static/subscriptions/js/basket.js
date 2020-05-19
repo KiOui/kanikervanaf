@@ -1,5 +1,5 @@
-let selectionItemList = document.getElementById('subscriptions-list');
-let selectionItemTotal = document.getElementById('subscriptions-list-total');
+let selectionItemList = document.getElementsByClassName('subscriptions-list');
+let selectionItemTotal = document.getElementsByClassName('subscriptions-list-total');
 
 function create_basket_item(name, id, price, can_email, can_letter, has_price) {
 
@@ -31,8 +31,8 @@ function create_basket_item(name, id, price, can_email, can_letter, has_price) {
 
 function create_basket(list) {
 	if (list.length === 0) {
-		selectionItemList.innerHTML = "Er staan nog geen abonnementen in deze lijst, kies wat abonnementen uit om op te zeggen!";
-		selectionItemTotal.innerHTML = "€0,00";
+	    set_text_list(selectionItemList, "Er staan nog geen abonnementen in deze lijst, kies wat abonnementen uit om op te zeggen!");
+		set_text_list(selectionItemTotal, "€0,00");
 	}
 	else {
 		let total = 0;
@@ -43,7 +43,7 @@ function create_basket(list) {
 				total = total + parseFloat(list[i].price);
 			}
 		}
-		selectionItemList.innerHTML = html;
+		set_text_list(selectionItemList, html);
 		update_total_price(total);
 	}
 }
@@ -60,10 +60,10 @@ function update_total_price(price) {
 	if (price > 0) {
 		price = price.toFixed(2);
 		price = price.toString().replace('.', ',');
-		selectionItemTotal.innerHTML = "€ " + price;
+		set_text_list(selectionItemTotal, "€ " + price);
 	}
 	else {
-		selectionItemTotal.innerHTML = "€0,00";
+	    set_text_list(selectionItemTotal, "€0,00");
 	}
 }
 
