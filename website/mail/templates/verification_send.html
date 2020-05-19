@@ -5,12 +5,16 @@
         {% if succeeded %}
             <h1 class="text-center mb-5"><strong>Verificatie verzonden!</strong></h1>
             <p class="text-center">De verificatiemail is verzonden naar het door jouw opgegeven email adres. Klik op de link
-            in de verificatiemail om uw opzegmails te ontvangen.</p>
-            <a class="text-centered" href="{% url "home" %}">Terug naar homepagina</a>
+            in de verificatiemail om uw opzegmails te ontvangen.
+                <br>
+                <a class="btn btn-primary mt-3" href="{% url 'home' %}"><i class="fas fa-angle-double-left"></i> Terug naar homepagina</a>
+            </p>
         {% else %}
             <h1 class="text-center mb-5"><strong>Verificatie verzenden mislukt!</strong></h1>
-            <p class="text-center">Het verzenden van de verificatiemail is mislukt, heb je het juist email-adres ingevuld?</p>
-            <a class="text-centered" href="{% url 'users:enter' %}">Terug naar mijn gegevens</a>
+            <p class="text-center">Het verzenden van de verificatiemail is mislukt, heb je het juist email-adres ingevuld?
+                <br>
+                <a class="btn btn-primary mt-3" href="{% url 'users:enter' %}"><i class="fas fa-angle-double-left"></i> Terug naar mijn gegevens</a>
+            </p>
         {% endif %}
     </div>
 {% endblock %}
