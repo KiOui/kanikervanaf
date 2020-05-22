@@ -4,29 +4,7 @@
     <link rel="stylesheet" href="{% static 'subscriptions/css/categories.css' %}">
 {% endblock %}
 {% block content %}
-    <div class="container-fluid">
-        <h3 class="mb-5"><strong>Selecteer abonnementen</strong></h3>
-        <p>
-            Zoek hieronder de abonnementen die u op wil zeggen of kies ze uit in de onderstaande top vijf
-            per categorie. Aangeklikte abonnementen zullen verschijnen in de lijst met abonnementen die u
-            op wilt zeggen. U kunt op volgende klikken als u minimaal één abonnement hebt geselecteerd.
-        </p>
-        <p>
-            Een email symbool (<i class="fas fa-at"></i>) achter een abonnement betekend dat wij de gegevens
-            van het bedrijf hebben om een e-mail op te kunnen stellen. Een brief symbool
-            (<i class="fas fa-envelope"></i>) betekend dat wij de gegevens van het bedrijf hebben om een
-            opzegbrief te kunnen genereren. De e-mails en opzegbrieven worden in stap 3 naar u verstuurd
-            via e-mail. Een euro symbool (<i class="fas fa-euro-sign"></i>) betekend dat wij een geregistreerde prijs
-            hebben voor het abonnement, die prijs zult u in het totaal terug zien.
-        </p>
-    </div>
-    <div>
-        <input id="searchfor" type="text" maxlength="75" autocorrect="off" spellcheck="false" autocomplete="off"
-           autocapitalize="off" placeholder="Zoek een abonnement..." class="container-fluid">
-        <div id="selection-container-id">
-
-        </div>
-    </div>
+    {% include "subscription_header.html" %}
     <div class="container-fluid mt-5">
         <div class="row">
             {% for category in categories %}
@@ -47,8 +25,4 @@
 {% block js %}
     <script src="{% static 'kanikervanaf/js/general.js' %}"></script>
     <script src="{% static 'subscriptions/js/categories.js' %}"></script>
-    <script src="{% static 'subscriptions/js/search.js' %}"></script>
-    <script>
-        SEARCH_URL = "{% url 'subscriptions:search' %}";
-    </script>
 {% endblock %}
