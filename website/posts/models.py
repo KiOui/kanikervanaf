@@ -3,7 +3,10 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-STATUS = ((0, "Draft"), (1, "Publish"))
+STATUS_DRAFT = 0
+STATUS_PUBLISHED = 1
+
+STATUS = ((STATUS_DRAFT, "Draft"), (STATUS_PUBLISHED, "Publish"))
 
 
 class Post(models.Model):

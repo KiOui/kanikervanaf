@@ -16,6 +16,7 @@ Weasyprint = "^51"
 django-recaptcha = "^2.0.6"
 uwsgi = "^2.0.18"
 psycopg2-binary = "^2.8.4"
+django-admin-autocomplete-filter = "^0.5"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"

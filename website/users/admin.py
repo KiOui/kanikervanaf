@@ -23,5 +23,4 @@ class CustomUserAdmin(UserAdmin):
         model = User
 
 
-admin.site.register(UserInformation)
 admin.site.register(User, CustomUserAdmin)

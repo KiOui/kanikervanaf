@@ -20,15 +20,11 @@ class PostDetailsView(TemplateView):
         :param kwargs: keyword arguments
         :return: a render of the post_details page
         """
-        post = kwargs.get('post')
+        post = kwargs.get("post")
         reactions = Post.objects.filter(response_to=post, status=1)
-        page = kwargs.get('page')
+        page = kwargs.get("page")
         paginator = Paginator(reactions, self.paginate_by)
-        context = {
-            "post": post,
-            "page": paginator.get_page(page),
-            "form": PostForm()
-        }
+        context = {"post": post, "page": paginator.get_page(page), "form": PostForm()}
         return render(request, self.template_name, context)
 
     def post(self, request, **kwargs):
@@ -40,9 +36,9 @@ class PostDetailsView(TemplateView):
         :param kwargs: keyword arguments
         :return: a redirect to the overview page or a render of the posts creation page
         """
-        post = kwargs.get('post')
+        post = kwargs.get("post")
         reactions = Post.objects.filter(response_to=post, status=1)
-        page = kwargs.get('page')
+        page = kwargs.get("page")
         paginator = Paginator(reactions, self.paginate_by)
         form = PostForm(request.POST)
 
@@ -50,14 +46,12 @@ class PostDetailsView(TemplateView):
             user = request.user if request.user.is_authenticated else None
             title = form.cleaned_data.get("title")
             content = form.cleaned_data.get("content")
-            Post.objects.create(title=title, author=user, content=content, response_to=post)
+            Post.objects.create(
+                title=title, author=user, content=content, response_to=post
+            )
             form = PostForm()
 
-        context = {
-            "post": post,
-            "page": paginator.get_page(page),
-            "form": form
-        }
+        context = {"post": post, "page": paginator.get_page(page), "form": form}
 
         return render(request, self.template_name, context)
 
@@ -77,7 +71,7 @@ class PostOverviewView(TemplateView):
         :return: a render of the post_overview page
         """
         posts = Post.objects.filter(status=1, response_to=None)
-        page = kwargs.get('page')
+        page = kwargs.get("page")
         paginator = Paginator(posts, self.paginate_by)
         context = {"page": paginator.get_page(page)}
 
@@ -126,6 +120,7 @@ class PostCreateView(TemplateView):
 
 
 class PostUserOverview(LoginRequiredMixin, TemplateView):
+    """View for letting users view their posts."""
 
     template_name = "posts/post_user_overview.html"
     paginate_by = 50
@@ -139,10 +134,9 @@ class PostUserOverview(LoginRequiredMixin, TemplateView):
         :return: a render of the post_details page
         """
         posts = Post.objects.filter(author=request.user, response_to=None)
-        page = kwargs.get('page')
+        page = kwargs.get("page")
         paginator = Paginator(posts, self.paginate_by)
         context = {
             "page": paginator.get_page(page),
         }
         return render(request, self.template_name, context)
-
