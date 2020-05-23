@@ -44,3 +44,13 @@ div.center-button {
         max-height: 75vh;
     }
 }
+
+@media screen and (max-width: 767px) {
+    .footer-copyright {
+        display: none;
+    }
+
+    .page-footer {
+        margin-top: 2rem;
+    }
+}
