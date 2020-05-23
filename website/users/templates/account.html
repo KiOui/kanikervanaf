@@ -24,8 +24,5 @@
     </div>
 {% endblock %}
 {% block sidebar %}
-    <ul>
-        <li><a href="{% url "users:account" %}">Mijn account</a></li>
-        <li><a href="{% url "users:logout" %}">Uitloggen</a></li>
-    </ul>
+    {% include 'account-sidebar.html' %}
 {% endblock %}

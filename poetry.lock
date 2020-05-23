@@ -194,6 +194,17 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 category = "main"
+description = "A simple Django app to render list filters in django admin using autocomplete widget"
+name = "django-admin-autocomplete-filter"
+optional = false
+python-versions = "*"
+version = "0.5"
+
+[package.dependencies]
+django = ">=2.0"
+
+[[package]]
+category = "main"
 description = "An international phone number field for django models."
 name = "django-phonenumber-field"
 optional = false
@@ -569,7 +580,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "6208299feed4f68205cf8d9cf1a7a6b7da19809e6bcb17d6c4d37e69b188b171"
+content-hash = "00f41243216cf5c69dbf1468962f9fc68d7e13a926b759d43cd06a472465de37"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -661,6 +672,10 @@ defusedxml = [
 django = [
     {file = "Django-3.0.4-py3-none-any.whl", hash = "sha256:89e451bfbb815280b137e33e454ddd56481fdaa6334054e6e031041ee1eda360"},
     {file = "Django-3.0.4.tar.gz", hash = "sha256:50b781f6cbeb98f673aa76ed8e572a019a45e52bdd4ad09001072dfd91ab07c8"},
+]
+django-admin-autocomplete-filter = [
+    {file = "django-admin-autocomplete-filter-0.5.tar.gz", hash = "sha256:9d95a4407c3289e823c3486ddb200124c4ec8edf11064a0b8cb998d32c39530e"},
+    {file = "django_admin_autocomplete_filter-0.5-py3-none-any.whl", hash = "sha256:44556b4b4d02c09a7ccdfc43e38c1e0f032741c6d484e9a6c542d7180b029418"},
 ]
 django-phonenumber-field = [
     {file = "django-phonenumber-field-4.0.0.tar.gz", hash = "sha256:d4580cc3352f4433962825f9927e6669852c1b40ec484fcb5a74064dabc1201a"},

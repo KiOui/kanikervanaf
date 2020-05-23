@@ -1,0 +1,46 @@
+{% extends "sidebar.html" %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid">
+        <h2><strong>Recente berichten</strong></h2>
+        <div class="mt-3">
+            {% if page %}
+                {% for post in page %}
+                    <div class="border mb-2"></div>
+                    <div class="mb-2 container-fluid">
+                        <h5>{{ post.title }}</h5>
+                        <p>{{ post.content|striptags|truncatechars:100 }}...</p>
+                        <a class="btn btn-primary" href="{% url "posts:details" post=post page=1 %}">Bekijk bericht</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Er zijn nog geen berichten.</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="container-sm">
+        <div class="container-fluid mt-3 text-center">
+            <span class="step-links">
+                {% if page.has_previous %}
+                    <a href="{% url 'posts:post_overview' page=1 %}">&laquo; eerste</a>
+                    <a href="{% url 'posts:post_overview' page=page.previous_page_number %}">vorige</a>
+                {% endif %}
+
+                <span class="current">
+                    Pagina {{ page.number }} van {{ page.paginator.num_pages }}
+                </span>
+
+                {% if page.has_next %}
+                    <a href="{% url 'posts:post_overview' page=page.next_page_number %}">volgende</a>
+                    <a href="{% url 'posts:post_overview' page=page.paginator.num_pages %}">laatste &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+{% endblock %}
+{% block sidebar %}
+    <h2><strong>Bericht maken</strong></h2>
+    <p>Heeft u iets wat u wilt delen met andere bezoekers? Wilt u iets voor ons achterlaten? Maak zelf
+    een bericht aan!</p>
+    <a class="btn btn-primary" href="{% url 'posts:post_create' %}">Bericht aanmaken</a>
+{% endblock %}
