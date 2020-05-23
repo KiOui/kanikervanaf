@@ -1,6 +1,30 @@
 var SUBSCRIPTION_LIST_COOKIE = "subscription_items";
 var SUBSCRIPTION_DETAILS_COOKIE = "subscription_details";
 
+function add_css_class(list, css_class) {
+	for (let i = 0; i < list.length; i++) {
+		$(list[i]).addClass(css_class);
+	}
+}
+
+function remove_css_class(list, css_class) {
+	for (let i = 0; i < list.length; i++) {
+		$(list[i]).removeClass(css_class);
+	}
+}
+
+function set_style_list(list, style, value) {
+    for (let i = 0; i < list.length; i++) {
+        $(list[i]).css(style, value);
+    }
+}
+
+function set_text_list(list, text) {
+    for (let i = 0; i < list.length; i++) {
+        list[i].innerHTML = text;
+    }
+}
+
 function in_list(list, id) {
 	for (let i = 0; i < list.length; i++) {
 		if (list[i].id === id) {

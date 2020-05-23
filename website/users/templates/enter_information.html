@@ -1,7 +1,7 @@
 {% extends "sidebar.html" %}
 {% load static %}
 {% block content %}
-    <div class="container-fluid">
+    <div class="container-fluid mb-5">
         <h3 class="mb-5"><strong>Persoonlijke gegevens</strong></h3>
         <p>
             Vul hieronder uw persoonlijke gegevens in. Wij hebben uw gegevens nodig zodat wij uw persoonlijke
@@ -27,7 +27,7 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include "subscription_list.html" with next_page="subscriptions:summary" button_id="subscription-disable-button-no-details" scroller=True %}
+    {% include "subscription_list.html" with next_page="subscriptions:summary" button_id="subscription-disable-button-no-details" scroller=False %}
 {% endblock %}
 
 {% block js %}
