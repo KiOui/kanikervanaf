@@ -39,8 +39,10 @@
     </div>
 {% endblock %}
 {% block sidebar %}
-    <h2><strong>Bericht maken</strong></h2>
-    <p>Heeft u iets wat u wilt delen met andere bezoekers? Wilt u iets voor ons achterlaten? Maak zelf
-    een bericht aan!</p>
-    <a class="btn btn-primary" href="{% url 'posts:post_create' %}">Bericht aanmaken</a>
+    <div class="container-fluid">
+        <h2><strong>Bericht maken</strong></h2>
+        <p>Heeft u iets wat u wilt delen met andere bezoekers? Wilt u iets voor ons achterlaten? Maak zelf
+        een bericht aan!</p>
+        <a class="btn btn-primary" href="{% url 'posts:post_create' %}">Bericht aanmaken</a>
+    </div>
 {% endblock %}
