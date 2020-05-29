@@ -1,0 +1,33 @@
+{% extends "sidebar.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container-xl">
+        <h2>Contactgegevens abonnementdienst</h2>
+        <p>Contactgegevens van bedrijven die abonnementen aanbieden zijn vaak moeilijk te vinden op het internet. Dit willen
+        wij veranderen! Wij maken het gemakkelijk om snel contactgegevens van bedrijven op te zoeken. Zoek hieronder naar
+        een bedrijf en kijk of het bij ons in de database staat!</p>
+        <div>
+            <input id="searchfor" type="text" maxlength="75" autocorrect="off" spellcheck="false" autocomplete="off"
+               autocapitalize="off" placeholder="Zoek een abonnement..." class="container-fluid">
+            <div id="selection-container-id">
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block sidebar %}
+    <div class="container-fluid">
+        <h2>Meest opgezegde abonnementen</h2>
+        <ol>
+            {% for subscription in top_subscriptions %}
+                <li><a href="{% url "subscriptions:details" subscription=subscription %}">{{ subscription.name }}</a></li>
+            {% endfor %}
+        </ol>
+    </div>
+{% endblock %}
+
+<script src="{% static 'subscriptions/js/search.js' %}"></script>
+<script>
+    SEARCH_URL = "{% url 'subscriptions:search' %}";
+</script>
