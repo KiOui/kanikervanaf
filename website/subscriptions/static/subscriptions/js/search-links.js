@@ -8,33 +8,9 @@ let feedback_form = '/feedback';
 
 let current_search_index = 0;
 
-var PRE_CHECKBOX_SEARCH = "checkbox-search-";
-var NAME_CHECKBOXES_SEARCH = "checkbox-search-list";
+function create_search_item(name, id, price, can_email, can_letter) {
 
-function toggle_search_checkboxes(checkboxes, list) {
-    for (let i = 0; i < checkboxes.length; i++) {
-        let checkbox = checkboxes[i];
-        let id = Number(checkbox.id.replace(PRE_CHECKBOX_SEARCH, ''));
-        checkbox.checked = in_list(list, id);
-    }
-}
-
-function renew_search() {
-	let list = get_list();
-	let checkboxes = document.querySelectorAll(`input[name=${NAME_CHECKBOXES_SEARCH}`);
-	toggle_search_checkboxes(checkboxes, list);
-}
-
-function create_search_item(name, id, price, can_email, can_letter, has_price, in_list) {
-
-    let menulink = `<div class="menu-link"><input name="checkbox-search-list" type="checkbox" class="normal-checkbox" onchange="toggle_checkbox(this,${id},${price},\x27${name}\x27,${can_email},${can_letter},${has_price});" __checked__ id="checkbox-search-${id}"></input><label for="checkbox-search-${id}">__name__</label><div class="icons">__icon_price__ __icon_email__ __icon_letter__</div></div>`;
-
-    if (has_price) {
-        menulink = menulink.replace("__icon_price__", "<i class='far fa-euro-sign'></i>");
-    }
-    else {
-		menulink = menulink.replace("__icon_price__", "");
-	}
+    let menulink = `<div class="menu-link"><a href="#">__name__</a><div class="icons">__icon_email__ __icon_letter__</div></div>`;
 
     if (can_email) {
         menulink = menulink.replace("__icon_email__", "<i class='fas fa-at'></i>");
@@ -50,24 +26,16 @@ function create_search_item(name, id, price, can_email, can_letter, has_price, i
         menulink = menulink.replace("__icon_letter__", "");
     }
 
-    if (in_list) {
-    	menulink = menulink.replace("__checked__", "checked");
-	}
-	else {
-    	menulink = menulink.replace("__checked__", "");
-	}
-
     return menulink.replace("__name__", name);
 }
 
 function get_search() {
-	let list = get_list();
 	let inputted = inputBox.value;
 	if (inputted === "") {
 		selectionBox.innerHTML = '';
 	}
 	else {
-		query(inputted, list);
+		query(inputted);
 	}
 }
 
@@ -78,7 +46,7 @@ function redirect_subscription() {
 	});
 }
 
-function query(search, list) {
+function query(search) {
     let csrf_token = getCookie('csrftoken');
 	jQuery(function($) {
 		current_search_index = current_search_index + 1;
@@ -99,7 +67,7 @@ function query(search, list) {
                 else {
                     let html = "";
                     for (let i = 0; i < data.length; i++) {
-                        html += create_search_item(data[i].name, data[i].id, data[i].price, data[i].can_email, data[i].can_letter, data[i].has_price, in_list(list, data[i].id));
+                        html += create_search_item(data[i].name, data[i].id, data[i].price, data[i].can_email, data[i].can_letter);
                     }
                     selectionBox.innerHTML = html;
                 }

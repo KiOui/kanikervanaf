@@ -27,7 +27,10 @@
     </div>
 {% endblock %}
 
-<script src="{% static 'subscriptions/js/search.js' %}"></script>
-<script>
-    SEARCH_URL = "{% url 'subscriptions:search' %}";
-</script>
+{% block js %}
+    <script src="{% static 'subscriptions/js/search-links.js' %}"></script>
+    <script src="{% static 'kanikervanaf/js/general.js' %}"></script>
+    <script>
+        SEARCH_URL = "{% url 'subscriptions:search' %}";
+    </script>
+{% endblock %}
