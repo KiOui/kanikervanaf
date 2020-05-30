@@ -16,13 +16,22 @@ logger = logging.getLogger(__name__)
 
 
 class SubscriptionDetailsSearchView(TemplateView):
-    """View for searching subscription details"""
+    """View for searching subscription details."""
 
-    template_name = "subscription_search_details.html"
+    template_name = "subscription_details.html"
 
     def get(self, request, **kwargs):
+        """
+        GET request for Subscriptions details search view.
+
+        :param request: the request
+        :param kwargs: keyword arguments
+        :return: a render of the subscription_details page
+        """
         top_subscriptions = Subscription.objects.all().order_by("-amount_used")[:20]
-        return render(request, self.template_name, {"top_subscriptions": top_subscriptions})
+        return render(
+            request, self.template_name, {"top_subscriptions": top_subscriptions}
+        )
 
 
 class SubscriptionDetailsView(TemplateView):
@@ -31,9 +40,20 @@ class SubscriptionDetailsView(TemplateView):
     template_name = "subscription_details.html"
 
     def get(self, request, **kwargs):
+        """
+        GET request for Subscriptions details search view.
+
+        :param request: the request
+        :param kwargs: keyword arguments
+        :return: a render of the subscription_details page with details of a subscription
+        """
         subscription = kwargs.get("subscription")
         top_subscriptions = Subscription.objects.all().order_by("-amount_used")[:20]
-        return render(request, self.template_name, {"top_subscriptions": top_subscriptions})
+        return render(
+            request,
+            self.template_name,
+            {"top_subscriptions": top_subscriptions, "subscription": subscription},
+        )
 
 
 class SubscriptionListView(TemplateView):

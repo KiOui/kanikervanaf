@@ -18,6 +18,10 @@ div.menu-link label {
     margin-right: 5px;
 }
 
+.menu-link a {
+    margin-right: auto;
+}
+
 #subscriptions-list-total {
     font-size: 32pt;
 }

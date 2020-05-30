@@ -10,7 +10,7 @@ let current_search_index = 0;
 
 function create_search_item(name, id, price, can_email, can_letter) {
 
-    let menulink = `<div class="menu-link"><a href="#">__name__</a><div class="icons">__icon_email__ __icon_letter__</div></div>`;
+    let menulink = `<div class="menu-link"><a href="/subscriptions/details/${id}">__name__</a><div class="icons">__icon_email__ __icon_letter__</div></div>`;
 
     if (can_email) {
         menulink = menulink.replace("__icon_email__", "<i class='fas fa-at'></i>");

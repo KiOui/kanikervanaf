@@ -27,5 +27,9 @@ urlpatterns = [
     path("search", search_database, name="search"),
     path("request", RequestView.as_view(), name="request"),
     path("details", SubscriptionDetailsSearchView.as_view(), name="details_search"),
-    path("details/<subscription:subscription>", SubscriptionDetailsView.as_view(), name="details")
+    path(
+        "details/<subscription:subscription>",
+        SubscriptionDetailsView.as_view(),
+        name="details",
+    ),
 ]

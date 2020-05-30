@@ -1,8 +1,10 @@
 {% extends "sidebar.html" %}
 {% load static %}
-
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'subscriptions/css/categories.css' %}">
+{% endblock %}
 {% block content %}
-    <div class="container-xl">
+    <div class="container-xl mb-5">
         <h2>Contactgegevens abonnementdienst</h2>
         <p>Contactgegevens van bedrijven die abonnementen aanbieden zijn vaak moeilijk te vinden op het internet. Dit willen
         wij veranderen! Wij maken het gemakkelijk om snel contactgegevens van bedrijven op te zoeken. Zoek hieronder naar
@@ -15,13 +17,30 @@
             </div>
         </div>
     </div>
+    {% if subscription %}
+        <div class="container-xl mb-5">
+            <h2>{{ subscription.name }}</h2>
+            {% if subscription.price %}
+                <p class="m-0">Prijs per jaar: €{{ subscription.price }}</p>
+            {% endif %}
+            {% if subscription.support_email %}
+                <p class="m-0">E-mail adres klantenservice: {{ subscription.support_email }}</p>
+            {% endif %}
+            {% if subscription.support_phone_number %}
+                <p class="m-0">Telefoonnummer klantenservice: {{ subscription.support_phone_number }}</p>
+            {% endif %}
+            {% if subscription.cancellation_number %}
+                <p class="m-0">Opzegnummer (gratis): {{ subscription.cancellation_number }}</p>
+            {% endif %}
+        </div>
+    {% endif %}
 {% endblock %}
 {% block sidebar %}
     <div class="container-fluid">
         <h2>Meest opgezegde abonnementen</h2>
         <ol>
             {% for subscription in top_subscriptions %}
-                <li><a href="#">{{ subscription.name }}</a></li>
+                <li><a href="{% url "subscriptions:details" subscription=subscription %}">{{ subscription.name }}</a></li>
             {% endfor %}
         </ol>
     </div>
