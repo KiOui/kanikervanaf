@@ -41,6 +41,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="{% url "home" %}">Home</a>
+                        <a class="dropdown-item" href="{% url "subscriptions:details_search" %}">Contactgegevens opzoeken</a>
                         <a class="dropdown-item" href="{% url "posts:post_overview" page=1 %}">Berichten</a>
                         <a class="dropdown-item" href="{% url "contact" %}">Contact</a>
                         <a class="dropdown-item" href="{% url "faq" %}">FAQ</a>
