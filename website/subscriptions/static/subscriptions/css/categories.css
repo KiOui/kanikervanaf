@@ -18,6 +18,16 @@ div.menu-link label {
     margin-right: 5px;
 }
 
+.subscription-icon {
+    display: inline-block;
+    width: 5%;
+    min-width: 30px;
+}
+
+.subscription-detail {
+    display: flex;
+}
+
 .menu-link a {
     margin-right: auto;
 }

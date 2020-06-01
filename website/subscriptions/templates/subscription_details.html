@@ -1,8 +1,10 @@
 {% extends "sidebar.html" %}
 {% load static %}
+
 {% block styles %}
     <link rel="stylesheet" href="{% static 'subscriptions/css/categories.css' %}">
 {% endblock %}
+
 {% block content %}
     <div class="container-xl mb-5">
         <h2>Contactgegevens abonnementdienst</h2>
@@ -21,16 +23,42 @@
         <div class="container-xl mb-5">
             <h2>{{ subscription.name }}</h2>
             {% if subscription.price %}
-                <p class="m-0">Prijs per jaar: €{{ subscription.price }}</p>
+                <div class="subscription-detail">
+                    <div class="subscription-icon">
+                        <i class="fas fa-euro-sign"></i>
+                    </div>
+                    <p class="m-0">Prijs per jaar: €{{ subscription.price }}</p>
+                </div>
             {% endif %}
             {% if subscription.support_email %}
-                <p class="m-0">E-mail adres klantenservice: {{ subscription.support_email }}</p>
+                <div class="subscription-detail">
+                    <div class="subscription-icon">
+                        <i class="fas fa-at"></i>
+                    </div>
+                    <p class="m-0">E-mail adres klantenservice:
+                        <a href="mailto:{{ subscription.support_email }}">{{ subscription.support_email }}</a>
+                    </p>
+                </div>
             {% endif %}
             {% if subscription.support_phone_number %}
-                <p class="m-0">Telefoonnummer klantenservice: {{ subscription.support_phone_number }}</p>
+                <div class="subscription-detail">
+                    <div class="subscription-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <p class="m-0">Telefoonnummer klantenservice:
+                        <a href="tel:{{ subscription.support_phone_number }}">{{ subscription.support_phone_number }}</a>
+                    </p>
+                </div>
             {% endif %}
             {% if subscription.cancellation_number %}
-                <p class="m-0">Opzegnummer (gratis): {{ subscription.cancellation_number }}</p>
+                <div class="subscription-detail">
+                    <div class="subscription-icon">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <p class="m-0">Opzegnummer (gratis):
+                        <a href="tel:{{ subscription.cancellation_number }}">{{ subscription.cancellation_number }}</a>
+                    </p>
+                </div>
             {% endif %}
         </div>
     {% endif %}
