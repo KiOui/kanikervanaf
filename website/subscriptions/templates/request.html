@@ -1,8 +1,19 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block title %}
+    Kanikervanaf: Abonnement aanvragen
+{% endblock %}
+
+{% block page_description %}
+    Kunt u een abonnement op onze pagina niet vinden? Vraag een abonnement aan en wij zorgen er voor dat deze bij ons in
+    de database komt te staan.
+{% endblock %}
+
 {% block styles %}
     <link rel="stylesheet" href="{% static 'kanikervanaf/css/fluid-input.css' %}"/>
 {% endblock %}
+
 {% block page %}
 <div class="container">
     {% if succeeded %}

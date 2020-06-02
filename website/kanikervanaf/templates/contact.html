@@ -1,8 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block title %}
+    Kanikervanaf: Contact
+{% endblock %}
+
+{% block page_description %}
+    Neem contact met ons op via onze contactgegevens of het formulier op deze pagina.
+{% endblock %}
+
 {% block styles %}
     <link rel="stylesheet" href="{% static 'kanikervanaf/css/fluid-input.css' %}"/>
 {% endblock %}
+
 {% block page %}
 <div class="container">
     {% if succeeded %}

@@ -1,6 +1,23 @@
 {% extends "sidebar.html" %}
 {% load static %}
 
+{% block title %}
+    {% if subscription %}
+        Kanikervanaf: Contactgegevens {{ subscription.name }}
+    {% else %}
+        Kanikervanaf: Contactgegevens opzoeken
+    {% endif %}
+{% endblock %}
+
+{% block page_description %}
+    {% if subscription %}
+        Bekijk de contactgegevens van {{ subscription.name }}.
+    {% else %}
+        Vind u het ook zo lastig om contactgegevens van bedrijven op te zoeken? Hier kunt u gemakkelijk en snel
+        contactgegevens van bedrijven en abonnementen opzoeken.
+    {% endif %}
+{% endblock %}
+
 {% block styles %}
     <link rel="stylesheet" href="{% static 'subscriptions/css/categories.css' %}">
 {% endblock %}
