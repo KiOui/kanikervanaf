@@ -22,9 +22,7 @@
           content="{% static "kanikervanaf/img/browser/icon-widetile.jpg" %}">
     <meta name="msapplication-square300x300logo"
           content="{% static "kanikervanaf/img/browser/icon-largetile.jpg" %}">
-    {% block page_description %}
-        <meta name="description" content="Snel en gratis automatisch abonnementen opzeggen. Aanklikken, gegevens invoeren en versturen!">
-    {% endblock %}
+    <meta name="description" content="{% block page_description %}Snel en gratis automatisch abonnementen opzeggen. Aanklikken, gegevens invoeren en versturen!{% endblock %}">
     <script src="https://kit.fontawesome.com/4e8cabe8e2.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.tiny.cloud/1/sx4eugpieda3a9a2mjzq9xh0ht6h59prb6wgd8gd3yqcjif5/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>

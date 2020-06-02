@@ -5,6 +5,10 @@
     Kanikervanaf: Bericht - {{ post.title }} - Pagina {{ page.number }}
 {% endblock %}
 
+{% block page_description %}
+    {{ post.content|striptags|truncatechars:100 }}...
+{% endblock %}
+
 {% block styles %}
     <link rel="stylesheet" href="{% static 'posts/css/container-posts.css' %}"/>
 {% endblock %}
