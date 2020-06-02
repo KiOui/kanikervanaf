@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block title %}
+    Kanikervanaf: Abonnement aanvragen
+{% endblock %}
+
 {% block styles %}
     <link rel="stylesheet" href="{% static 'kanikervanaf/css/fluid-input.css' %}"/>
 {% endblock %}
+
 {% block page %}
 <div class="container">
     {% if succeeded %}

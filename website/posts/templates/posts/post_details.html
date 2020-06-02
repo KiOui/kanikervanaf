@@ -1,8 +1,14 @@
 {% extends "sidebar.html" %}
 {% load static %}
+
+{% block title %}
+    Kanikervanaf: Bericht - {{ post.title }} - Pagina {{ page.number }}
+{% endblock %}
+
 {% block styles %}
     <link rel="stylesheet" href="{% static 'posts/css/container-posts.css' %}"/>
 {% endblock %}
+
 {% block content %}
     <div class="container-sm mb-3">
         <div class='btn btn-primary' onclick="window.history.back();"><i class="fas fa-arrow-left"></i> Terug</div>

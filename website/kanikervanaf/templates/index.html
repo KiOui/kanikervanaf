@@ -1,8 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block title %}
+    Kanikervanaf: Home
+{% endblock %}
+
 {% block styles %}
     <link rel="stylesheet" href="{% static 'kanikervanaf/css/home.css' %}"/>
 {% endblock %}
+
 {%  block page %}
 <div class="container">
     <h1 class="text-center text-margin"><strong>Zeg uw abonnementen op in 3 simpele stappen</strong></h1>

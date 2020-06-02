@@ -1,6 +1,14 @@
 {% extends "sidebar.html" %}
 {% load static %}
 
+{% block title %}
+    {% if subscription %}
+        Kanikervanaf: Contactgegevens {{ subscription.name }}
+    {% else %}
+        Kanikervanaf: Contactgegevens opzoeken
+    {% endif %}
+{% endblock %}
+
 {% block styles %}
     <link rel="stylesheet" href="{% static 'subscriptions/css/categories.css' %}">
 {% endblock %}

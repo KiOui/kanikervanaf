@@ -1,8 +1,14 @@
 {% extends 'sidebar.html' %}
 {% load static %}
+
+{% block title %}
+    Kanikervanaf: Abonnementen selecteren - {{ category.name }}
+{% endblock %}
+
 {% block styles %}
     <link rel="stylesheet" href="{% static 'subscriptions/css/categories.css' %}">
 {% endblock %}
+
 {% block content %}
     <div class="container-fluid">
         <h3 class="mb-5"><strong>Selecteer abonnementen</strong></h3>

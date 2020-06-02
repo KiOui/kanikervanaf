@@ -1,8 +1,14 @@
 {% extends 'sidebar.html' %}
 {% load static %}
+
+{% block title %}
+    Kanikervanaf: Abonnementen selecteren - {{ category.name }} - Pagina {{ category.top.number }}
+{% endblock %}
+
 {% block styles %}
     <link rel="stylesheet" href="{% static 'subscriptions/css/categories.css' %}">
 {% endblock %}
+
 {% block content %}
     {% include "subscription_header.html" %}
     <div class="container-fluid mt-5">
