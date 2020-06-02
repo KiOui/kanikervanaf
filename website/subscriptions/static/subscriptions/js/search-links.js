@@ -47,7 +47,7 @@ function redirect_subscription() {
 }
 
 function query(search) {
-    let csrf_token = getCookie('csrftoken');
+    let csrf_token = get_csrf_token();
 	jQuery(function($) {
 		current_search_index = current_search_index + 1;
 		let data = {
