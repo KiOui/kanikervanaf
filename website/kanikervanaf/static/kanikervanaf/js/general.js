@@ -121,6 +121,15 @@ function refresh_all() {
 	}
 }
 
+function get_csrf_token() {
+	if (typeof(CSRF_TOKEN) !== "undefined") {
+		return CSRF_TOKEN;
+	}
+	else {
+		return getCookie('csrftoken');
+	}
+}
+
 function setCookie(name,value,days) {
     let expires = "";
     value = encodeURI(value);
