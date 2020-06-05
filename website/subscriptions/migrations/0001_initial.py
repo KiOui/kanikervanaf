@@ -45,16 +45,9 @@ class Migration(migrations.Migration):
                 ("correspondence_city", models.CharField(blank=True, max_length=1024)),
                 (
                     "support_phone_number",
-                    models.CharField(
-                        blank=True, max_length=1024
-                    ),
+                    models.CharField(blank=True, max_length=1024),
                 ),
-                (
-                    "cancellation_number",
-                    models.CharField(
-                        blank=True, max_length=1024
-                    ),
-                ),
+                ("cancellation_number", models.CharField(blank=True, max_length=1024),),
                 ("amount_used", models.PositiveIntegerField(default=1)),
             ],
         ),
