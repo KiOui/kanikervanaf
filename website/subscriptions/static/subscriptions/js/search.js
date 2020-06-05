@@ -4,7 +4,7 @@ let selectionBox = document.getElementById('selection-container-id');
 let typingTimer;
 let typingInterval = 200;
 
-let feedback_form = '/feedback';
+let feedback_form = '/subscriptions/request';
 
 let current_search_index = 0;
 

@@ -20,15 +20,15 @@ def verify(request, **kwargs):
         return HttpResponseNotFound()
 
     if handle_deregister_request(mail_list):
-        return render(request, "mails_send.html", {"succeeded": True})
+        return render(request, "mail/mails_send.html", {"succeeded": True})
     else:
-        return render(request, "mails_send.html", {"succeeded": False})
+        return render(request, "mail/mails_send.html", {"succeeded": False})
 
 
 class VerificationSendSucceeded(TemplateView):
     """Template for send verification."""
 
-    template_name = "verification_send.html"
+    template_name = "mail/verification_send.html"
 
     def get(self, request, **kwargs):
         """
@@ -44,7 +44,7 @@ class VerificationSendSucceeded(TemplateView):
 class VerificationSendFailed(TemplateView):
     """Template for failed verification send."""
 
-    template_name = "verification_send.html"
+    template_name = "mail/verification_send.html"
 
     def get(self, request, **kwargs):
         """

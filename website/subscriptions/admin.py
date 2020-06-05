@@ -1,6 +1,7 @@
 from django.contrib import admin
 from subscriptions import models
 from admin_auto_filters.filters import AutocompleteFilter
+from import_export.admin import ImportExportModelAdmin
 
 
 class SubscriptionCategoryFilter(AutocompleteFilter):
@@ -11,7 +12,7 @@ class SubscriptionCategoryFilter(AutocompleteFilter):
 
 
 @admin.register(models.Subscription)
-class SubscriptionAdmin(admin.ModelAdmin):
+class SubscriptionAdmin(ImportExportModelAdmin):
     """Subscription categories are displayed inline."""
 
     search_fields = ["name"]

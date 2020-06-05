@@ -17,13 +17,13 @@ from .services import generate_password_reset, send_reset_password
 class BasicUserInformation(TemplateView):
     """View for entering user information."""
 
-    template_name = "enter_information.html"
+    template_name = "users/enter_information.html"
 
 
 class LoginView(TemplateView):
     """View for logging in."""
 
-    template_name = "login.html"
+    template_name = "users/login.html"
 
     def get(self, request, **kwargs):
         """
@@ -68,7 +68,7 @@ class LoginView(TemplateView):
 class RegisterView(TemplateView):
     """Registration view."""
 
-    template_name = "register.html"
+    template_name = "users/register.html"
 
     def get(self, request, **kwargs):
         """
@@ -120,7 +120,7 @@ class RegisterView(TemplateView):
 class ForgotView(TemplateView):
     """Forgot password view."""
 
-    template_name = "forgot.html"
+    template_name = "users/forgot.html"
 
     def get(self, request, **kwargs):
         """
@@ -158,7 +158,7 @@ class ForgotView(TemplateView):
 class LogoutView(TemplateView):
     """Log out view."""
 
-    template_name = "logout.html"
+    template_name = "users/logout.html"
 
     def get(self, request, **kwargs):
         """
@@ -183,7 +183,7 @@ class LogoutView(TemplateView):
 class ResetView(TemplateView):
     """Reset password view."""
 
-    template_name = "reset.html"
+    template_name = "users/reset.html"
 
     def get(self, request, **kwargs):
         """
@@ -226,7 +226,7 @@ class ResetView(TemplateView):
 class AccountView(LoginRequiredMixin, TemplateView):
     """Account details page, requires logged in user."""
 
-    template_name = "account.html"
+    template_name = "users/account.html"
 
     def get(self, request, **kwargs):
         """

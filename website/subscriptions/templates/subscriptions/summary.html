@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "kanikervanaf/base.html" %}
 {% load static %}
 
 {% block title %}
@@ -12,7 +12,7 @@
 {% block page %}
     <div class="container mt-5">
         <h1 class="text-center mb-5"><strong>Tijd om te versturen!</strong></h1>
-        {% include "subscription_list.html" with next_page="subscriptions:send" button_id="subscription-disable-button-no-all" button_text="Versturen" scroller=False %}
+        {% include "subscriptions/subscription_list.html" with next_page="subscriptions:send" button_id="subscription-disable-button-no-all" button_text="Versturen" scroller=False %}
     </div>
 {% endblock %}
 {% block js %}

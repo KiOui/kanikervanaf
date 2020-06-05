@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 class SubscriptionDetailsSearchView(TemplateView):
     """View for searching subscription details."""
 
-    template_name = "subscription_details.html"
+    template_name = "subscriptions/subscription_details.html"
 
     def get(self, request, **kwargs):
         """
@@ -37,7 +37,7 @@ class SubscriptionDetailsSearchView(TemplateView):
 class SubscriptionDetailsView(TemplateView):
     """View for displaying the details of a subscription."""
 
-    template_name = "subscription_details.html"
+    template_name = "subscriptions/subscription_details.html"
 
     def get(self, request, **kwargs):
         """
@@ -59,7 +59,7 @@ class SubscriptionDetailsView(TemplateView):
 class SubscriptionListView(TemplateView):
     """List view for subscriptions."""
 
-    template_name = "subscription_select.html"
+    template_name = "subscriptions/subscription_select.html"
 
     def get(self, request, **kwargs):
         """
@@ -79,7 +79,7 @@ class SubscriptionListView(TemplateView):
 class ListCategoryView(TemplateView):
     """List view for subscriptions of a specific category."""
 
-    template_name = "subscription_category.html"
+    template_name = "subscriptions/subscription_category.html"
 
     def get(self, request, **kwargs):
         """
@@ -110,7 +110,7 @@ class ListCategoryView(TemplateView):
 class ListCategoryPageView(TemplateView):
     """Category view with pages."""
 
-    template_name = "subscription_category_page.html"
+    template_name = "subscriptions/subscription_category_page.html"
     paginate_by = 50
 
     def get(self, request, **kwargs):
@@ -145,7 +145,7 @@ class ListCategoryPageView(TemplateView):
 class SummaryView(TemplateView):
     """Summary view of the selected subscriptions."""
 
-    template_name = "summary.html"
+    template_name = "subscriptions/summary.html"
 
 
 def verification_send(request):
@@ -189,7 +189,7 @@ def verification_send(request):
 class RequestView(TemplateView):
     """Request view for sending in a subscription request."""
 
-    template_name = "request.html"
+    template_name = "subscriptions/request.html"
 
     def get(self, request, **kwargs):
         """

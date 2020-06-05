@@ -41,17 +41,6 @@ tests = ["coverage", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "zope.i
 
 [[package]]
 category = "main"
-description = "Internationalization utilities"
-name = "babel"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "2.8.0"
-
-[package.dependencies]
-pytz = ">=2015.7"
-
-[[package]]
-category = "main"
 description = "The uncompromising code formatter."
 name = "black"
 optional = false
@@ -177,6 +166,14 @@ version = "0.6.0"
 
 [[package]]
 category = "main"
+description = "Repackaging of Google's Diff Match and Patch libraries. Offers robust algorithms to perform the operations required for synchronizing plain text."
+name = "diff-match-patch"
+optional = false
+python-versions = "*"
+version = "20181111"
+
+[[package]]
+category = "main"
 description = "A high-level Python Web framework that encourages rapid development and clean, pragmatic design."
 name = "django"
 optional = false
@@ -205,19 +202,19 @@ django = ">=2.0"
 
 [[package]]
 category = "main"
-description = "An international phone number field for django models."
-name = "django-phonenumber-field"
+description = "Django application and library for importing and exporting data with included admin integration."
+name = "django-import-export"
 optional = false
 python-versions = ">=3.5"
-version = "4.0.0"
+version = "2.2.0"
 
 [package.dependencies]
-Django = ">=1.11.3"
-babel = "*"
+Django = ">=2.0"
+diff-match-patch = "*"
 
-[package.extras]
-phonenumbers = ["phonenumbers (>=7.0.2)"]
-phonenumberslite = ["phonenumberslite (>=7.0.2)"]
+[package.dependencies.tablib]
+extras = ["ods", "xls", "xlsx", "yaml", "html"]
+version = ">=0.14.0"
 
 [[package]]
 category = "main"
@@ -229,6 +226,14 @@ version = "2.0.6"
 
 [package.dependencies]
 django = ">1.11,<4.0"
+
+[[package]]
+category = "main"
+description = "An implementation of lxml.xmlfile for the standard library"
+name = "et-xmlfile"
+optional = false
+python-versions = "*"
+version = "1.0.1"
 
 [[package]]
 category = "main"
@@ -274,6 +279,22 @@ docs = ["sphinx", "rst.linker"]
 testing = ["packaging", "importlib-resources"]
 
 [[package]]
+category = "main"
+description = "Julian dates from proleptic Gregorian and Julian calendars."
+name = "jdcal"
+optional = false
+python-versions = "*"
+version = "1.4.1"
+
+[[package]]
+category = "main"
+description = "An HTML/XML generator"
+name = "markuppy"
+optional = false
+python-versions = "*"
+version = "1.14"
+
+[[package]]
 category = "dev"
 description = "More routines for operating on iterables, beyond itertools"
 marker = "python_version > \"2.7\""
@@ -281,6 +302,29 @@ name = "more-itertools"
 optional = false
 python-versions = ">=3.5"
 version = "8.2.0"
+
+[[package]]
+category = "main"
+description = "Python API and tools to manipulate OpenDocument files"
+name = "odfpy"
+optional = false
+python-versions = "*"
+version = "1.4.1"
+
+[package.dependencies]
+defusedxml = "*"
+
+[[package]]
+category = "main"
+description = "A Python library to read/write Excel 2010 xlsx/xlsm files"
+name = "openpyxl"
+optional = false
+python-versions = ">=3.6,"
+version = "3.0.3"
+
+[package.dependencies]
+et_xmlfile = "*"
+jdcal = "*"
 
 [[package]]
 category = "dev"
@@ -427,6 +471,14 @@ version = "2019.3"
 
 [[package]]
 category = "main"
+description = "YAML parser and emitter for Python"
+name = "pyyaml"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+version = "5.3.1"
+
+[[package]]
+category = "main"
 description = "Alternative regular expression module, to replace re."
 name = "regex"
 optional = false
@@ -474,6 +526,49 @@ name = "sqlparse"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "0.3.1"
+
+[[package]]
+category = "main"
+description = "Format agnostic tabular data library (XLS, JSON, YAML, CSV)"
+name = "tablib"
+optional = false
+python-versions = ">=3.5"
+version = "2.0.0"
+
+[package.dependencies]
+[package.dependencies.markuppy]
+optional = true
+version = "*"
+
+[package.dependencies.odfpy]
+optional = true
+version = "*"
+
+[package.dependencies.openpyxl]
+optional = true
+version = ">=2.6.0"
+
+[package.dependencies.pyyaml]
+optional = true
+version = "*"
+
+[package.dependencies.xlrd]
+optional = true
+version = "*"
+
+[package.dependencies.xlwt]
+optional = true
+version = "*"
+
+[package.extras]
+all = ["markuppy", "odfpy", "openpyxl (>=2.6.0)", "pandas", "pyyaml", "tabulate", "xlrd", "xlwt"]
+cli = ["tabulate"]
+html = ["markuppy"]
+ods = ["odfpy"]
+pandas = ["pandas"]
+xls = ["xlrd", "xlwt"]
+xlsx = ["openpyxl (>=2.6.0)"]
+yaml = ["pyyaml"]
 
 [[package]]
 category = "main"
@@ -567,6 +662,22 @@ python-versions = "*"
 version = "0.5.1"
 
 [[package]]
+category = "main"
+description = "Library for developers to extract data from Microsoft Excel (tm) spreadsheet files"
+name = "xlrd"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+version = "1.2.0"
+
+[[package]]
+category = "main"
+description = "Library to create spreadsheet files compatible with MS Excel 97/2000/XP/2003 XLS files, on any platform, with Python 2.6, 2.7, 3.3+"
+name = "xlwt"
+optional = false
+python-versions = "*"
+version = "1.3.0"
+
+[[package]]
 category = "dev"
 description = "Backport of pathlib-compatible object wrapper for zip files"
 marker = "python_version < \"3.8\""
@@ -580,7 +691,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [metadata]
-content-hash = "00f41243216cf5c69dbf1468962f9fc68d7e13a926b759d43cd06a472465de37"
+content-hash = "1ca156c9d061169daae1b855e781c789b2e1be1cb594a001bb559cff815ca9e9"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -599,10 +710,6 @@ atomicwrites = [
 attrs = [
     {file = "attrs-19.3.0-py2.py3-none-any.whl", hash = "sha256:08a96c641c3a74e44eb59afb61a24f2cb9f4d7188748e76ba4bb5edfa3cb7d1c"},
     {file = "attrs-19.3.0.tar.gz", hash = "sha256:f7b7ce16570fe9965acd6d30101a28f62fb4a7f9e926b3bbc9b61f8b04247e72"},
-]
-babel = [
-    {file = "Babel-2.8.0-py2.py3-none-any.whl", hash = "sha256:d670ea0b10f8b723672d3a6abeb87b565b244da220d76b4dba1b66269ec152d4"},
-    {file = "Babel-2.8.0.tar.gz", hash = "sha256:1aac2ae2d0d8ea368fa90906567f5c08463d98ade155c0c4bfedd6a0f7160e38"},
 ]
 black = [
     {file = "black-19.10b0-py36-none-any.whl", hash = "sha256:1b30e59be925fafc1ee4565e5e08abef6b03fe455102883820fe5ee2e4734e0b"},
@@ -669,6 +776,9 @@ defusedxml = [
     {file = "defusedxml-0.6.0-py2.py3-none-any.whl", hash = "sha256:6687150770438374ab581bb7a1b327a847dd9c5749e396102de3fad4e8a3ef93"},
     {file = "defusedxml-0.6.0.tar.gz", hash = "sha256:f684034d135af4c6cbb949b8a4d2ed61634515257a67299e5f940fbaa34377f5"},
 ]
+diff-match-patch = [
+    {file = "diff-match-patch-20181111.tar.gz", hash = "sha256:a809a996d0f09b9bbd59e9bbd0b71eed8c807922512910e05cbd3f9480712ddb"},
+]
 django = [
     {file = "Django-3.0.4-py3-none-any.whl", hash = "sha256:89e451bfbb815280b137e33e454ddd56481fdaa6334054e6e031041ee1eda360"},
     {file = "Django-3.0.4.tar.gz", hash = "sha256:50b781f6cbeb98f673aa76ed8e572a019a45e52bdd4ad09001072dfd91ab07c8"},
@@ -677,12 +787,14 @@ django-admin-autocomplete-filter = [
     {file = "django-admin-autocomplete-filter-0.5.tar.gz", hash = "sha256:9d95a4407c3289e823c3486ddb200124c4ec8edf11064a0b8cb998d32c39530e"},
     {file = "django_admin_autocomplete_filter-0.5-py3-none-any.whl", hash = "sha256:44556b4b4d02c09a7ccdfc43e38c1e0f032741c6d484e9a6c542d7180b029418"},
 ]
-django-phonenumber-field = [
-    {file = "django-phonenumber-field-4.0.0.tar.gz", hash = "sha256:d4580cc3352f4433962825f9927e6669852c1b40ec484fcb5a74064dabc1201a"},
-    {file = "django_phonenumber_field-4.0.0-py3-none-any.whl", hash = "sha256:2ca3bb0ada0ebc164bd903a981a34f1202a4294006e520b0da961bd7ce9f20a4"},
+django-import-export = [
+    {file = "django-import-export-2.2.0.tar.gz", hash = "sha256:83be410caca8c1b78585677c0fd7ae0e4de5dd5507ad3cea815fbcd29323f448"},
 ]
 django-recaptcha = [
     {file = "django_recaptcha-2.0.6-py2.py3-none-any.whl", hash = "sha256:567784963fd5400feaf92e8951d8dbbbdb4b4c48a76e225d4baa63a2c9d2cd8c"},
+]
+et-xmlfile = [
+    {file = "et_xmlfile-1.0.1.tar.gz", hash = "sha256:614d9722d572f6246302c4491846d2c393c199cfa4edc9af593437691683335b"},
 ]
 html5lib = [
     {file = "html5lib-1.0.1-py2.py3-none-any.whl", hash = "sha256:20b159aa3badc9d5ee8f5c647e5efd02ed2a66ab8d354930bd9ff139fc1dc0a3"},
@@ -696,9 +808,23 @@ importlib-metadata = [
     {file = "importlib_metadata-1.6.0-py2.py3-none-any.whl", hash = "sha256:2a688cbaa90e0cc587f1df48bdc97a6eadccdcd9c35fb3f976a09e3b5016d90f"},
     {file = "importlib_metadata-1.6.0.tar.gz", hash = "sha256:34513a8a0c4962bc66d35b359558fd8a5e10cd472d37aec5f66858addef32c1e"},
 ]
+jdcal = [
+    {file = "jdcal-1.4.1-py2.py3-none-any.whl", hash = "sha256:1abf1305fce18b4e8aa248cf8fe0c56ce2032392bc64bbd61b5dff2a19ec8bba"},
+    {file = "jdcal-1.4.1.tar.gz", hash = "sha256:472872e096eb8df219c23f2689fc336668bdb43d194094b5cc1707e1640acfc8"},
+]
+markuppy = [
+    {file = "MarkupPy-1.14.tar.gz", hash = "sha256:1adee2c0a542af378fe84548ff6f6b0168f3cb7f426b46961038a2bcfaad0d5f"},
+]
 more-itertools = [
     {file = "more-itertools-8.2.0.tar.gz", hash = "sha256:b1ddb932186d8a6ac451e1d95844b382f55e12686d51ca0c68b6f61f2ab7a507"},
     {file = "more_itertools-8.2.0-py3-none-any.whl", hash = "sha256:5dd8bcf33e5f9513ffa06d5ad33d78f31e1931ac9a18f33d37e77a180d393a7c"},
+]
+odfpy = [
+    {file = "odfpy-1.4.1-py2.7.egg", hash = "sha256:fc3b8d1bc098eba4a0fda865a76d9d1e577c4ceec771426bcb169a82c5e9dfe0"},
+    {file = "odfpy-1.4.1.tar.gz", hash = "sha256:db766a6e59c5103212f3cc92ec8dd50a0f3a02790233ed0b52148b70d3c438ec"},
+]
+openpyxl = [
+    {file = "openpyxl-3.0.3.tar.gz", hash = "sha256:547a9fc6aafcf44abe358b89ed4438d077e9d92e4f182c87e2dc294186dc4b64"},
 ]
 packaging = [
     {file = "packaging-20.3-py2.py3-none-any.whl", hash = "sha256:82f77b9bee21c1bafbf35a84905d604d5d1223801d639cf3ed140bd651c08752"},
@@ -802,6 +928,19 @@ pytz = [
     {file = "pytz-2019.3-py2.py3-none-any.whl", hash = "sha256:1c557d7d0e871de1f5ccd5833f60fb2550652da6be2693c1e02300743d21500d"},
     {file = "pytz-2019.3.tar.gz", hash = "sha256:b02c06db6cf09c12dd25137e563b31700d3b80fcc4ad23abb7a315f2789819be"},
 ]
+pyyaml = [
+    {file = "PyYAML-5.3.1-cp27-cp27m-win32.whl", hash = "sha256:74809a57b329d6cc0fdccee6318f44b9b8649961fa73144a98735b0aaf029f1f"},
+    {file = "PyYAML-5.3.1-cp27-cp27m-win_amd64.whl", hash = "sha256:240097ff019d7c70a4922b6869d8a86407758333f02203e0fc6ff79c5dcede76"},
+    {file = "PyYAML-5.3.1-cp35-cp35m-win32.whl", hash = "sha256:4f4b913ca1a7319b33cfb1369e91e50354d6f07a135f3b901aca02aa95940bd2"},
+    {file = "PyYAML-5.3.1-cp35-cp35m-win_amd64.whl", hash = "sha256:cc8955cfbfc7a115fa81d85284ee61147059a753344bc51098f3ccd69b0d7e0c"},
+    {file = "PyYAML-5.3.1-cp36-cp36m-win32.whl", hash = "sha256:7739fc0fa8205b3ee8808aea45e968bc90082c10aef6ea95e855e10abf4a37b2"},
+    {file = "PyYAML-5.3.1-cp36-cp36m-win_amd64.whl", hash = "sha256:69f00dca373f240f842b2931fb2c7e14ddbacd1397d57157a9b005a6a9942648"},
+    {file = "PyYAML-5.3.1-cp37-cp37m-win32.whl", hash = "sha256:d13155f591e6fcc1ec3b30685d50bf0711574e2c0dfffd7644babf8b5102ca1a"},
+    {file = "PyYAML-5.3.1-cp37-cp37m-win_amd64.whl", hash = "sha256:73f099454b799e05e5ab51423c7bcf361c58d3206fa7b0d555426b1f4d9a3eaf"},
+    {file = "PyYAML-5.3.1-cp38-cp38-win32.whl", hash = "sha256:06a0d7ba600ce0b2d2fe2e78453a470b5a6e000a985dd4a4e54e436cc36b0e97"},
+    {file = "PyYAML-5.3.1-cp38-cp38-win_amd64.whl", hash = "sha256:95f71d2af0ff4227885f7a6605c37fd53d3a106fcab511b8860ecca9fcf400ee"},
+    {file = "PyYAML-5.3.1.tar.gz", hash = "sha256:b8eac752c5e14d3eca0e6dd9199cd627518cb5ec06add0de9d32baeee6fe645d"},
+]
 regex = [
     {file = "regex-2020.2.20-cp27-cp27m-win32.whl", hash = "sha256:99272d6b6a68c7ae4391908fc15f6b8c9a6c345a46b632d7fdb7ef6c883a2bbb"},
     {file = "regex-2020.2.20-cp27-cp27m-win_amd64.whl", hash = "sha256:974535648f31c2b712a6b2595969f8ab370834080e00ab24e5dbb9d19b8bfb74"},
@@ -840,6 +979,10 @@ snowballstemmer = [
 sqlparse = [
     {file = "sqlparse-0.3.1-py2.py3-none-any.whl", hash = "sha256:022fb9c87b524d1f7862b3037e541f68597a730a8843245c349fc93e1643dc4e"},
     {file = "sqlparse-0.3.1.tar.gz", hash = "sha256:e162203737712307dfe78860cc56c8da8a852ab2ee33750e33aeadf38d12c548"},
+]
+tablib = [
+    {file = "tablib-2.0.0-py3-none-any.whl", hash = "sha256:c5a77c96ad306d5b380def1309d521ad5e98b4f83726f84857ad87e142d13279"},
+    {file = "tablib-2.0.0.tar.gz", hash = "sha256:8cc2fa10bc37219ac5e76850eb7fbd50de313c7a1a7895c44af2a8dd206b7be7"},
 ]
 tinycss2 = [
     {file = "tinycss2-1.0.2-py3-none-any.whl", hash = "sha256:9fdacc0e22d344ddd2ca053837c133900fe820ae1222f63b79617490a498507a"},
@@ -891,6 +1034,14 @@ weasyprint = [
 webencodings = [
     {file = "webencodings-0.5.1-py2.py3-none-any.whl", hash = "sha256:a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78"},
     {file = "webencodings-0.5.1.tar.gz", hash = "sha256:b36a1c245f2d304965eb4e0a82848379241dc04b865afcc4aab16748587e1923"},
+]
+xlrd = [
+    {file = "xlrd-1.2.0-py2.py3-none-any.whl", hash = "sha256:e551fb498759fa3a5384a94ccd4c3c02eb7c00ea424426e212ac0c57be9dfbde"},
+    {file = "xlrd-1.2.0.tar.gz", hash = "sha256:546eb36cee8db40c3eaa46c351e67ffee6eeb5fa2650b71bc4c758a29a1b29b2"},
+]
+xlwt = [
+    {file = "xlwt-1.3.0-py2.py3-none-any.whl", hash = "sha256:a082260524678ba48a297d922cc385f58278b8aa68741596a87de01a9c628b2e"},
+    {file = "xlwt-1.3.0.tar.gz", hash = "sha256:c59912717a9b28f1a3c2a98fd60741014b06b043936dcecbc113eaaada156c88"},
 ]
 zipp = [
     {file = "zipp-3.1.0-py3-none-any.whl", hash = "sha256:aa36550ff0c0b7ef7fa639055d797116ee891440eac1a56f378e2d3179e0320b"},
