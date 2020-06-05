@@ -35,7 +35,6 @@ def send_verification_email(first_name, email_address, verification_url):
         [email_address],
     )
     msg.attach_alternative(html_content, "text/html")
-    logger.info("perparing send")
     try:
         msg.send()
         logger.info("Send completed")

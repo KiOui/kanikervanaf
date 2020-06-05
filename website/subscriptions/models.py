@@ -1,5 +1,4 @@
 from django.db import models
-from phonenumber_field.modelfields import PhoneNumberField
 from users.models import UserInformation
 import secrets
 import datetime
@@ -19,8 +18,8 @@ class Subscription(models.Model):
     correspondence_address = models.CharField(max_length=1024, blank=True)
     correspondence_postal_code = models.CharField(max_length=64, blank=True)
     correspondence_city = models.CharField(max_length=1024, blank=True)
-    support_phone_number = PhoneNumberField(blank=True)
-    cancellation_number = PhoneNumberField(blank=True)
+    support_phone_number = models.CharField(max_length=1024, blank=True)
+    cancellation_number = models.CharField(max_length=1024, blank=True)
     amount_used = models.PositiveIntegerField(default=1)
     category = models.ForeignKey(
         "SubscriptionCategory", null=True, blank=True, on_delete=models.SET_NULL

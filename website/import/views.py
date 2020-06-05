@@ -14,6 +14,8 @@ logger = logging.getLogger(__name__)
 class ImportFromWebsite(TemplateView):
     """View for starting the import process from a Wordpress hosted website with the deregister plugin."""
 
+    template_name = "import/import.html"
+
     def get(self, request, **kwargs):
         """
         GET request for the import view.
@@ -22,7 +24,7 @@ class ImportFromWebsite(TemplateView):
         :param kwargs: keyword arguments
         :return: a render of the import.html page
         """
-        return render(request, "import.html")
+        return render(request, self.template_name)
 
     def post(self, request, **kwargs):
         """
@@ -37,7 +39,7 @@ class ImportFromWebsite(TemplateView):
         t = threading.Thread(target=import_all, args=(import_url,))
         t.start()
         context = {"started": True}
-        return render(request, "import.html", context)
+        return render(request, self.template_name, context)
 
 
 def import_all(import_url):

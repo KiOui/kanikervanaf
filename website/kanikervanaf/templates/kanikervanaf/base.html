@@ -6,7 +6,7 @@
     <title>
         {% block title %}Kanikervanaf{% endblock %}
     </title>
-    {% include 'analytics.html' %}
+    {% include 'kanikervanaf/analytics.html' %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'kanikervanaf/img/favicon.ico' %}"/>
     <link rel="icon" type="image/x-icon" href="{% static 'kanikervanaf/img/favicon.ico' %}"/>
@@ -26,7 +26,7 @@
     <meta name="keywords" content="Opzeggen, Abonnementen, Abonnement, Gratis">
     <meta name="description" content="{% block page_description %}Snel en gratis automatisch abonnementen opzeggen. Aanklikken, gegevens invoeren en versturen!{% endblock %}">
     <script src="https://kit.fontawesome.com/4e8cabe8e2.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.tiny.cloud/1/sx4eugpieda3a9a2mjzq9xh0ht6h59prb6wgd8gd3yqcjif5/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 <body>
@@ -61,6 +61,9 @@
                     </a>
                     {% if user.is_authenticated %}
                         <div class="dropdown-menu" aria-labelledby="navbarAccountMenuLink">
+                            {% if user.is_staff %}
+                                <a class="dropdown-item" href="{% url "admin:index" %}">Site admin</a>
+                            {% endif %}
                             <a class="dropdown-item" href="{% url "users:account" %}">Overzicht</a>
                             <a class="dropdown-item" href="{% url "users:logout" %}">Uitloggen</a>
                         </div>

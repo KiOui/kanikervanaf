@@ -1,4 +1,4 @@
-{% extends 'sidebar.html' %}
+{% extends 'kanikervanaf/sidebar.html' %}
 {% load static %}
 
 {% block title %}
@@ -14,11 +14,11 @@
 {% endblock %}
 
 {% block content %}
-    {% include "subscription_header.html" %}
+    {% include "subscriptions/subscription_header.html" %}
     <div class="container-fluid mt-5">
         <div class="row">
             <div class="col-md category-column">
-                {% include 'subscription_one_category.html' with category=category show_more=False %}
+                {% include 'subscriptions/subscription_one_category.html' with category=category show_more=False %}
             </div>
         </div>
     </div>
@@ -41,7 +41,7 @@
     </div>
 {% endblock %}
 {% block sidebar %}
-    {% include "subscription_list.html" with next_page="users:enter" button_id="subscription-disable-button-no-items" scroller=True %}
+    {% include "subscriptions/subscription_list.html" with next_page="users:enter" button_id="subscription-disable-button-no-items" scroller=True %}
 {% endblock %}
 {% block js %}
     <script src="{% static 'kanikervanaf/js/general.js' %}"></script>

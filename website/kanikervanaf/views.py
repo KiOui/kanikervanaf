@@ -7,25 +7,25 @@ from .forms import ContactForm
 class IndexView(TemplateView):
     """Home view."""
 
-    template_name = "index.html"
+    template_name = "kanikervanaf/index.html"
 
 
 class FAQView(TemplateView):
     """Frequently asked questions view."""
 
-    template_name = "faq.html"
+    template_name = "kanikervanaf/faq.html"
 
 
 class PrivacyPolicy(TemplateView):
     """Frequently asked questions view."""
 
-    template_name = "privacy.html"
+    template_name = "kanikervanaf/privacy.html"
 
 
 class ContactView(TemplateView):
     """Contact view."""
 
-    template_name = "contact.html"
+    template_name = "kanikervanaf/contact.html"
 
     def get(self, request, **kwargs):
         """
