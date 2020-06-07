@@ -19,7 +19,7 @@
     </div>
     <div class="container-sm mb-5">
         <div class="mb-3">
-            <h2><strong>{{ post.title }}</strong></h2>
+            <h1><strong>{{ post.title }}</strong></h1>
             <p>Geplaatst door: {% if post.author %}{{ post.get_author }}{% else %}Anoniem{% endif %}</p>
             <p>{{ post.content|safe }}</p>
         </div>
