@@ -85,3 +85,13 @@ class PostDetailsSitemap(Sitemap):
         """
         post, page = obj
         return reverse("posts:details", kwargs={"post": post, "page": page})
+
+    def lastmod(self, obj):
+        """
+        Get the date when this object was last modified.
+
+        :param obj: the object
+        :return: a date value when this object was last modified
+        """
+        post, page = obj
+        return post.updated_on
