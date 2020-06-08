@@ -16,9 +16,46 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from .views import IndexView, ContactView, FAQView, PrivacyPolicy
+from django.contrib.sitemaps.views import sitemap
+from .sitemaps import HomeSitemap, ContactSitemap, FAQSitemap, PrivacySitemap
+from posts.sitemaps import PostOverviewSitemap, PostCreateSitemap, PostDetailsSitemap
+from subscriptions.sitemaps import (
+    SubscriptionCategoryPageSitemap,
+    SubscriptionListSitemap,
+    SubscriptionDetailsSearchSitemap,
+    SubscriptionDetailsSitemap,
+    SubscriptionSummarySitemap,
+    SubscriptionRequestSitemap,
+)
+from users.sitemaps import EnterUserSitemap, UserSitemap
+
+sitemaps = {
+    "home": HomeSitemap,
+    "contact": ContactSitemap,
+    "faq": FAQSitemap,
+    "privacy": PrivacySitemap,
+    "posts:post_create": PostCreateSitemap,
+    "posts:post_overview": PostOverviewSitemap,
+    "posts:details": PostDetailsSitemap,
+    "subscriptions:overview": SubscriptionListSitemap,
+    "subscriptions:overview_category_page": SubscriptionCategoryPageSitemap,
+    "subscriptions:summary": SubscriptionSummarySitemap,
+    "subscriptions:requets": SubscriptionRequestSitemap,
+    "subscriptions:details_search": SubscriptionDetailsSearchSitemap,
+    "subscriptions:details": SubscriptionDetailsSitemap,
+    "users:enter": EnterUserSitemap,
+    "users": UserSitemap,
+}
 
 urlpatterns = [
     path("", IndexView.as_view(), name="home"),
+    path(
+        "sitemap.xml",
+        sitemap,
+        {"sitemaps": sitemaps},
+        name="django.contrib.sitemaps.views.sitemap",
+    ),
+    path("robots.txt", include("robots.urls")),
     path("faq", FAQView.as_view(), name="faq"),
     path("privacybeleid", PrivacyPolicy.as_view(), name="privacy"),
     path("contact", ContactView.as_view(), name="contact"),
