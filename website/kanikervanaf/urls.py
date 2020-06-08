@@ -55,6 +55,7 @@ urlpatterns = [
         {"sitemaps": sitemaps},
         name="django.contrib.sitemaps.views.sitemap",
     ),
+    path("robots.txt", include('robots.urls')),
     path("faq", FAQView.as_view(), name="faq"),
     path("privacybeleid", PrivacyPolicy.as_view(), name="privacy"),
     path("contact", ContactView.as_view(), name="contact"),

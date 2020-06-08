@@ -27,8 +27,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
+    "django.contrib.sites",
     "admin_auto_filters",
     "import_export",
+    "robots",
     "kanikervanaf",
     "captcha",
     "subscriptions",
@@ -119,3 +121,9 @@ STATIC_URL = "/static/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 MEDIA_URL = "/media/"
+
+# Sites app
+SITE_ID = 1
+
+# Robots app
+ROBOTS_CACHE_TIMEOUT = 60*60*24
