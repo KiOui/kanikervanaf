@@ -10,16 +10,16 @@ class Subscription(models.Model):
     """Subscription model."""
 
     name = models.CharField(max_length=1024)
-    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
-    support_email = models.EmailField(blank=True)
-    support_reply_number = models.CharField(max_length=10, blank=True)
-    support_postal_code = models.CharField(max_length=64, blank=True)
-    support_city = models.CharField(max_length=1024, blank=True)
-    correspondence_address = models.CharField(max_length=1024, blank=True)
-    correspondence_postal_code = models.CharField(max_length=64, blank=True)
-    correspondence_city = models.CharField(max_length=1024, blank=True)
-    support_phone_number = models.CharField(max_length=1024, blank=True)
-    cancellation_number = models.CharField(max_length=1024, blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    support_email = models.EmailField(blank=True, null=True)
+    support_reply_number = models.CharField(max_length=10, blank=True, null=True)
+    support_postal_code = models.CharField(max_length=64, blank=True, null=True)
+    support_city = models.CharField(max_length=1024, blank=True, null=True)
+    correspondence_address = models.CharField(max_length=1024, blank=True, null=True)
+    correspondence_postal_code = models.CharField(max_length=64, blank=True, null=True)
+    correspondence_city = models.CharField(max_length=1024, blank=True, null=True)
+    support_phone_number = models.CharField(max_length=1024, blank=True, null=True)
+    cancellation_number = models.CharField(max_length=1024, blank=True, null=True)
     amount_used = models.PositiveIntegerField(default=1)
     category = models.ForeignKey(
         "SubscriptionCategory", null=True, blank=True, on_delete=models.SET_NULL
@@ -84,7 +84,7 @@ class Subscription(models.Model):
 
         :return: True if the price is registered in the database
         """
-        return self.price != 0
+        return self.price is not None and self.price != 0
 
     def get_address_information(self):
         """
