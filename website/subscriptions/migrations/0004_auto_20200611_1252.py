@@ -6,58 +6,58 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('subscriptions', '0003_auto_20200605_1053'),
+        ("subscriptions", "0003_auto_20200605_1053"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='subscription',
-            name='cancellation_number',
+            model_name="subscription",
+            name="cancellation_number",
             field=models.CharField(blank=True, max_length=1024, null=True),
         ),
         migrations.AlterField(
-            model_name='subscription',
-            name='correspondence_address',
+            model_name="subscription",
+            name="correspondence_address",
             field=models.CharField(blank=True, max_length=1024, null=True),
         ),
         migrations.AlterField(
-            model_name='subscription',
-            name='correspondence_city',
+            model_name="subscription",
+            name="correspondence_city",
             field=models.CharField(blank=True, max_length=1024, null=True),
         ),
         migrations.AlterField(
-            model_name='subscription',
-            name='correspondence_postal_code',
+            model_name="subscription",
+            name="correspondence_postal_code",
             field=models.CharField(blank=True, max_length=64, null=True),
         ),
         migrations.AlterField(
-            model_name='subscription',
-            name='price',
+            model_name="subscription",
+            name="price",
             field=models.DecimalField(decimal_places=2, default=0, max_digits=10),
         ),
         migrations.AlterField(
-            model_name='subscription',
-            name='support_city',
+            model_name="subscription",
+            name="support_city",
             field=models.CharField(blank=True, max_length=1024, null=True),
         ),
         migrations.AlterField(
-            model_name='subscription',
-            name='support_email',
+            model_name="subscription",
+            name="support_email",
             field=models.EmailField(blank=True, max_length=254, null=True),
         ),
         migrations.AlterField(
-            model_name='subscription',
-            name='support_phone_number',
+            model_name="subscription",
+            name="support_phone_number",
             field=models.CharField(blank=True, max_length=1024, null=True),
         ),
         migrations.AlterField(
-            model_name='subscription',
-            name='support_postal_code',
+            model_name="subscription",
+            name="support_postal_code",
             field=models.CharField(blank=True, max_length=64, null=True),
         ),
         migrations.AlterField(
-            model_name='subscription',
-            name='support_reply_number',
+            model_name="subscription",
+            name="support_reply_number",
             field=models.CharField(blank=True, max_length=10, null=True),
         ),
     ]
