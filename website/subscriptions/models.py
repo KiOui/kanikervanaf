@@ -136,6 +136,11 @@ class Subscription(models.Model):
             "has_price": self.has_registered_price(),
         }
 
+    class Meta:
+        """Meta class."""
+
+        ordering = ["name"]
+
 
 class SubscriptionCategory(models.Model):
     """Category for subscriptions."""

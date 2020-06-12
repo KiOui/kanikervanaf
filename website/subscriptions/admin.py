@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.urls import reverse
 from subscriptions import models
 from admin_auto_filters.filters import AutocompleteFilter
 from import_export.admin import ImportExportModelAdmin
@@ -18,6 +19,15 @@ class SubscriptionAdmin(ImportExportModelAdmin):
     search_fields = ["name"]
     list_filter = [SubscriptionCategoryFilter, "category"]
     list_display = ["name", "amount_used", "category"]
+
+    def view_on_site(self, obj):
+        """
+        Get the URL for the frontend view of the subscription.
+
+        :param obj: the subscription to get the frontend view for
+        :return: the url to the subscription on the frontend
+        """
+        return reverse("subscriptions:details", kwargs={"subscription": obj})
 
     class Media:
         """Necessary to use AutocompleteFilter."""
