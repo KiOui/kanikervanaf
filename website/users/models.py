@@ -9,12 +9,12 @@ from django.conf import settings
 class UserInformation(models.Model):
     """User information object."""
 
-    firstname = models.CharField(max_length=256)
-    lastname = models.CharField(max_length=256, blank=True)
-    email_address = models.EmailField(max_length=256)
-    address = models.CharField(max_length=256, blank=True)
-    postal_code = models.CharField(max_length=6, blank=True)
-    residence = models.CharField(max_length=256, blank=True)
+    firstname = models.CharField(max_length=1024)
+    lastname = models.CharField(max_length=1024, blank=True)
+    email_address = models.EmailField(max_length=1024)
+    address = models.CharField(max_length=1024, blank=True)
+    postal_code = models.CharField(max_length=256, blank=True)
+    residence = models.CharField(max_length=1024, blank=True)
 
     def __str__(self):
         """
