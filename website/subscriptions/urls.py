@@ -10,15 +10,16 @@ from .views import (
     verification_send,
     search_database,
 )
-from .converters import SubscriptionConverter
+from .converters import SubscriptionConverter, SubscriptionCategoryConverter
 
 register_converter(SubscriptionConverter, "subscription")
+register_converter(SubscriptionCategoryConverter, "category")
 
 urlpatterns = [
     path("", SubscriptionListView.as_view(), name="overview",),
-    path("<int:id>", ListCategoryView.as_view(), name="overview_category",),
+    path("<category:category>", ListCategoryView.as_view(), name="overview_category",),
     path(
-        "<int:id>/page/<int:page>",
+        "<category:category>/page/<int:page>",
         ListCategoryPageView.as_view(),
         name="overview_category_page",
     ),
