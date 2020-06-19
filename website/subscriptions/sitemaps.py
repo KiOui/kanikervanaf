@@ -62,7 +62,7 @@ class SubscriptionCategoryPageSitemap(Sitemap):
         category, page = obj
         return reverse(
             "subscriptions:overview_category_page",
-            kwargs={"id": category.id, "page": page},
+            kwargs={"category": category, "page": page},
         )
 
 
