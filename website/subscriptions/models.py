@@ -143,7 +143,7 @@ class SubscriptionCategory(models.Model):
     """Category for subscriptions."""
 
     name = models.CharField(max_length=1024)
-    slug = models.SlugField(null=False, blank=False, unique=True, max_length=100)
+    slug = models.SlugField(max_length=100)
     parent = models.ForeignKey(
         "self",
         blank=True,
