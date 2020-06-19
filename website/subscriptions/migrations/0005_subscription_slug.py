@@ -30,13 +30,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="subscription",
             name="slug",
-            field=models.SlugField(default="", max_length=100, unique=False),
-            preserve_default=False,
+            field=models.SlugField(max_length=100, null=True),
         ),
         migrations.RunPython(slugify_subscriptions),
         migrations.AlterField(
             model_name="subscription",
             name="slug",
-            field=models.SlugField(max_length=100, unique=True),
+            field=models.SlugField(max_length=100, unique=True, null=False),
+            preserve_default=False,
         ),
     ]
