@@ -25,8 +25,8 @@
     <div class="container-fluid mt-3 text-center">
         <span class="step-links">
             {% if category.top.has_previous %}
-                <a href="{% url 'subscriptions:overview_category_page' id=category.id page=1 %}">&laquo; eerste</a>
-                <a href="{% url 'subscriptions:overview_category_page' id=category.id page=category.top.previous_page_number %}">vorige</a>
+                <a href="{% url 'subscriptions:overview_category_page' category=category page=1 %}">&laquo; eerste</a>
+                <a href="{% url 'subscriptions:overview_category_page' category=category page=category.top.previous_page_number %}">vorige</a>
             {% endif %}
 
             <span class="current">
@@ -34,8 +34,8 @@
             </span>
 
             {% if category.top.has_next %}
-                <a href="{% url 'subscriptions:overview_category_page' id=category.id page=category.top.next_page_number %}">volgende</a>
-                <a href="{% url 'subscriptions:overview_category_page' id=category.id page=category.top.paginator.num_pages %}">laatste &raquo;</a>
+                <a href="{% url 'subscriptions:overview_category_page' category=category page=category.top.next_page_number %}">volgende</a>
+                <a href="{% url 'subscriptions:overview_category_page' category=category page=category.top.paginator.num_pages %}">laatste &raquo;</a>
             {% endif %}
         </span>
     </div>

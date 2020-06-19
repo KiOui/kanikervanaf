@@ -1,11 +1,13 @@
 import urllib.parse
 import json
+from itertools import chain
 
 from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
 from .models import Subscription, SubscriptionCategory
+from django.db.models import Q
 from .services import handle_verification_request
 from django.urls import reverse
 from mail.services import send_verification_email, send_request_email
@@ -89,22 +91,17 @@ class ListCategoryView(TemplateView):
         :param kwargs: keyword arguments
         :return: the subscription_category.html page with all subscriptions belonging to a specific category
         """
-        if SubscriptionCategory.objects.filter(id=kwargs.get("id")).count() > 0:
-            category = SubscriptionCategory.objects.get(id=kwargs.get("id"))
-            category_path = category.get_path_to_me()
-            subcategories = category.get_subcategories()
-            if subcategories.count() > 0:
-                category.subcategories = subcategories
-            category.top = Subscription.top_category(
-                category, max_items=0, order_by="name"
-            )
-            return render(
-                request,
-                self.template_name,
-                {"category": category, "category_path": category_path},
-            )
-        else:
-            return redirect("subscriptions:overview")
+        category = kwargs.get("category")
+        category_path = category.get_path_to_me()
+        subcategories = category.get_subcategories()
+        if subcategories.count() > 0:
+            category.subcategories = subcategories
+        category.top = Subscription.top_category(category, max_items=0, order_by="name")
+        return render(
+            request,
+            self.template_name,
+            {"category": category, "category_path": category_path},
+        )
 
 
 class ListCategoryPageView(TemplateView):
@@ -121,25 +118,22 @@ class ListCategoryPageView(TemplateView):
         :param kwargs: keyword arguments
         :return: the subscription_category.html page with all subscriptions belonging to a specific category
         """
-        if SubscriptionCategory.objects.filter(id=kwargs.get("id")).count() > 0:
-            category = SubscriptionCategory.objects.get(id=kwargs.get("id"))
-            category_path = category.get_path_to_me()
-            subcategories = category.get_subcategories()
-            if subcategories.count() > 0:
-                category.subcategories = subcategories
-            subscriptions = Subscription.top_category(
-                category, max_items=0, order_by="name"
-            )
-            page = kwargs.get("page")
-            paginator = Paginator(subscriptions, self.paginate_by)
-            category.top = paginator.get_page(page)
-            return render(
-                request,
-                self.template_name,
-                {"category": category, "category_path": category_path},
-            )
-        else:
-            return redirect("subscriptions:overview")
+        category = kwargs.get("category")
+        category_path = category.get_path_to_me()
+        subcategories = category.get_subcategories()
+        if subcategories.count() > 0:
+            category.subcategories = subcategories
+        subscriptions = Subscription.top_category(
+            category, max_items=0, order_by="name"
+        )
+        page = kwargs.get("page")
+        paginator = Paginator(subscriptions, self.paginate_by)
+        category.top = paginator.get_page(page)
+        return render(
+            request,
+            self.template_name,
+            {"category": category, "category_path": category_path},
+        )
 
 
 class SummaryView(TemplateView):
@@ -244,9 +238,9 @@ def search_database(request):
             maximum = int(request.POST.get("maximum", 5))
         except ValueError:
             maximum = 5
-        subscriptions = Subscription.objects.filter(name__icontains=query).order_by(
-            "-amount_used"
-        )[:maximum]
+        subscriptions = Subscription.objects.filter(
+            Q(name__icontains=query) | Q(subscriptionsearchterm__name__icontains=query)
+        ).order_by("-amount_used")[:maximum]
         converted_set = convert_list_to_json(subscriptions)
         json_list = {"items": converted_set, "id": request_id}
         json_response = json.dumps(json_list)
