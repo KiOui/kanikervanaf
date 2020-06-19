@@ -47,7 +47,7 @@ class Subscription(models.Model):
         if order_by is not None:
             queryset = queryset.order_by(order_by)
 
-        if max_items != 0:
+        if max_items > 0:
             return queryset[:max_items]
         else:
             return queryset
