@@ -18,6 +18,7 @@ class SubscriptionAdmin(ImportExportModelAdmin):
     search_fields = ["name"]
     list_filter = [SubscriptionCategoryFilter, "category"]
     list_display = ["name", "amount_used", "category"]
+    prepopulated_fields = {"slug": ("name",)}
 
     class Media:
         """Necessary to use AutocompleteFilter."""
@@ -43,6 +44,7 @@ class SubscriptionCategoryAdmin(admin.ModelAdmin):
 
     list_display = ["name", "parent"]
     list_filter = [CategoryParentFilter, "parent"]
+    prepopulated_fields = {"slug": ("name",)}
 
     class Media:
         """Necessary to use AutocompleteFilter."""

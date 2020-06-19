@@ -24,6 +24,7 @@ class Subscription(models.Model):
     category = models.ForeignKey(
         "SubscriptionCategory", null=True, blank=True, on_delete=models.SET_NULL
     )
+    slug = models.SlugField(null=False, blank=False, unique=True, max_length=100)
 
     def __str__(self):
         """
@@ -134,6 +135,7 @@ class Subscription(models.Model):
             "can_email": self.can_email(),
             "can_letter": self.can_generate_pdf(),
             "has_price": self.has_registered_price(),
+            "slug": self.slug,
         }
 
 
@@ -141,7 +143,7 @@ class SubscriptionCategory(models.Model):
     """Category for subscriptions."""
 
     name = models.CharField(max_length=1024)
-    slug = models.SlugField()
+    slug = models.SlugField(null=False, blank=False, unique=True, max_length=100)
     parent = models.ForeignKey(
         "self",
         blank=True,

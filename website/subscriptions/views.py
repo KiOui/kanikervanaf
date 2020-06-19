@@ -91,22 +91,17 @@ class ListCategoryView(TemplateView):
         :param kwargs: keyword arguments
         :return: the subscription_category.html page with all subscriptions belonging to a specific category
         """
-        if SubscriptionCategory.objects.filter(id=kwargs.get("id")).count() > 0:
-            category = SubscriptionCategory.objects.get(id=kwargs.get("id"))
-            category_path = category.get_path_to_me()
-            subcategories = category.get_subcategories()
-            if subcategories.count() > 0:
-                category.subcategories = subcategories
-            category.top = Subscription.top_category(
-                category, max_items=0, order_by="name"
-            )
-            return render(
-                request,
-                self.template_name,
-                {"category": category, "category_path": category_path},
-            )
-        else:
-            return redirect("subscriptions:overview")
+        category = kwargs.get("category")
+        category_path = category.get_path_to_me()
+        subcategories = category.get_subcategories()
+        if subcategories.count() > 0:
+            category.subcategories = subcategories
+        category.top = Subscription.top_category(category, max_items=0, order_by="name")
+        return render(
+            request,
+            self.template_name,
+            {"category": category, "category_path": category_path},
+        )
 
 
 class ListCategoryPageView(TemplateView):
@@ -123,25 +118,22 @@ class ListCategoryPageView(TemplateView):
         :param kwargs: keyword arguments
         :return: the subscription_category.html page with all subscriptions belonging to a specific category
         """
-        if SubscriptionCategory.objects.filter(id=kwargs.get("id")).count() > 0:
-            category = SubscriptionCategory.objects.get(id=kwargs.get("id"))
-            category_path = category.get_path_to_me()
-            subcategories = category.get_subcategories()
-            if subcategories.count() > 0:
-                category.subcategories = subcategories
-            subscriptions = Subscription.top_category(
-                category, max_items=0, order_by="name"
-            )
-            page = kwargs.get("page")
-            paginator = Paginator(subscriptions, self.paginate_by)
-            category.top = paginator.get_page(page)
-            return render(
-                request,
-                self.template_name,
-                {"category": category, "category_path": category_path},
-            )
-        else:
-            return redirect("subscriptions:overview")
+        category = kwargs.get("category")
+        category_path = category.get_path_to_me()
+        subcategories = category.get_subcategories()
+        if subcategories.count() > 0:
+            category.subcategories = subcategories
+        subscriptions = Subscription.top_category(
+            category, max_items=0, order_by="name"
+        )
+        page = kwargs.get("page")
+        paginator = Paginator(subscriptions, self.paginate_by)
+        category.top = paginator.get_page(page)
+        return render(
+            request,
+            self.template_name,
+            {"category": category, "category_path": category_path},
+        )
 
 
 class SummaryView(TemplateView):
