@@ -135,6 +135,7 @@ class Subscription(models.Model):
             "can_email": self.can_email(),
             "can_letter": self.can_generate_pdf(),
             "has_price": self.has_registered_price(),
+            "slug": self.slug,
         }
 
 
