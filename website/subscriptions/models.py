@@ -138,6 +138,11 @@ class Subscription(models.Model):
             "slug": self.slug,
         }
 
+    class Meta:
+        """Meta class."""
+
+        ordering = ["name"]
+
 
 class SubscriptionCategory(models.Model):
     """Category for subscriptions."""
