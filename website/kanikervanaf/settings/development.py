@@ -14,7 +14,10 @@ import os
 
 from kanikervanaf.settings.base import *
 
-from kanikervanaf.settings.mailsettings import *
+try:
+    from kanikervanaf.settings.mailsettings import *
+except ModuleNotFoundError:
+    pass
 
 
 # Quick-start development settings - unsuitable for production
