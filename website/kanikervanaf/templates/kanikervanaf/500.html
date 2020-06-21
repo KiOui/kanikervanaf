@@ -1,0 +1,35 @@
+{% extends 'kanikervanaf/base.html' %}
+{% load static %}
+
+{% block title %}
+    Kanikervanaf: Server fout (500)
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'kanikervanaf/css/viewheight.css' %}"/>
+{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+{%  block page %}
+    <div class="container-fluid min-vh-100 bg-primary">
+        <div class="flex-container min-vh-100 container-fluid">
+            <div class="container-centered bg-white p-5">
+                <div class="flex-container mb-2">
+                    <img class="container-centered" style="height: 200px; width: auto;" src="{% static 'kanikervanaf/img/logo.png' %}">
+                </div>
+                <h1>Daar ging iets mis!</h1>
+                <p>Er is iets misgegaan op onze server, dit kan komen omdat het momenteel te druk is op onze website
+                of omdat wij een fout hebben gemaakt. Deze fout is opgeslagen zodat onze programmeurs er later naar
+                kunnen kijken. Probeer het later opnieuw.</p>
+                <a href="{% url "home" %}"> ← Terug naar Kanikervanaf.nl</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}

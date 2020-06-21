@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <title>
@@ -30,63 +30,65 @@
     <script src="https://cdn.tiny.cloud/1/sx4eugpieda3a9a2mjzq9xh0ht6h59prb6wgd8gd3yqcjif5/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-md navbar-light sticky-top site-header mb-5">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="/"><img src="{% static 'kanikervanaf/img/logo.png' %}" height="50"/></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="{% url "home" %}" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Home
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="{% url "home" %}">Home</a>
-                        <a class="dropdown-item" href="{% url "subscriptions:details_search" %}">Contactgegevens opzoeken</a>
-                        <a class="dropdown-item" href="{% url "posts:post_overview" page=1 %}">Berichten</a>
-                        <a class="dropdown-item" href="{% url "contact" %}">Contact</a>
-                        <a class="dropdown-item" href="{% url "faq" %}">FAQ</a>
-                        <a class="dropdown-item" href="{% url "subscriptions:request" %}">Vraag abonnement aan</a>
-                    </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarAccountMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {% if user.is_authenticated %}
-                            Mijn account
-                        {% else %}
-                            Account
-                        {% endif %}
-                    </a>
-                    {% if user.is_authenticated %}
-                        <div class="dropdown-menu" aria-labelledby="navbarAccountMenuLink">
-                            {% if user.is_staff %}
-                                <a class="dropdown-item" href="{% url "admin:index" %}">Site admin</a>
+    {% block header %}
+        <nav class="navbar navbar-expand-md navbar-light sticky-top site-header mb-5">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/"><img src="{% static 'kanikervanaf/img/logo.png' %}" height="50"/></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="{% url "home" %}" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Home
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="{% url "home" %}">Home</a>
+                            <a class="dropdown-item" href="{% url "subscriptions:details_search" %}">Contactgegevens opzoeken</a>
+                            <a class="dropdown-item" href="{% url "posts:post_overview" page=1 %}">Berichten</a>
+                            <a class="dropdown-item" href="{% url "contact" %}">Contact</a>
+                            <a class="dropdown-item" href="{% url "faq" %}">FAQ</a>
+                            <a class="dropdown-item" href="{% url "subscriptions:request" %}">Vraag abonnement aan</a>
+                        </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarAccountMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {% if user.is_authenticated %}
+                                Mijn account
+                            {% else %}
+                                Account
                             {% endif %}
-                            <a class="dropdown-item" href="{% url "users:account" %}">Overzicht</a>
-                            <a class="dropdown-item" href="{% url "users:logout" %}">Uitloggen</a>
-                        </div>
-                    {% else %}
-                        <div class="dropdown-menu" aria-labelledby="navbarAccountMenuLink">
-                            <a class="dropdown-item" href="{% url "users:login" %}">Log in</a>
-                            <a class="dropdown-item" href="{% url "users:forgot" %}">Wachtwoord vergeten</a>
-                        </div>
-                    {% endif %}
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url "subscriptions:overview" %}">1. Selecteer abonnementen</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url "users:enter" %}">2. Voer uw gegevens in</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url "subscriptions:summary" %}">3. Versturen</a>
-                    </li>
-                </ul>
+                        </a>
+                        {% if user.is_authenticated %}
+                            <div class="dropdown-menu" aria-labelledby="navbarAccountMenuLink">
+                                {% if user.is_staff %}
+                                    <a class="dropdown-item" href="{% url "admin:index" %}">Site admin</a>
+                                {% endif %}
+                                <a class="dropdown-item" href="{% url "users:account" %}">Overzicht</a>
+                                <a class="dropdown-item" href="{% url "users:logout" %}">Uitloggen</a>
+                            </div>
+                        {% else %}
+                            <div class="dropdown-menu" aria-labelledby="navbarAccountMenuLink">
+                                <a class="dropdown-item" href="{% url "users:login" %}">Log in</a>
+                                <a class="dropdown-item" href="{% url "users:forgot" %}">Wachtwoord vergeten</a>
+                            </div>
+                        {% endif %}
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url "subscriptions:overview" %}">1. Selecteer abonnementen</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url "users:enter" %}">2. Voer uw gegevens in</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url "subscriptions:summary" %}">3. Versturen</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    {% endblock %}
     {% block page %}{% endblock %}
     {% block footer %}
         <footer class="page-footer font-small pt-4">

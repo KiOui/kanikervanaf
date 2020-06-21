@@ -1,0 +1,33 @@
+{% extends 'kanikervanaf/base.html' %}
+{% load static %}
+
+{% block title %}
+    Kanikervanaf: Pagina niet gevonden (404)
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'kanikervanaf/css/viewheight.css' %}"/>
+{% endblock %}
+
+{% block header %}
+
+{% endblock %}
+
+{%  block page %}
+    <div class="container-fluid min-vh-100 bg-primary">
+        <div class="flex-container min-vh-100 container-fluid">
+            <div class="container-centered bg-white p-5">
+                <div class="flex-container mb-2">
+                    <img class="container-centered" style="height: 200px; width: auto;" src="{% static 'kanikervanaf/img/logo.png' %}">
+                </div>
+                <h1>Pagina niet gevonden</h1>
+                <p>De pagina die u probeerde te bereiken is verwijderd of niet gevonden.</p>
+                <a href="{% url "home" %}"> ← Terug naar Kanikervanaf.nl</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+
+{% endblock %}
