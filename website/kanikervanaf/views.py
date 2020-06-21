@@ -64,3 +64,24 @@ class ContactView(TemplateView):
                 return render(request, self.template_name, context)
         else:
             return render(request, self.template_name, context)
+
+
+def handler404(request, exception):
+    """
+    Handle a 404 (page not found) exception.
+
+    :param request: the request
+    :param exception: the exception
+    :return: a render of the 404 page
+    """
+    return render(request, "kanikervanaf/404.html", status=404)
+
+
+def handler500(request):
+    """
+    Handle a 50x (server fault) exception.
+
+    :param request: the request
+    :return: a render of the 500 page
+    """
+    return render(request, "kanikervanaf/500.html", status=500)
