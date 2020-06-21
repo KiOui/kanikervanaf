@@ -1,10 +1,9 @@
 import urllib.parse
 import json
-from itertools import chain
 
 from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.views.generic import TemplateView
 from .models import Subscription, SubscriptionCategory
 from django.db.models import Q
