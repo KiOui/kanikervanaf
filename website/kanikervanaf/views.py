@@ -74,7 +74,7 @@ def handler404(request, exception):
     :param exception: the exception
     :return: a render of the 404 page
     """
-    return render(request, 'kanikervanaf/404.html', status=404)
+    return render(request, "kanikervanaf/404.html", status=404)
 
 
 def handler500(request):
@@ -84,4 +84,4 @@ def handler500(request):
     :param request: the request
     :return: a render of the 500 page
     """
-    return render(request, 'kanikervanaf/500.html', status=500)
+    return render(request, "kanikervanaf/500.html", status=500)

@@ -15,7 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from .views import IndexView, ContactView, FAQView, PrivacyPolicy, handler404 as custom_handler404, handler500 as custom_handler500
+from .views import (
+    IndexView,
+    ContactView,
+    FAQView,
+    PrivacyPolicy,
+    handler404 as custom_handler404,
+    handler500 as custom_handler500,
+)
 from django.contrib.sitemaps.views import sitemap
 from .sitemaps import HomeSitemap, ContactSitemap, FAQSitemap, PrivacySitemap
 from posts.sitemaps import PostOverviewSitemap, PostCreateSitemap, PostDetailsSitemap
