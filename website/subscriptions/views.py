@@ -2,7 +2,7 @@ import urllib.parse
 import json
 
 from django.core.paginator import Paginator
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from .models import Subscription, SubscriptionCategory
@@ -127,6 +127,8 @@ class ListCategoryPageView(TemplateView):
         )
         page = kwargs.get("page")
         paginator = Paginator(subscriptions, self.paginate_by)
+        if page not in paginator.page_range:
+            raise Http404("Page not found")
         category.top = paginator.get_page(page)
         return render(
             request,
