@@ -18,19 +18,7 @@
             verificatiemail. Nadat u uw mailadres heeft bevestigd worden uw gegevens direct verwijderd.
         </p>
         <form>
-            {% csrf_token %}
-            <label for="email"><strong>Uw e-mail:</strong></label>
-            <input type="email" name="email" id="email" class="container-fluid"><br>
-            <label for="firstname"><strong>Voornaam:</strong></label>
-            <input type="text" name="firstname" id="firstname" class="container-fluid"><br>
-            <label for="lastname">Achternaam:</label>
-            <input type="text" name="lastname" id="lastname" class="container-fluid"><br>
-            <label for="address">Adres:</label>
-            <input type="text" name="address" id="address" class="container-fluid"><br>
-            <label for="postalcode">Postcode:</label>
-            <input type="text" name="postalcode" id="postalcode" class="container-fluid"><br>
-            <label for="residence">Plaats:</label>
-            <input type="text" name="residence" id="residence" class="container-fluid"><br>
+            {{ form }}
 		</form>
     </div>
 {% endblock %}

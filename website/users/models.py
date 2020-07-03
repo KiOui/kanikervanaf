@@ -37,6 +37,7 @@ class UserManager(BaseUserManager):
         :param username: the username of the new user, must be unique
         :param email: the email of the new user, must be unique
         :param password: the password for the new user
+        :param is_staff: whether or not to create a staff user
         :param is_admin: whether or not to create an administrative user
         :return: the new user
         """
@@ -87,8 +88,6 @@ class User(AbstractUser):
 
     username = models.CharField(max_length=256, unique=True)
     email = models.EmailField(max_length=256, unique=True)
-    active = models.BooleanField(default=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
 
     objects = UserManager()
 
@@ -139,6 +138,19 @@ class User(AbstractUser):
         """
         return True
 
+    def get_profile(self):
+        """
+        Get the profile corresponding to this user object.
+
+        :return: a Profile object corresponding to this user, if it does not exist create it first
+        """
+        try:
+            return Profile.objects.get(user=self)
+        except Profile.DoesNotExist:
+            profile = Profile.objects.create(user=self)
+            profile.save()
+            return profile
+
 
 class PasswordReset(models.Model):
     """Queued password resets object."""
@@ -182,3 +194,20 @@ class PasswordReset(models.Model):
         for password_reset in password_resets:
             if password_reset.created <= remove_after:
                 password_reset.delete()
+
+
+class Profile(models.Model):
+    """Profile of a user."""
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    address = models.CharField(max_length=1024, blank=True)
+    postal_code = models.CharField(max_length=256, blank=True)
+    residence = models.CharField(max_length=1024, blank=True)
+
+    def __str__(self):
+        """
+        Convert this object to string.
+
+        :return: the username of the user object
+        """
+        return self.user.__str__()

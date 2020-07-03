@@ -19,16 +19,22 @@
             <li>Gebruikersnaam: {{ user.username }}</li>
             <li>Email-adres: {{ user.email }}</li>
         </ul>
-        <h3>Account aanpassen</h3>
-        {% if succeeded %}
-            <p class="message-ok">Account bijgewerkt</p>
-        {% elif failed %}
-            <p class="message-error">Account bijwerken mislukt</p>
-        {% endif %}
+        {% for message in messages %}
+            <p class="{% if message.error %}message-error{% else %}message-ok{% endif %}">{{ message.message }}</p>
+        {% endfor %}
+        <h3>Wachtwoord wijzigen</h3>
         <form method="POST" class="centered-form">
             {% csrf_token %}
-            {{ form }}
-            <input type="submit" class="btn btn-primary" value="Opslaan"/>
+            {{ form_password }}
+            <input type="hidden" name="type" value="form_password"/>
+            <input type="submit" class="btn btn-primary" value="Wachtwoord wijzigen"/>
+        </form>
+        <h3>Persoonlijke gegevens wijzigen</h3>
+        <form method="POST" class="centered-form">
+            {% csrf_token %}
+            {{ form_user }}
+            <input type="hidden" name="type" value="form_user"/>
+            <input type="submit" class="btn btn-primary" value="Gegevens wijzigen"/>
         </form>
     </div>
 {% endblock %}
