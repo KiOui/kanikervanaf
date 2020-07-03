@@ -192,7 +192,8 @@ class RequestView(TemplateView):
         :param kwargs: keyword arguments
         :return: the request.html page
         """
-        form = RequestForm(None)
+        prefilled_subscription = request.GET.get("subscription", "")
+        form = RequestForm(initial={"subscription_name": prefilled_subscription})
         context = {"form": form}
         return render(request, self.template_name, context)
 
