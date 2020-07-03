@@ -44,11 +44,11 @@ class SubscriptionCategoryPageSitemap(Sitemap):
         categories = SubscriptionCategory.objects.all()
         pages = list()
         for category in categories:
-            subscriptions = Subscription.objects.filter(category=category).order_by(
-                "name"
+            subscriptions = Subscription.top_category(
+                category, max_items=0, order_by="name"
             )
             paginator = Paginator(subscriptions, ListCategoryPageView.paginate_by)
-            for i in range(1, paginator.num_pages + 1):
+            for i in paginator.page_range:
                 pages.append((category, i))
         return pages
 
