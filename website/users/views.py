@@ -8,7 +8,9 @@ from .forms import (
     UserRegisterForm,
     PasswordForgotForm,
     PasswordResetForm,
+    PasswordUpdateForm,
     UserUpdateForm,
+    EnterUserInformationForm,
 )
 from .models import User, PasswordReset
 from .services import generate_password_reset, send_reset_password
@@ -17,7 +19,31 @@ from .services import generate_password_reset, send_reset_password
 class BasicUserInformation(TemplateView):
     """View for entering user information."""
 
+    cookie_name = "subscription_details"
+
     template_name = "users/enter_information.html"
+
+    def get(self, request, **kwargs):
+        """
+        GET request for user information view.
+
+        :param request: the request
+        :param kwargs: keyword arguments
+        :return: render of the enter_information page
+        """
+        if (
+            request.COOKIES.get("subscription_details", None) is None
+            and request.user.is_authenticated
+        ):
+            return render(
+                request,
+                self.template_name,
+                {"form": EnterUserInformationForm(user=request.user)},
+            )
+        else:
+            return render(
+                request, self.template_name, {"form": EnterUserInformationForm()}
+            )
 
 
 class LoginView(TemplateView):
@@ -236,10 +262,10 @@ class AccountView(LoginRequiredMixin, TemplateView):
         :param kwargs: keyword arguments
         :return: a render of the accounts page with initial information filled in
         """
-        initial = {}
-        form = UserUpdateForm(initial=initial)
+        password_form = PasswordUpdateForm()
+        user_form = UserUpdateForm(user=request.user)
 
-        context = {"form": form}
+        context = {"form_password": password_form, "form_user": user_form}
 
         return render(request, self.template_name, context)
 
@@ -252,18 +278,72 @@ class AccountView(LoginRequiredMixin, TemplateView):
         :param kwargs: keyword arguments
         :return: a render of the accounts page
         """
-        form = UserUpdateForm(request.POST)
-
-        context = {"form": form}
-
-        if form.is_valid():
-            if request.user.check_password(form.cleaned_data.get("oldpassword")):
-                request.user.set_password(form.cleaned_data.get("password"))
-                request.user.save()
-                context["succeeded"] = True
-                return render(request, self.template_name, context)
+        form_type = request.POST.get("type")
+        context = {"form_password": PasswordUpdateForm(), "messages": []}
+        if form_type == "form_user":
+            if self.handle_user_information_change(request):
+                context["messages"].append(
+                    {"error": False, "message": "Persoonlijke gegevens bijgewerkt"}
+                )
             else:
-                context["failed"] = True
-                return render(request, self.template_name, context)
+                context["messages"].append(
+                    {
+                        "error": True,
+                        "message": "Persoonlijke gegevens bijwerken mislukt",
+                    }
+                )
+        elif form_type == "form_password":
+            if self.handle_password_change(request):
+                context["messages"].append(
+                    {"error": False, "message": "Wachtwoord bijgewerkt"}
+                )
+            else:
+                context["messages"].append(
+                    {"error": True, "message": "Wachtwoord bijwerken mislukt"}
+                )
+        else:
+            context["messages"].append(
+                {"error": True, "message": "Er ging iets fout, probeer het opnieuw"}
+            )
+
+        context["form_user"] = UserUpdateForm(user=request.user)
 
         return render(request, self.template_name, context)
+
+    @staticmethod
+    def handle_password_change(request):
+        """
+        Handle a password change.
+
+        :param request: the request
+        :return: True if the password was changed successfully, False otherwise
+        """
+        form = PasswordUpdateForm(request.POST)
+        if form.is_valid() and request.user.check_password(
+            form.cleaned_data.get("oldpassword")
+        ):
+            request.user.set_password(form.cleaned_data.get("password"))
+            request.user.save()
+            return True
+        return False
+
+    @staticmethod
+    def handle_user_information_change(request):
+        """
+        Handle a user information change.
+
+        :param request: the request
+        :return: True if the user information was changed successfully, False otherwise
+        """
+        form = UserUpdateForm(request.POST)
+        if form.is_valid():
+            request.user.first_name = form.cleaned_data.get("first_name")
+            request.user.last_name = form.cleaned_data.get("last_name")
+            profile = request.user.get_profile()
+            profile.address = form.cleaned_data.get("address")
+            profile.postal_code = form.cleaned_data.get("postal_code")
+            profile.residence = form.cleaned_data.get("residence")
+            request.user.save()
+            profile.save()
+            return True
+        return False
