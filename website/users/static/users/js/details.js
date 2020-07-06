@@ -65,4 +65,5 @@ function register_keyup() {
 jQuery(document).ready(function($) {
 	register_keyup();
 	putback_details();
+	update();
 });
