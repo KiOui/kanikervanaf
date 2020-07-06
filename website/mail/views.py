@@ -19,7 +19,7 @@ def verify(request, **kwargs):
     except QueuedMailList.DoesNotExist:
         raise Http404()
 
-    if handle_deregister_request(mail_list):
+    if handle_deregister_request(mail_list, request):
         return render(request, "mail/mails_send.html", {"succeeded": True})
     else:
         return render(request, "mail/mails_send.html", {"succeeded": False})

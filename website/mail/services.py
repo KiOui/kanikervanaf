@@ -9,7 +9,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def send_verification_email(first_name, email_address, verification_url):
+def send_verification_email(first_name, email_address, verification_url, request):
     """
     Send a verification email to a specified email address.
 
@@ -23,7 +23,11 @@ def send_verification_email(first_name, email_address, verification_url):
     template = get_template("email/verification_mail.html")
     template_text = get_template("email/verification_mail.txt")
 
-    context = {"verification_url": verification_url, "firstname": first_name}
+    context = {
+        "verification_url": verification_url,
+        "firstname": first_name,
+        "request": request,
+    }
 
     text_content = template_text.render(context)
     html_content = template.render(context)
@@ -52,6 +56,7 @@ def send_summary_email(
     failed_letters,
     pdfs,
     user_information,
+    request,
     direct_send=False,
 ):
     """
@@ -61,6 +66,7 @@ def send_summary_email(
     :param failed_mails: the list with subscriptions that failed sending a deregister email
     :param user_information: the user information for the summary email
     :param direct_send: whether or not the deregister emails were send directly to the companies
+    :param request: the request to build the absolute URIs
     :return: True if the mail was send successfully, False otherwise
     This function captures SMTPExceptions and logs them to the console.
     """
@@ -74,6 +80,7 @@ def send_summary_email(
         "unsend_emails": failed_mails,
         "send_letters": succeeded_letters,
         "unsend_letters": failed_letters,
+        "request": request,
     }
 
     html_content = template.render(context)
@@ -119,11 +126,12 @@ def create_deregister_letters(mail_list):
     return succeeded, failed, pdfs
 
 
-def handle_deregister_request(mail_list):
+def handle_deregister_request(mail_list, request):
     """
     Handle a deregister request.
 
-    :param mail_list: the request to handle
+    :param mail_list: the mail list to handle
+    :param request: the request to build absolute URIs from
     :return: True if the summary email was send successfully, False otherwise
     """
     succeeded_mails, failed_mails = send_deregister_emails(mail_list)
@@ -135,6 +143,7 @@ def handle_deregister_request(mail_list):
         failed_letters,
         pdfs,
         mail_list.user_information,
+        request,
     )
     for subscription in mail_list.item_list.iterator():
         subscription.deregistered()
@@ -216,7 +225,7 @@ def create_deregister_email(user_information, subscription, forward_address=Fals
     return template.render(context)
 
 
-def send_contact_email(name, email_address, title, message):
+def send_contact_email(name, email_address, title, message, request):
     """
     Construct and send a contact email.
 
@@ -224,6 +233,7 @@ def send_contact_email(name, email_address, title, message):
     :param email_address: the email-address of the person sending the contact email
     :param title: the title of the contact email
     :param message: the message of the contact email
+    :param request: the request
     :return: True if the sending succeeded, False otherwise
     """
     template = get_template("email/contact_mail.html")
@@ -234,6 +244,7 @@ def send_contact_email(name, email_address, title, message):
         "email": email_address,
         "title": title,
         "message": message,
+        "request": request,
     }
 
     html_content = template.render(context)
@@ -258,7 +269,7 @@ def send_contact_email(name, email_address, title, message):
     return True
 
 
-def send_request_email(name, email_address, subscription, message):
+def send_request_email(name, email_address, subscription, message, request):
     """
     Construct and send a request email.
 
@@ -266,6 +277,7 @@ def send_request_email(name, email_address, subscription, message):
     :param email_address: the email-address of the person sending the contact email
     :param subscription: the subscription that the user requested
     :param message: the message of the contact email
+    :param request: the request
     :return: True if the sending succeeded, False otherwise
     """
     template = get_template("email/request_mail.html")
@@ -276,6 +288,7 @@ def send_request_email(name, email_address, subscription, message):
         "email": email_address,
         "subscription": subscription,
         "message": message,
+        "request": request,
     }
 
     html_content = template.render(context)
