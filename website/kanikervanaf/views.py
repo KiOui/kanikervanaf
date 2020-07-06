@@ -56,7 +56,7 @@ class ContactView(TemplateView):
             title = form.cleaned_data.get("title")
             message = form.cleaned_data.get("content")
             context["form"] = ContactForm(None)
-            if send_contact_email(name, email, title, message):
+            if send_contact_email(name, email, title, message, request):
                 context["succeeded"] = True
                 return render(request, self.template_name, context)
             else:

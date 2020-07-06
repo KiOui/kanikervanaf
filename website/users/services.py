@@ -50,7 +50,11 @@ def send_reset_password(reset, request):
         reverse("users:reset", kwargs={"token": reset.token})
     )
 
-    context = {"firstname": reset.user.username, "verification_url": verification_url}
+    context = {
+        "firstname": reset.user.username,
+        "verification_url": verification_url,
+        "request": request,
+    }
 
     text_content = template_text.render(context)
     html_content = template.render(context)

@@ -171,6 +171,7 @@ def verification_send(request):
             mail_list.user_information.firstname,
             mail_list.user_information.email_address,
             verification_url,
+            request,
         ):
             return HttpResponseRedirect(reverse("mail:verification_send_succeeded"))
         else:
@@ -216,7 +217,7 @@ class RequestView(TemplateView):
             subscription = form.cleaned_data.get("subscription_name")
             message = form.cleaned_data.get("content")
             context["form"] = RequestForm(None)
-            if send_request_email(name, email, subscription, message):
+            if send_request_email(name, email, subscription, message, request):
                 context["succeeded"] = True
                 return render(request, self.template_name, context)
             else:
