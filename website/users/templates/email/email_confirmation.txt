@@ -1,0 +1,14 @@
+Hallo {{ firstname }}!
+
+Email bevestigen
+
+Jouw email adres is gekoppeld aan een account op kanikervanaf.nl. Klik op de knop om je email adres te bevestigen.
+Heb jij geen account aangevraagd? Negeer dit mailtje dan.
+
+{{ verification_url }}
+
+Heeft u nog feedback voor ons? Mist u een abonnement op onze website? Help anderen en stuur ons een email (klantenservice@kanikervanaf.nl)!
+
+Met vriendelijke groet,
+
+Kanikervanaf.nl!

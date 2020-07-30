@@ -196,6 +196,63 @@ class PasswordReset(models.Model):
                 password_reset.delete()
 
 
+class EmailUpdate(models.Model):
+    """Queued email update model."""
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    token = models.CharField(max_length=64, null=False, blank=False, unique=True)
+    created = models.DateTimeField(auto_now_add=True)
+    email_address = models.EmailField(max_length=1024)
+
+    @staticmethod
+    def generate(user, email_address):
+        """
+        Generate a EmailUpdate object with random token.
+
+        :param user: the User object for which to generate the email update
+        :param email_address: the new email address to register for the email update
+        :return: a EmailUpdate object connected to the User object and with a random token
+        """
+        random_token = secrets.token_hex(32)
+        reset = EmailUpdate.objects.create(
+            token=random_token, user=user, email_address=email_address
+        )
+        return reset
+
+    def update_user(self):
+        """
+        Update the corresponding user with the new email address.
+
+        :return: None
+        """
+        self.user.email = self.email_address
+        self.user.save()
+
+    def __str__(self):
+        """
+        Convert this object to string.
+
+        :return: a string format of the username and the creation timestamp
+        """
+        return "{}, created: {}".format(self.user.username, self.created)
+
+    @staticmethod
+    def remove_expired():
+        """
+        Remove all expired EmailUpdate objects.
+
+        :return: None
+        """
+        email_updates = EmailUpdate.objects.all()
+        timezone = pytz.timezone(settings.TIME_ZONE)
+        remove_after = timezone.localize(
+            datetime.datetime.now() - datetime.timedelta(minutes=60)
+        )
+        for email_update in email_updates:
+            if email_update.created <= remove_after:
+                email_update.delete()
+
+
 class Profile(models.Model):
     """Profile of a user."""
 

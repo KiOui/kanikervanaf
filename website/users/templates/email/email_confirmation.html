@@ -1,0 +1,20 @@
+{% extends "email/mail_base.html" %}
+
+{% block title %}Email bevestigen{% endblock %}
+
+{% block salutation %}
+    Hallo {{ firstname }}!
+{% endblock %}
+
+{% block content %}
+    <div class="flex-column" style="max-width: 400px;min-width: 300px;justify-content: space-between;padding: 5px;flex: 1;">
+        <strong>Email bevestigen</strong> <br>
+        <p>Jouw email adres is gekoppeld aan een account op kanikervanaf.nl. Klik op de knop om je email adres te bevestigen.</p>
+        <p>Heb jij geen account aangevraagd? Negeer dit mailtje dan.</p>
+        <div class="button-container" style="padding: 15px;display: flex;justify-content: center;">
+            <a href="{{ verification_url }}" class="button" style="background-color: #34af99;padding: 1em 2em;color: white;font-size: 30px;border-radius: 500px;"> Email verifiëren </a>
+        </div>
+        <p>Heeft u nog feedback voor ons? Mist u een abonnement op onze website? Help anderen en <a href="mailto:klantenservice@kanikervanaf.nl">stuur ons een email!</a>
+
+        </p></div>
+{% endblock %}

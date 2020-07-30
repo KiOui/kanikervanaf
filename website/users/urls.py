@@ -7,6 +7,7 @@ from .views import (
     LogoutView,
     ResetView,
     AccountView,
+    EmailConfirmView,
 )
 
 urlpatterns = [
@@ -16,5 +17,6 @@ urlpatterns = [
     path("register", RegisterView.as_view(), name="register"),
     path("forgot", ForgotView.as_view(), name="forgot"),
     path("reset/<str:token>", ResetView.as_view(), name="reset"),
+    path("update/<str:token>", EmailConfirmView.as_view(), name="confirm"),
     path("account", AccountView.as_view(), name="account"),
 ]
