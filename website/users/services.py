@@ -85,3 +85,44 @@ def generate_password_reset(user):
     """
     reset = PasswordReset.generate(user)
     return reset
+
+
+def send_update_email(update, request):
+    """
+    Send an update email message.
+
+    :param update: an EmailUpdate object with the email update
+    :param request: the request
+    :return: True if the mail was sent successfully, False otherwise
+    """
+    template = get_template("email/email_confirmation.html")
+    template_text = get_template("email/email_confirmation.txt")
+
+    verification_url = request.build_absolute_uri(
+        reverse("users:confirm", kwargs={"token": update.token})
+    )
+
+    context = {
+        "firstname": update.user.username,
+        "verification_url": verification_url,
+        "request": request,
+    }
+
+    text_content = template_text.render(context)
+    html_content = template.render(context)
+
+    msg = EmailMultiAlternatives(
+        "Kanikervanaf: email-adres bevestigen",
+        text_content,
+        settings.EMAIL_HOST_USER,
+        [update.email_address],
+    )
+    msg.attach_alternative(html_content, "text/html")
+
+    try:
+        msg.send()
+    except SMTPException as e:
+        print(e)
+        return False
+
+    return True

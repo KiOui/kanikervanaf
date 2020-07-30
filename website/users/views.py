@@ -2,6 +2,7 @@ from django.views.generic import TemplateView
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
+from django.http import Http404
 
 from .forms import (
     UserLoginForm,
@@ -11,9 +12,10 @@ from .forms import (
     PasswordUpdateForm,
     UserUpdateForm,
     EnterUserInformationForm,
+    EmailUpdateForm,
 )
-from .models import User, PasswordReset
-from .services import generate_password_reset, send_reset_password
+from .models import User, PasswordReset, EmailUpdate
+from .services import generate_password_reset, send_reset_password, send_update_email
 
 
 class BasicUserInformation(TemplateView):
@@ -132,9 +134,7 @@ class RegisterView(TemplateView):
             password = form.cleaned_data.get("password")
             user.set_password(password)
             user.save()
-            print(user)
             new_user = authenticate(username=user.email, password=password)
-            print(new_user)
             login(request, new_user)
             return render(request, self.template_name, {"succeeded": True})
 
@@ -235,8 +235,8 @@ class ResetView(TemplateView):
         if form.is_valid():
             new_password = form.cleaned_data.get("password")
             token = kwargs.get("token")
+            PasswordReset.remove_expired()
             if PasswordReset.objects.filter(token=token).exists():
-                PasswordReset.remove_expired()
                 reset = PasswordReset.objects.get(token=token)
                 reset.user.set_password(new_password)
                 reset.user.save()
@@ -247,6 +247,30 @@ class ResetView(TemplateView):
 
         context = {"form": form}
         return render(request, self.template_name, context)
+
+
+class EmailConfirmView(TemplateView):
+    """Confirm email view."""
+
+    template_name = "users/confirm.html"
+
+    def get(self, request, **kwargs):
+        """
+        GET request for confirm email view.
+
+        :param request: the request
+        :param kwargs: keyword arguments
+        :return: a render of the email confirmation page
+        """
+        token = kwargs.get("token")
+        EmailUpdate.remove_expired()
+        if EmailUpdate.objects.filter(token=token).exists():
+            update = EmailUpdate.objects.get(token=token)
+            update.update_user()
+            update.delete()
+            return render(request, self.template_name)
+        else:
+            raise Http404("Page not found")
 
 
 class AccountView(LoginRequiredMixin, TemplateView):
@@ -264,8 +288,14 @@ class AccountView(LoginRequiredMixin, TemplateView):
         """
         password_form = PasswordUpdateForm()
         user_form = UserUpdateForm(user=request.user)
+        email_form = EmailUpdateForm(user=request.user)
 
-        context = {"form_password": password_form, "form_user": user_form}
+        context = {
+            "form_password": password_form,
+            "form_user": user_form,
+            "form_email": email_form,
+            "email_update": EmailUpdate.objects.filter(user=request.user).exists(),
+        }
 
         return render(request, self.template_name, context)
 
@@ -301,12 +331,27 @@ class AccountView(LoginRequiredMixin, TemplateView):
                 context["messages"].append(
                     {"error": True, "message": "Wachtwoord bijwerken mislukt"}
                 )
+        elif form_type == "form_email":
+            if self.handle_email_change(request):
+                context["messages"].append(
+                    {
+                        "error": False,
+                        "message": "Email-adres bijgewerkt, klik op de link in de verificatie mail om te"
+                        " bevestigen",
+                    }
+                )
+            else:
+                context["messages"].append(
+                    {"error": True, "message": "Email-adres bijwerken mislukt",}
+                )
         else:
             context["messages"].append(
                 {"error": True, "message": "Er ging iets fout, probeer het opnieuw"}
             )
 
         context["form_user"] = UserUpdateForm(user=request.user)
+        context["form_email"] = EmailUpdateForm(user=request.user)
+        context["email_update"] = EmailUpdate.objects.filter(user=request.user).exists()
 
         return render(request, self.template_name, context)
 
@@ -346,4 +391,24 @@ class AccountView(LoginRequiredMixin, TemplateView):
             request.user.save()
             profile.save()
             return True
+        return False
+
+    @staticmethod
+    def handle_email_change(request):
+        """
+        Handle an email change.
+
+        :param request: the request
+        :return: True if the email update was created successfully, False otherwise
+        """
+        form = EmailUpdateForm(request.POST)
+        if (
+            form.is_valid()
+            and form.cleaned_data.get("email_address") != request.user.email
+        ):
+            email_update = EmailUpdate.generate(
+                request.user, form.cleaned_data.get("email_address")
+            )
+            email_update.save()
+            return send_update_email(email_update, request)
         return False

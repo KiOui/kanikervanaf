@@ -49,7 +49,7 @@ class CategoryParentFilter(AutocompleteFilter):
 
 
 @admin.register(models.SubscriptionCategory)
-class SubscriptionCategoryAdmin(admin.ModelAdmin):
+class SubscriptionCategoryAdmin(ImportExportModelAdmin):
     """Admin model for subscription categories."""
 
     list_display = ["name", "parent"]
@@ -60,4 +60,6 @@ class SubscriptionCategoryAdmin(admin.ModelAdmin):
         """Necessary to use AutocompleteFilter."""
 
 
-admin.site.register(models.SubscriptionSearchTerm)
+@admin.register(models.SubscriptionSearchTerm)
+class SubscriptionSearchTermAdmin(ImportExportModelAdmin):
+    """Admin model for subscription search terms."""

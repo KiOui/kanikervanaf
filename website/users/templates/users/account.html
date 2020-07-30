@@ -15,13 +15,20 @@
 {% block content %}
     <div class="container-fluid">
         <h1><strong>Mijn account</strong></h1>
-        <ul>
-            <li>Gebruikersnaam: {{ user.username }}</li>
-            <li>Email-adres: {{ user.email }}</li>
-        </ul>
+        <p>Gebruikersnaam: {{ user.username }}</p>
         {% for message in messages %}
             <p class="{% if message.error %}message-error{% else %}message-ok{% endif %}">{{ message.message }}</p>
         {% endfor %}
+        <h3>Email-adres wijzigen</h3>
+        {% if email_update %}
+            <p class="message-ok">Er is momenteel een email update actief, klik op de link in de mail om je email-adres aan te passen.</p>
+        {% endif %}
+        <form method="POST" class="centered-form">
+            {% csrf_token %}
+            {{ form_email }}
+            <input type="hidden" name="type" value="form_email"/>
+            <input type="submit" class="btn btn-primary" value="Email-adres wijzigen"/>
+        </form>
         <h3>Wachtwoord wijzigen</h3>
         <form method="POST" class="centered-form">
             {% csrf_token %}

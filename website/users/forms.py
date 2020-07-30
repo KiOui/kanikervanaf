@@ -285,3 +285,26 @@ class UserUpdateForm(forms.Form):
             user_information.update(initial)
             kwargs.update(initial=user_information)
         super(UserUpdateForm, self).__init__(*args, **kwargs)
+
+
+class EmailUpdateForm(forms.Form):
+    """Update email address."""
+
+    email_address = forms.EmailField(label="Email-adres", required=True)
+    captcha = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
+
+    def __init__(self, *args, **kwargs):
+        """
+        Initialize email update form.
+
+        :param args: arguments
+        :param kwargs: keyword arguments, if this includes the "user" keyword argument the field will be preset to the
+        user
+        """
+        user = kwargs.pop("user", None)
+        if user is not None:
+            initial = kwargs.get("initial", {})
+            user_information = {"email_address": user.email}
+            user_information.update(initial)
+            kwargs.update(initial=user_information)
+        super(EmailUpdateForm, self).__init__(*args, **kwargs)
