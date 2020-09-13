@@ -2,6 +2,7 @@ from django.urls import path, register_converter
 from .views import (
     SubscriptionDetailsSearchView,
     SubscriptionDetailsView,
+    SubscriptionDetailsRedirectView,
     SubscriptionListView,
     SummaryView,
     ListCategoryView,
@@ -32,5 +33,10 @@ urlpatterns = [
         "details/<subscription:subscription>",
         SubscriptionDetailsView.as_view(),
         name="details",
+    ),
+    path(
+        "details/<int:subscription>",
+        SubscriptionDetailsRedirectView.as_view(),
+        name="details_redirect",
     ),
 ]
