@@ -12,6 +12,7 @@ from django.urls import reverse
 from mail.services import send_verification_email, send_request_email
 from .forms import RequestForm
 import logging
+from django.http import HttpResponsePermanentRedirect
 
 logger = logging.getLogger(__name__)
 
@@ -225,6 +226,27 @@ class RequestView(TemplateView):
                 return render(request, self.template_name, context)
         else:
             return render(request, self.template_name, context)
+
+
+class SubscriptionDetailsRedirectView(TemplateView):
+    """Redirect old subscription details pages."""
+
+    def get(self, request, **kwargs):
+        """
+        GET request for SubscriptionDetailsRedirectView.
+
+        :param request: the request
+        :param kwargs: keyword arguments
+        :return: a redirect to the new page with the slug
+        """
+        subscription_int = kwargs.get("subscription")
+        try:
+            subscription = Subscription.objects.get(id=subscription_int)
+        except Subscription.DoesNotExist:
+            raise Http404("This subscription does not exist")
+        return HttpResponsePermanentRedirect(
+            reverse("subscriptions:details", kwargs={"subscription": subscription})
+        )
 
 
 def search_database(request):
