@@ -104,6 +104,27 @@ class ListCategoryView(TemplateView):
         )
 
 
+class ListCategoryRedirectView(TemplateView):
+    """Redirects old list category view to the new one."""
+
+    def get(self, request, **kwargs):
+        """
+        GET request for ListCategoryRedirectView.
+
+        :param request: the request
+        :param kwargs: keyword arguments
+        :return: a redirect to the new page with the slug
+        """
+        category_int = kwargs.get("category")
+        try:
+            category = SubscriptionCategory.objects.get(id=category_int)
+        except SubscriptionCategory.DoesNotExist:
+            raise Http404("This subscription category does not exist")
+        return HttpResponsePermanentRedirect(
+            reverse("subscriptions:overview_category", kwargs={"category": category})
+        )
+
+
 class ListCategoryPageView(TemplateView):
     """Category view with pages."""
 
@@ -135,6 +156,31 @@ class ListCategoryPageView(TemplateView):
             request,
             self.template_name,
             {"category": category, "category_path": category_path},
+        )
+
+
+class ListCategoryPageRedirectView(TemplateView):
+    """Redirects old list category page view to the new one."""
+
+    def get(self, request, **kwargs):
+        """
+        GET request for ListCategoryPageRedirectView.
+
+        :param request: the request
+        :param kwargs: keyword arguments
+        :return: a redirect to the new page with the slug
+        """
+        category_int = kwargs.get("category")
+        page = kwargs.get("page")
+        try:
+            category = SubscriptionCategory.objects.get(id=category_int)
+        except SubscriptionCategory.DoesNotExist:
+            raise Http404("This subscription category does not exist")
+        return HttpResponsePermanentRedirect(
+            reverse(
+                "subscriptions:overview_category_page",
+                kwargs={"category": category, "page": page},
+            )
         )
 
 
