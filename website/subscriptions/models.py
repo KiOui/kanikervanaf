@@ -9,22 +9,81 @@ from django.conf import settings
 class Subscription(models.Model):
     """Subscription model."""
 
-    name = models.CharField(max_length=1024)
-    price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    support_email = models.EmailField(blank=True, null=True)
-    support_reply_number = models.CharField(max_length=10, blank=True, null=True)
-    support_postal_code = models.CharField(max_length=64, blank=True, null=True)
-    support_city = models.CharField(max_length=1024, blank=True, null=True)
-    correspondence_address = models.CharField(max_length=1024, blank=True, null=True)
-    correspondence_postal_code = models.CharField(max_length=64, blank=True, null=True)
-    correspondence_city = models.CharField(max_length=1024, blank=True, null=True)
-    support_phone_number = models.CharField(max_length=1024, blank=True, null=True)
-    cancellation_number = models.CharField(max_length=1024, blank=True, null=True)
-    amount_used = models.PositiveIntegerField(default=1)
+    name = models.CharField(max_length=1024, help_text="The name of the subscription.")
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        help_text="The price per year for the subscription.",
+    )
+    support_email = models.EmailField(
+        blank=True,
+        null=True,
+        help_text="The support email address for the subscription. If enabled in the website settings, this is also the"
+        " email address where the deregister emails are sent to.",
+    )
+    support_reply_number = models.CharField(
+        max_length=10,
+        blank=True,
+        null=True,
+        help_text="The reply number (Postbus) for the subscription provider (to send the customers letter to).",
+    )
+    support_postal_code = models.CharField(
+        max_length=64,
+        blank=True,
+        null=True,
+        help_text="The postal code for the support reply number.",
+    )
+    support_city = models.CharField(
+        max_length=1024,
+        blank=True,
+        null=True,
+        help_text="The city for the support reply number.",
+    )
+    correspondence_address = models.CharField(
+        max_length=1024,
+        blank=True,
+        null=True,
+        help_text="The correspondence address of the subscription provider.",
+    )
+    correspondence_postal_code = models.CharField(
+        max_length=64,
+        blank=True,
+        null=True,
+        help_text="The postal code for the correspondence address of the subscription provider.",
+    )
+    correspondence_city = models.CharField(
+        max_length=1024,
+        blank=True,
+        null=True,
+        help_text="The city for the correspondence address of the subscription provider.",
+    )
+    support_phone_number = models.CharField(
+        max_length=1024,
+        blank=True,
+        null=True,
+        help_text="The support phone number (not paid).",
+    )
+    cancellation_number = models.CharField(
+        max_length=1024,
+        blank=True,
+        null=True,
+        help_text="The cancellation number (possible paid).",
+    )
+    amount_used = models.PositiveIntegerField(
+        default=1,
+        help_text="The amount of times the subscription was used at deregistering of customers.",
+    )
     category = models.ForeignKey(
         "SubscriptionCategory", null=True, blank=True, on_delete=models.SET_NULL
     )
-    slug = models.SlugField(null=False, blank=False, unique=True, max_length=100)
+    slug = models.SlugField(
+        null=False,
+        blank=False,
+        unique=True,
+        max_length=100,
+        help_text="The last part of the URL for the page of the subscription provider.",
+    )
 
     def __str__(self):
         """
