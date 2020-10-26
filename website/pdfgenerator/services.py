@@ -19,7 +19,7 @@ def render_deregister_letter(user_information, item):
             "address": user_information.address,
             "postal_code": user_information.postal_code,
             "residence": user_information.residence,
-            "subscription_addresss": item_address,
+            "subscription_address": item_address,
             "subscription_postal_code": item_postal_code,
             "subscription_residence": item_residence,
             "subscription_name": item.name,
