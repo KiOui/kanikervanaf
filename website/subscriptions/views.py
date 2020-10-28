@@ -220,7 +220,10 @@ def verification_send(request):
             verification_url,
             request,
         ):
-            return HttpResponseRedirect(reverse("mail:verification_send_succeeded"))
+            response = HttpResponseRedirect(reverse("mail:verification_send_succeeded"))
+            response.delete_cookie("subscription_details")
+            response.delete_cookie("subscription_items")
+            return response
         else:
             mail_list.user_information.delete()
             mail_list.delete()
