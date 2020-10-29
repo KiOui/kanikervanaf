@@ -160,7 +160,7 @@ class Subscription(models.Model):
             and self.support_postal_code != ""
         ):
             return (
-                self.support_reply_number,
+                self.support_reply_number_prefixed,
                 self.support_postal_code,
                 self.support_city,
             )
@@ -170,6 +170,19 @@ class Subscription(models.Model):
                 self.correspondence_postal_code,
                 self.correspondence_city,
             )
+
+    @property
+    def support_reply_number_prefixed(self):
+        """
+        Get the support reply number with prefix.
+
+        :return: the support reply number with the prefix
+        """
+        return (
+            "Postbus {}".format(self.support_reply_number)
+            if self.support_reply_number is not None and self.support_reply_number != ""
+            else self.support_reply_number
+        )
 
     def deregistered(self):
         """
