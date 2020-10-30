@@ -113,8 +113,8 @@ class PostCreateView(TemplateView):
             title = form.cleaned_data.get("title")
             content = form.cleaned_data.get("content")
             Post.objects.create(title=title, author=user, content=content)
-
-            return redirect("posts:post_overview", page=1)
+            context["succeeded"] = True
+            return render(request, self.template_name, context)
 
         return render(request, self.template_name, context)
 
