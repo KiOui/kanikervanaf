@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from posts.services import send_post_status_update_email
 
 User = get_user_model()
 
@@ -16,7 +17,7 @@ class Post(models.Model):
     TIME_FORMAT = "%H:%M"
 
     title = models.CharField(max_length=256, blank=False, null=False)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=False)
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
     content = models.TextField(blank=False, null=False)
@@ -28,6 +29,17 @@ class Post(models.Model):
         related_name="reactions",
     )
     status = models.IntegerField(choices=STATUS, default=0)
+
+    def save(self, *args, **kwargs):
+        """Save method."""
+        if self.author is not None:
+            try:
+                current_instance = Post.objects.get(pk=self.pk)
+                if current_instance.status != self.status:
+                    send_post_status_update_email(self)
+            except Post.DoesNotExist:
+                pass
+        super(Post, self).save(*args, **kwargs)
 
     @property
     def post_date(self):

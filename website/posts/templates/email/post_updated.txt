@@ -1,0 +1,9 @@
+Hallo {{ name }}!
+
+De status van uw bericht "{{ message_title }}" is veranderd.
+
+De status is nu: {{ status }}.
+
+Met vriendelijke groet,
+
+Kanikervanaf.nl!

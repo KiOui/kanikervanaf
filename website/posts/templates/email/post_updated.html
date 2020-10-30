@@ -1,0 +1,11 @@
+{% extends 'email/email.html' %}
+
+{% block salutation %}
+    Hallo {{ name }}!
+{% endblock %}
+
+{% block content %}
+    De status van uw bericht "{{ message_title }}" is veranderd.
+
+    De status is nu: {{ status }}.
+{% endblock %}

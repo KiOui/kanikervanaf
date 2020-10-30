@@ -17,6 +17,10 @@
 {% block page %}
     <div class="container flex-container">
         <div class="container-centered">
+            {% if succeeded %}
+                <p class="message-ok">Uw bericht is aangemaakt. Als het bericht is goedgekeurd zal het verschijnen op de
+                    berichten pagina.</p>
+            {% endif %}
             <h1><strong>Maak een bericht aan</strong></h1>
             <p>Heeft u iets te delen met andere mensen die onze site bezoeken? Maak hieronder een bericht aan. Iedereen kan
             daarna uw bericht terugvinden op onze berichtenpagina.</p>
