@@ -28,9 +28,13 @@ class Post(models.Model):
         blank=True,
         related_name="reactions",
     )
-    status = models.IntegerField(choices=STATUS, default=0, help_text="If the status is updated, an email message will"
-                                                                      "be send to the author of this post (if it is"
-                                                                      "not anonymously placed).")
+    status = models.IntegerField(
+        choices=STATUS,
+        default=0,
+        help_text="If the status is updated, an email message will"
+        "be send to the author of this post (if it is"
+        "not anonymously placed).",
+    )
 
     def save(self, *args, **kwargs):
         """Save method."""
