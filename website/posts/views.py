@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from .forms import PostForm
 from django.views.generic import TemplateView
 from .models import Post
@@ -114,6 +114,7 @@ class PostCreateView(TemplateView):
             content = form.cleaned_data.get("content")
             Post.objects.create(title=title, author=user, content=content)
             context["succeeded"] = True
+            context["form"] = PostForm()
             return render(request, self.template_name, context)
 
         return render(request, self.template_name, context)

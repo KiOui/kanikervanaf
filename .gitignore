@@ -135,6 +135,6 @@ dmypy.json
 # PyCharm
 .idea/
 
-
+# Django
 db.sqlite3
-mailsettings.py
+localsettings.py

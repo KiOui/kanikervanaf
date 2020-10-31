@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-from kanikervanaf.settings.base import *
+from kanikervanaf.settings import *
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
@@ -57,6 +57,7 @@ if os.environ.get("DJANGO_EMAIL_HOST"):
     EMAIL_HOST_PASSWORD = os.environ.get("DJANGO_EMAIL_HOST_PASSWORD")
     EMAIL_USE_TLS = os.environ.get("DJANGO_EMAIL_USE_TLS", False) == "True"
     EMAIL_USE_SSL = os.environ.get("DJANGO_EMAIL_USE_SSL", False) == "True"
+    CUSTOMER_SERVICE_EMAIL = os.environ.get("DJANGO_CUSTOMER_SERVICE_EMAIL")
 
 if os.environ.get("DJANGO_RECAPTCHA_PUBLIC_KEY") and os.environ.get(
     "DJANGO_RECAPTCHA_PRIVATE_KEY"

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from subscriptions.services import send_contact_email
+from .services import send_contact_email
 from .forms import ContactForm
 
 

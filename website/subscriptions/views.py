@@ -266,7 +266,7 @@ class RequestView(TemplateView):
             subscription = form.cleaned_data.get("subscription_name")
             message = form.cleaned_data.get("content")
             context["form"] = RequestForm(None)
-            if send_request_email(name, email, subscription, message, request):
+            if send_request_email(name, email, subscription, message):
                 context["succeeded"] = True
                 return render(request, self.template_name, context)
             else:

@@ -227,49 +227,6 @@ def create_deregister_email(user_information, subscription, forward_address=Fals
     return template.render(context)
 
 
-def send_contact_email(name, email_address, title, message):
-    """
-    Construct and send a contact email.
-
-    :param name: the name of the person sending the contact email
-    :param email_address: the email-address of the person sending the contact email
-    :param title: the title of the contact email
-    :param message: the message of the contact email
-    :return: True if the sending succeeded, False otherwise
-    """
-    template = get_template("email/contact_mail.html")
-    template_text = get_template("email/contact_mail.txt")
-
-    context = {
-        "name": name,
-        "email": email_address,
-        "title": title,
-        "message": message,
-        "domain": Site.objects.get_current().domain,
-    }
-
-    html_content = template.render(context)
-    text_content = template_text.render(context)
-
-    msg = EmailMultiAlternatives(
-        "Kanikervanaf: Contactformulier",
-        text_content,
-        settings.EMAIL_HOST_USER,
-        ["klantenservice@kanikervanaf.nl"],
-        bcc=[email_address],
-        reply_to=[email_address],
-    )
-    msg.attach_alternative(html_content, "text/html")
-
-    try:
-        msg.send()
-    except SMTPException as e:
-        logger.error(e)
-        return False
-
-    return True
-
-
 def send_request_email(name, email_address, subscription, message):
     """
     Construct and send a request email.
@@ -298,7 +255,7 @@ def send_request_email(name, email_address, subscription, message):
         "Kanikervanaf: Abonnement aangevraagd",
         text_content,
         settings.EMAIL_HOST_USER,
-        ["klantenservice@kanikervanaf.nl"],
+        [settings.CUSTOMER_SERVICE_EMAIL],
         bcc=[email_address],
         reply_to=[email_address],
     )
