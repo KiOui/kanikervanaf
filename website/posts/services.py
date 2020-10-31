@@ -3,6 +3,7 @@ from django.conf import settings
 from smtplib import SMTPException
 from django.core.mail import EmailMultiAlternatives
 import posts.models as models
+from django.contrib.sites.models import Site
 
 
 def send_post_status_update_email(post):
@@ -21,6 +22,7 @@ def send_post_status_update_email(post):
         else post.author.username,
         "message_title": post.title,
         "status": models.STATUS[post.status][1],
+        "domain": Site.objects.get_current().domain,
     }
 
     text_content = template_text.render(context)
