@@ -11,7 +11,7 @@ from .views import (
     ListCategoryPageRedirectView,
     RequestView,
     verification_send,
-    search_database,
+    search_database, VerificationSendSucceeded, verify, VerificationSendFailed,
 )
 from .converters import SubscriptionConverter, SubscriptionCategoryConverter
 
@@ -50,5 +50,16 @@ urlpatterns = [
         "details/<int:subscription>",
         SubscriptionDetailsRedirectView.as_view(),
         name="details_redirect",
+    ),
+    path("verify/<str:token>", verify, name="verify",),
+    path(
+        "verification-request/succeeded",
+        VerificationSendSucceeded.as_view(),
+        name="verification_send_succeeded",
+    ),
+    path(
+        "verification-request/failed",
+        VerificationSendFailed.as_view(),
+        name="verification_send_failed",
     ),
 ]

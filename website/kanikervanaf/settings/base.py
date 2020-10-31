@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     "captcha",
     "subscriptions",
     "users",
-    "mail",
     "pdfgenerator",
     "posts",
 ]
@@ -127,3 +126,5 @@ SITE_ID = 1
 
 # Robots app
 ROBOTS_CACHE_TIMEOUT = 60 * 60 * 24
+
+GOOGLE_ANALYTICS_KEY = "adsfkjsdfk"

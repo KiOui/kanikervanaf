@@ -29,7 +29,7 @@ def send_post_status_update_email(post):
     html_content = template.render(context)
 
     msg = EmailMultiAlternatives(
-        "Kanikervanaf: bericht status gewijzigd",
+        "Kanikervanaf: Bericht status gewijzigd",
         text_content,
         settings.EMAIL_HOST_USER,
         [post.author.email],

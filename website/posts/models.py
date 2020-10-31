@@ -7,7 +7,7 @@ User = get_user_model()
 STATUS_DRAFT = 0
 STATUS_PUBLISHED = 1
 
-STATUS = ((STATUS_DRAFT, "Draft"), (STATUS_PUBLISHED, "Publish"))
+STATUS = ((STATUS_DRAFT, "Draft"), (STATUS_PUBLISHED, "Published"))
 
 
 class Post(models.Model):
@@ -17,7 +17,7 @@ class Post(models.Model):
     TIME_FORMAT = "%H:%M"
 
     title = models.CharField(max_length=256, blank=False, null=False)
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=False)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
     content = models.TextField(blank=False, null=False)
@@ -31,8 +31,8 @@ class Post(models.Model):
     status = models.IntegerField(
         choices=STATUS,
         default=0,
-        help_text="If the status is updated, an email message will"
-        "be send to the author of this post (if it is"
+        help_text="If the status is updated, an email message will "
+        "be send to the author of this post (if it is "
         "not anonymously placed).",
     )
 
