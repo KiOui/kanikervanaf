@@ -217,16 +217,20 @@ def verification_send(request):
         if send_verification_email(
             mail_list.user_information.firstname,
             mail_list.user_information.email_address,
-            verification_url
+            verification_url,
         ):
-            response = HttpResponseRedirect(reverse("subscriptions:verification_send_succeeded"))
+            response = HttpResponseRedirect(
+                reverse("subscriptions:verification_send_succeeded")
+            )
             response.delete_cookie("subscription_details")
             response.delete_cookie("subscription_items")
             return response
         else:
             mail_list.user_information.delete()
             mail_list.delete()
-            return HttpResponseRedirect(reverse("subscriptions:verification_send_failed"))
+            return HttpResponseRedirect(
+                reverse("subscriptions:verification_send_failed")
+            )
     else:
         return HttpResponse(status=500)
 

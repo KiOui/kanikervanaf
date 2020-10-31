@@ -53,13 +53,13 @@ def send_verification_email(first_name, email_address, verification_url):
 
 
 def send_summary_email(
-        succeeded_mails,
-        failed_mails,
-        succeeded_letters,
-        failed_letters,
-        pdfs,
-        user_information,
-        direct_send=False,
+    succeeded_mails,
+    failed_mails,
+    succeeded_letters,
+    failed_letters,
+    pdfs,
+    user_information,
+    direct_send=False,
 ):
     """
     Send a summary email.

@@ -11,7 +11,10 @@ from .views import (
     ListCategoryPageRedirectView,
     RequestView,
     verification_send,
-    search_database, VerificationSendSucceeded, verify, VerificationSendFailed,
+    search_database,
+    VerificationSendSucceeded,
+    verify,
+    VerificationSendFailed,
 )
 from .converters import SubscriptionConverter, SubscriptionCategoryConverter
 
