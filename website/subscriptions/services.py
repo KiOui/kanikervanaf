@@ -1,16 +1,42 @@
 from django.contrib.sites.models import Site
-
+from weasyprint import HTML
 from .models import QueuedMailList, Subscription
 from users.models import UserInformation
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from smtplib import SMTPException
-from pdfgenerator.services import render_deregister_letter
 import logging
 
 
 logger = logging.getLogger(__name__)
+
+
+def render_deregister_letter(user_information, item):
+    """
+    Render a deregister letter.
+
+    :param user_information: the user information
+    :param item: the item to render the letter for
+    :return:
+    """
+    item_address, item_postal_code, item_residence = item.get_address_information()
+    html = render_to_string(
+        "pdf/deregister_letter.html",
+        {
+            "firstname": user_information.firstname,
+            "lastname": user_information.lastname,
+            "address": user_information.address,
+            "postal_code": user_information.postal_code,
+            "residence": user_information.residence,
+            "subscription_address": item_address,
+            "subscription_postal_code": item_postal_code,
+            "subscription_residence": item_residence,
+            "subscription_name": item.name,
+        },
+    )
+    pdf = HTML(string=html).write_pdf()
+    return pdf
 
 
 def send_verification_email(first_name, email_address, verification_url):
