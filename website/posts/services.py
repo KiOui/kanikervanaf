@@ -19,8 +19,6 @@ def send_post_status_update_email(post):
     context = {
         "name": post.author.first_name
         if post.author.first_name is not None and post.author.first_name != ""
-        else post.author.username
-        if post.author.first_name is not None or post.author.first_name != ""
         else post.author.username,
         "message_title": post.title,
         "status": models.STATUS[post.status][1],
