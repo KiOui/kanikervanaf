@@ -37,11 +37,10 @@ INSTALLED_APPS = [
     "admin_auto_filters",
     "import_export",
     "robots",
-    "kanikervanaf",
     "captcha",
+    "kanikervanaf",
     "subscriptions",
     "users",
-    "pdfgenerator",
     "posts",
 ]
 
