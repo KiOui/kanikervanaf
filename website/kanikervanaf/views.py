@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from mail.services import send_contact_email
+from .services import send_contact_email
 from .forms import ContactForm
 
 
@@ -56,7 +56,7 @@ class ContactView(TemplateView):
             title = form.cleaned_data.get("title")
             message = form.cleaned_data.get("content")
             context["form"] = ContactForm(None)
-            if send_contact_email(name, email, title, message, request):
+            if send_contact_email(name, email, title, message):
                 context["succeeded"] = True
                 return render(request, self.template_name, context)
             else:

@@ -75,6 +75,5 @@ urlpatterns = [
         include(("subscriptions.urls", "subscriptions"), namespace="subscriptions"),
     ),
     path("users/", include(("users.urls", "users"), namespace="users")),
-    path("mail/", include(("mail.urls", "mail"), namespace="mail")),
     path("posts/", include(("posts.urls", "posts"), namespace="posts")),
 ]

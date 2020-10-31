@@ -5,11 +5,11 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from .models import Subscription, SubscriptionCategory
+from .models import Subscription, SubscriptionCategory, QueuedMailList
 from django.db.models import Q
-from .services import handle_verification_request
+from .services import handle_verification_request, handle_deregister_request
 from django.urls import reverse
-from mail.services import send_verification_email, send_request_email
+from subscriptions.services import send_verification_email, send_request_email
 from .forms import RequestForm
 import logging
 from django.http import HttpResponsePermanentRedirect
@@ -212,22 +212,25 @@ def verification_send(request):
     mail_list = handle_verification_request(details, items)
     if mail_list:
         verification_url = request.build_absolute_uri(
-            reverse("mail:verify", kwargs={"token": mail_list.token})
+            reverse("subscriptions:verify", kwargs={"token": mail_list.token})
         )
         if send_verification_email(
             mail_list.user_information.firstname,
             mail_list.user_information.email_address,
             verification_url,
-            request,
         ):
-            response = HttpResponseRedirect(reverse("mail:verification_send_succeeded"))
+            response = HttpResponseRedirect(
+                reverse("subscriptions:verification_send_succeeded")
+            )
             response.delete_cookie("subscription_details")
             response.delete_cookie("subscription_items")
             return response
         else:
             mail_list.user_information.delete()
             mail_list.delete()
-            return HttpResponseRedirect(reverse("mail:verification_send_failed"))
+            return HttpResponseRedirect(
+                reverse("subscriptions:verification_send_failed")
+            )
     else:
         return HttpResponse(status=500)
 
@@ -267,7 +270,7 @@ class RequestView(TemplateView):
             subscription = form.cleaned_data.get("subscription_name")
             message = form.cleaned_data.get("content")
             context["form"] = RequestForm(None)
-            if send_request_email(name, email, subscription, message, request):
+            if send_request_email(name, email, subscription, message):
                 context["succeeded"] = True
                 return render(request, self.template_name, context)
             else:
@@ -296,6 +299,58 @@ class SubscriptionDetailsRedirectView(TemplateView):
         return HttpResponsePermanentRedirect(
             reverse("subscriptions:details", kwargs={"subscription": subscription})
         )
+
+
+def verify(request, **kwargs):
+    """
+    Verify a verification request.
+
+    :param request: the request to verify
+    :param kwargs: keyword arguments
+    :return: a rendered page with either a succeeded message or failed message regarding the verification
+    """
+    token = kwargs.get("token", "")
+    try:
+        mail_list = QueuedMailList.objects.get(token=token)
+    except QueuedMailList.DoesNotExist:
+        raise Http404()
+
+    if handle_deregister_request(mail_list):
+        return render(request, "subscriptions/mails_send.html", {"succeeded": True})
+    else:
+        return render(request, "subscriptions/mails_send.html", {"succeeded": False})
+
+
+class VerificationSendSucceeded(TemplateView):
+    """Template for send verification."""
+
+    template_name = "subscriptions/verification_send.html"
+
+    def get(self, request, **kwargs):
+        """
+        GET request handler.
+
+        :param request: the request
+        :param kwargs: keyword arguments
+        :return: a render of the verification_send.html page with a succeeded message
+        """
+        return render(request, self.template_name, {"succeeded": True})
+
+
+class VerificationSendFailed(TemplateView):
+    """Template for failed verification send."""
+
+    template_name = "subscriptions/verification_send.html"
+
+    def get(self, request, **kwargs):
+        """
+        GET request handler.
+
+        :param request: the request
+        :param kwargs: keyword arguments
+        :return: a render of the verification_send.html page with a failed message
+        """
+        return render(request, self.template_name, {"succeeded": False})
 
 
 def search_database(request):

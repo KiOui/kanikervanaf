@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = "oc&trhl=-2=$raqf^y4i07i-gfxg75l11i7#1oyb^tpbpu(5s%"
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.abspath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..")
@@ -35,7 +41,6 @@ INSTALLED_APPS = [
     "captcha",
     "subscriptions",
     "users",
-    "mail",
     "pdfgenerator",
     "posts",
 ]
@@ -127,3 +132,6 @@ SITE_ID = 1
 
 # Robots app
 ROBOTS_CACHE_TIMEOUT = 60 * 60 * 24
+
+RECAPTCHA_PUBLIC_KEY = ""
+RECAPTCHA_PRIVATE_KEY = ""

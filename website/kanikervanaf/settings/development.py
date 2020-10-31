@@ -12,27 +12,16 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
-from kanikervanaf.settings.base import *
-
-try:
-    from kanikervanaf.settings.mailsettings import *
-except ModuleNotFoundError:
-    pass
+from kanikervanaf.settings import *
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "oc&trhl=-2=$raqf^y4i07i-gfxg75l11i7#1oyb^tpbpu(5s%"
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-RECAPTCHA_PUBLIC_KEY = "6Le_FNAUAAAAAJM1S2Q7vdZAfz9U79sdjP0y52XH"
-RECAPTCHA_PRIVATE_KEY = "6Le_FNAUAAAAAKYHM-EVHUTq_A9SP4mbrlB0d7W4"
 
 LOGGING = {
     "version": 1,
