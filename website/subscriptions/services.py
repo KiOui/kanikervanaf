@@ -7,6 +7,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from smtplib import SMTPException
 import logging
+import datetime
 
 
 logger = logging.getLogger(__name__)
@@ -33,6 +34,7 @@ def render_deregister_letter(user_information, item):
             "subscription_postal_code": item_postal_code,
             "subscription_residence": item_residence,
             "subscription_name": item.name,
+            "date": datetime.datetime.now().strftime("%d-%m-%Y"),
         },
     )
     pdf = HTML(string=html).write_pdf()

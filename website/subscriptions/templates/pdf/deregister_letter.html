@@ -12,33 +12,36 @@
 </header>
 <body>
     <div>
+        {{ subscription_name }}<br>
         {{ subscription_address }}<br>
-        {{ subscription_postal_code }}<br>
-        {{ subscription_residence }}
+        {{ subscription_postal_code }} {{ subscription_residence }}
     </div>
+    <p style="text-align: right;">
+        {% if residence %}{{ residence }}, {% endif %}{{ date }}
+    </p>
 
     <p>
+        Onderwerp: Opzegging abonnement<br>
+        <br>
         Beste heer/mevrouw,<br>
         <br>
-        Hierbij wil ik graag mijn abonnement bij uw dienst opzeggen. Het gaat hierbij om {{ subscription_name }}. Ik zeg mijn abonnement op per eerst mogelijke datum. Hierbij houd ik rekening met de opzegtermijn. Mijn gegevens:
+        Hierbij wil ik graag mijn abonnement bij uw dienst opzeggen. Ik zeg mijn abonnement op per eerst mogelijke datum. Hierbij houd ik rekening met de opzegtermijn.<br>
+        <br>
+        Mijn gegevens zijn:
         <ul>
-            {% if firstname %}
-                <li>Voornaam: {{ firstname }}</li>
-            {% endif %}
-            {% if lastname %}
-                <li>Achternaam: {{ lastname }}</li>
+            {% if firstname or lastname %}
+                <li>{% if firstname %}{{ firstname }}{% endif %}{% if lastname %} {{ lastname }}{% endif %}</li>
             {% endif %}
             {% if address %}
-                <li>Adres: {{ address }}</li>
+                <li>{{ address }}</li>
             {% endif %}
-            {% if postal_code %}
-                <li>Postcode: {{ postal_code }}</li>
-            {% endif %}
-            {% if residence %}
-                <li>Woonplaats: {{ residence }}</li>
+            {% if postal_code or residence %}
+                <li>{% if postal_code %}{{ postal_code }}{% endif %}{% if residence %} {{ residence }}{% endif %}</li>
             {% endif %}
         </ul>
-        Ik vraag u vriendelijk om een bevestiging van mijn opzegging per brief. Uw bevestiging zie ik graag binnen twee weken tegemoet.<br>
+        Ik vraag u vriendelijk om een bevestiging van mijn opzegging per brief.<br>
+        <br>
+        Uw bevestiging zie ik graag binnen twee weken tegemoet.<br>
         <br>
         Met vriendelijke groet,
         <br>
