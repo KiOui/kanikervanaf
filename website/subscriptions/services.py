@@ -5,7 +5,7 @@ from django.template import Template, Context
 from weasyprint import HTML
 from .models import QueuedMailList, Subscription
 from users.models import UserInformation
-from django.template.loader import get_template
+from django.template.loader import get_template, render_to_string
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from smtplib import SMTPException
