@@ -1,16 +1,29 @@
+import os
+
 from django.contrib.sites.models import Site
+from django.template import Template, Context
 from weasyprint import HTML
 from .models import QueuedMailList, Subscription
 from users.models import UserInformation
-from django.template.loader import get_template, render_to_string
+from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from smtplib import SMTPException
 import logging
 import datetime
 
-
 logger = logging.getLogger(__name__)
+
+
+def render_template_with_context_to_pdf(template: Template, context: Context):
+    """Render a template with context to pdf."""
+    source = render_template_with_context(template, context)
+    return HTML(string=source).write_pdf()
+
+
+def render_template_with_context(template: Template, context: Context):
+    """Render a template with context to string."""
+    return template.render(context)
 
 
 def render_deregister_letter(user_information, item):
@@ -22,8 +35,8 @@ def render_deregister_letter(user_information, item):
     :return:
     """
     item_address, item_postal_code, item_residence = item.get_address_information()
-    html = render_to_string(
-        "pdf/deregister_letter.html",
+    template = Template(get_file_contents(item.get_letter_template()))
+    context = Context(
         {
             "firstname": user_information.firstname,
             "lastname": user_information.lastname,
@@ -35,10 +48,9 @@ def render_deregister_letter(user_information, item):
             "subscription_residence": item_residence,
             "subscription_name": item.name,
             "date": datetime.datetime.now().strftime("%d-%m-%Y"),
-        },
+        }
     )
-    pdf = HTML(string=html).write_pdf()
-    return pdf
+    return render_template_with_context_to_pdf(template, context)
 
 
 def send_verification_email(first_name, email_address, verification_url):
@@ -81,13 +93,13 @@ def send_verification_email(first_name, email_address, verification_url):
 
 
 def send_summary_email(
-    succeeded_mails,
-    failed_mails,
+    succeeded_mails: set,
+    failed_mails: set,
     succeeded_letters,
     failed_letters,
-    pdfs,
-    user_information,
-    direct_send=False,
+    pdfs: list,
+    user_information: UserInformation,
+    direct_send: bool = False,
 ):
     """
     Send a summary email.
@@ -126,7 +138,7 @@ def send_summary_email(
     )
     msg.attach_alternative(html_content, "text/html")
     for pdf in pdfs:
-        msg.attach(None, pdf, "application/pdf")
+        msg.attach(pdf["item"].slug + ".pdf", pdf["pdf"], "application/pdf")
 
     try:
         msg.send()
@@ -143,14 +155,19 @@ def create_deregister_letters(mail_list):
 
     :param mail_list: the mail list to create the letters for
     :return: a tuple with (succeeded_letters, failed_letters, pdfs) with a list of succeeded letters, failed letters
-    and created pdfs
+    and created pdfs in dictionary format {item: item, pdf: pdf_source}
     """
     succeeded = list()
     failed = list()
     pdfs = list()
     for item in mail_list.item_list.iterator():
         if item.can_generate_pdf():
-            pdfs.append(render_deregister_letter(mail_list.user_information, item))
+            pdfs.append(
+                {
+                    "item": item,
+                    "pdf": render_deregister_letter(mail_list.user_information, item),
+                }
+            )
             succeeded.append(item)
         else:
             failed.append(item)
@@ -183,7 +200,7 @@ def handle_deregister_request(mail_list):
     return retvalue
 
 
-def send_deregister_emails(mail_list, direct_send=False):
+def send_deregister_emails(mail_list, direct_send=False) -> (set, set):
     """
     Send all deregister emails for subscriptions in mail_list.
 
@@ -200,7 +217,7 @@ def send_deregister_emails(mail_list, direct_send=False):
         if subscription.support_email is not None and subscription.support_email != "":
             deregister_email = create_deregister_email(
                 mail_list.user_information,
-                subscription.name,
+                subscription,
                 forward_address=False if direct_send else subscription.support_email,
             )
             if direct_send:
@@ -240,19 +257,21 @@ def create_deregister_email(user_information, subscription, forward_address=Fals
     of the created email
     :return: the deregister email with filled in user information
     """
-    template = get_template("email/deregister_mail.txt")
+    template = Template(get_file_contents(subscription.get_email_template_text()))
 
-    context = {
-        "firstname": user_information.firstname,
-        "lastname": user_information.lastname,
-        "address": user_information.address,
-        "postalcode": user_information.postal_code,
-        "residence": user_information.residence,
-        "subscription": subscription,
-        "forward_address": forward_address,
-    }
+    context = Context(
+        {
+            "firstname": user_information.firstname,
+            "lastname": user_information.lastname,
+            "address": user_information.address,
+            "postalcode": user_information.postal_code,
+            "residence": user_information.residence,
+            "subscription": subscription.name,
+            "forward_address": forward_address,
+        }
+    )
 
-    return template.render(context)
+    return render_template_with_context(template, context)
 
 
 def send_request_email(name, email_address, subscription, message):
@@ -342,3 +361,21 @@ def handle_verification_request(user_information, subscription_list):
             return False
     else:
         return False
+
+
+def get_file_contents(filename):
+    """
+    Get the file contents of a file with filename.
+
+    :param filename: the filename of the file to get the contents of
+    :return: the contents of the file or 'There was an error rendering the template file' if the contents could not be
+    retrieved
+    """
+    if os.path.exists(str(filename)):
+        with open(filename) as file:
+            try:
+                return file.read()
+            except IOError:
+                pass
+    logging.error("There was an error rendering the file {}".format(filename))
+    return "There was an error rendering the template file"

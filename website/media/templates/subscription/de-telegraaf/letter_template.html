@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+<link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: "Roboto", sans-serif;
+    }
+</style>
+
+<header>
+    <title> Kanikervanaf: Opzegbrief </title>
+</header>
+<body>
+    <div>
+        {{ subscription_name }}<br>
+        {{ subscription_address }}<br>
+        {{ subscription_postal_code }} {{ subscription_residence }}
+    </div>
+    <p style="text-align: right;">
+        {% if residence %}{{ residence }}, {% endif %}{{ date }}
+    </p>
+
+    <p>
+        Onderwerp: Opzegging abonnement<br>
+        <br>
+        Beste heer/mevrouw,<br>
+        <br>
+        Hierbij wil ik graag mijn abonnement bij uw dienst opzeggen. Ik zeg mijn abonnement op per eerst mogelijke datum. Hierbij houd ik rekening met de opzegtermijn.<br>
+        <br>
+        Mijn gegevens zijn:
+        <ul>
+            {% if firstname or lastname %}
+                <li>{% if firstname %}{{ firstname }}{% endif %}{% if lastname %} {{ lastname }}{% endif %}</li>
+            {% endif %}
+            {% if address %}
+                <li>{{ address }}</li>
+            {% endif %}
+            {% if postal_code or residence %}
+                <li>{% if postal_code %}{{ postal_code }}{% endif %}{% if residence %} {{ residence }}{% endif %}</li>
+            {% endif %}
+        </ul>
+        Ik vraag u vriendelijk om een bevestiging van mijn opzegging per brief.<br>
+        <br>
+        Uw bevestiging zie ik graag binnen twee weken tegemoet of iets langer maakt niet uit.<br>
+        <br>
+        Met vriendelijke groet,
+        <br>
+        {{ firstname }} {{ lastname }}
+</body>
+
+</html>

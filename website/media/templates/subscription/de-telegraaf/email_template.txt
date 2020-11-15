@@ -1,0 +1,178 @@
+import requests
+from urllib import parse
+import json
+from datetime import datetime
+import pytz
+import time
+
+
+TIME_ZONE = "Europe/Amsterdam"
+BASE_URL = "https://publiek.usc.ru.nl/app/api/v1/?module={module}&method={method}"
+token = ""
+
+TIME_ZONE_OBJ = pytz.timezone(TIME_ZONE)
+
+filter_name = "Fitness beneden / downstairs"
+time_start = datetime.strptime("2020-11-03 9:15:00+01:00", "%Y-%m-%d %H:%M:%S%z")
+time_end = datetime.strptime("2020-11-03 18:00:00+01:00", "%Y-%m-%d %H:%M:%S%z")
+
+class Customer:
+
+    def __init__(self, customer_id, token):
+        self.customer_id = customer_id
+        self.token = token
+
+customer = Customer("193497", "00f45f4c6c4beeb179d788fe2aaecc7428609d60")
+
+
+class ApiException(Exception):
+    pass
+
+
+class Api:
+
+    @staticmethod
+    def login(username, password):
+        url = Api.format_url("user", "logIn")
+        response_raw = Api.send_post(url, {"username": username, "password": password})
+        response = Api.decode_response(response_raw.text)
+        return response
+
+    @staticmethod
+    def get_calendar(customer):
+        url = Api.format_url("agenda", "getAgenda")
+        response_raw = Api.send_post(url, {"klantId": customer.customer_id, "token": customer.token})
+        response = Api.decode_response(response_raw.text)
+        return response
+
+    @staticmethod
+    def get_locations(customer):
+        url = Api.format_url("locatie", "getLocaties")
+        response_raw = Api.send_post(url, {"klantId": customer.customer_id, "token": customer.token})
+        response = Api.decode_response(response_raw.text)
+        return response
+
+    @staticmethod
+    def get_tickets(customer):
+        url = Api.format_url("ticketuur", "getTicketuren")
+        response_raw = Api.send_post(url, {"klantId": customer.customer_id, "token": customer.token})
+        response = Api.decode_response(response_raw.text)
+        return response
+
+    @staticmethod
+    def get_classes(customer):
+        url = Api.format_url("cursus", "getCursussen")
+        response_raw = Api.send_post(url, {"klantId": customer.customer_id, "token": customer.token})
+        response = Api.decode_response(response_raw.text)
+        return response
+
+    @staticmethod
+    def register_location(customer, location):
+        url = Api.format_url("locatie", "addLinschrijving")
+        response_raw = Api.send_post(url, {
+            "klantId": customer.customer_id,
+            "token": customer.token,
+            "inschrijvingId": location.register_id,
+            "poolId": location.pool_id,
+            "laanbodId": location.catalog_id,
+            "start": location.start,
+            "eind": location.finish,
+        })
+        response = Api.decode_response(response_raw.text)
+        return response
+
+    @staticmethod
+    def send_post(url, data):
+        return requests.post(url, data=parse.urlencode(data), headers={
+            'content-type': 'application/x-www-form-urlencoded'
+        })
+
+    @staticmethod
+    def format_url(module, method):
+        return BASE_URL.replace("{module}", module).replace("{method}", method)
+
+    @staticmethod
+    def decode_response(response_raw):
+        try:
+            response = json.loads(response_raw)
+        except json.JSONDecodeError:
+            raise ApiException("Decoding of the response failed.")
+        if type(response) == dict and 'error' in response.keys():
+            raise ApiException(response['error'])
+        return response
+
+
+class LocationItem:
+
+    def __init__(self, name, register_name, pool_name, catalog_id, plan_rule_id, register_id, pool_id, offer_id, l_register_id, registrants, max_registrants, date, start, finish):
+        self.name = name
+        self.register_name = register_name
+        self.pool_name = pool_name
+        self.catalog_id = catalog_id
+        self.plan_rule_id = plan_rule_id
+        self.register_id = register_id
+        self.pool_id = pool_id
+        self.offer_id = offer_id
+        self.l_register_id = l_register_id
+        self.registrants = int(registrants)
+        self.max_registrants = int(max_registrants)
+        self.date = date
+
+        timezone = pytz.timezone(TIME_ZONE)
+
+        self.start = timezone.localize(datetime.utcfromtimestamp(int(start)))
+        self.finish = timezone.localize(datetime.utcfromtimestamp(int(finish)))
+
+    def space_left(self):
+        return self.registrants < self.max_registrants
+
+    @staticmethod
+    def convert_location_list(locations):
+        location_obj_list = list()
+        for location in locations:
+            location_obj_list.append(
+                LocationItem(location['naam'],
+                            location['inschrijvingNaam'],
+                            location['poolNaam'],
+                            location['catalogusId'],
+                            location['planregelId'],
+                            location['inschrijvingId'],
+                            location['poolId'],
+                            location['laanbodId'],
+                            location['linschrijvingId'],
+                            location['inschrijvingen'],
+                            location['maxInschrijvingen'],
+                            location['datum'],
+                            location['start'],
+                            location['eind']
+                             ))
+        return location_obj_list
+
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        return f"{self.name} - {self.date} - ({self.registrants}/{self.max_registrants})) - {self.start}"
+
+
+while True:
+    print("Trying...")
+    locations = Api.get_locations(customer)
+    location_list = LocationItem.convert_location_list(locations)
+    location_fitness_only = [x for x in location_list if x.name == filter_name]
+    location_time_filtered = [x for x in location_fitness_only if x.start >= time_start and x.start <= time_end]
+    for location in location_time_filtered:
+        if location.space_left():
+            print(f"Found an open location: {location}")
+            try:
+                print('\a')
+                print('\a')
+                print('\a')
+            except ApiException as e:
+                print('\a')
+                print(e)
+                print("Tried but failed")
+                pass
+    time.sleep(30)
+
+
