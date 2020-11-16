@@ -138,5 +138,5 @@ dmypy.json
 # Django
 db.sqlite3
 localsettings.py
-media/
-static/
+website/media/
+website/static/
