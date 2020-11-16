@@ -9,6 +9,7 @@ from django.http import (
     HttpResponseRedirect,
     Http404,
     HttpResponseForbidden,
+    FileResponse,
 )
 from django.shortcuts import render
 from django.views.generic import TemplateView
@@ -443,6 +444,42 @@ class AdminTemplateInformationView(TemplateView):
         """Render the admin template information view."""
         if request.user and request.user.is_staff:
             return render(request, self.template_name)
+        else:
+            return HttpResponseForbidden()
+
+
+class AdminGetTemplateFileView(TemplateView):
+    """Get admin template file view."""
+
+    def get(self, request, **kwargs):
+        """Get an admin template file."""
+        if request.user and request.user.is_staff:
+            format_obj = kwargs.get("format")
+            slug = kwargs.get("slug")
+            template_name = kwargs.get("template_name")
+            if format_obj == "subscription":
+                obj = Subscription
+            elif format_obj == "subscription-category":
+                obj = SubscriptionCategory
+            else:
+                raise Http404()
+            try:
+                instance = obj.objects.get(slug=slug)
+            except obj.DoesNotExist:
+                raise Http404()
+            if template_name == "letter":
+                file_handle = instance.letter_template.open()
+            elif template_name == "email_text":
+                file_handle = instance.email_template_text.open()
+            else:
+                raise Http404()
+            response = FileResponse(file_handle, content_type="text/plain")
+            response["Content-Length"] = file_handle.size
+            response["Content-Disposition"] = (
+                'attachment; filename="%s"' % file_handle.name
+            )
+
+            return response
         else:
             return HttpResponseForbidden()
 

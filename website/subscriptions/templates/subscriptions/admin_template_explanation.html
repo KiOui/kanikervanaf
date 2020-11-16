@@ -31,23 +31,27 @@
             template met normale tekst. Voor het genereren van opzegbrieven wordt gebruik gemaakt van een template met
             <a href="https://html.com">HTML en CSS</a>. Een voorbeeld hiervan is het volgende template:
             <div class="markdown"><code>{% verbatim %}{% if forward_address %}
-                Doorsturen naar: {{ forward_address }}
-                {% endif %}
-                Geachte heer/mevrouw,
+Doorsturen naar: {{ forward_address }}
+{% endif %}
+Geachte heer/mevrouw,
 
-                Hierbij wil ik graag mijn abonnement bij uw dienst opzeggen. Het gaat hierbij om {{ subscription_name }}. Ik zeg mijn abonnement op per eerst mogelijke datum. Hierbij houd ik rekening met de opzegtermijn. Mijn gegevens:
+Hierbij zeg ik mijn abonnement met onderstaande gegevens per eerstvolgende mogelijkheid na dagtekening op.
 
-                Voornaam: {{ firstname }}
-                {% if lastname %}Achternaam: {{ lastname }}{% endif %}
-                {% if address %}Adres: {{ address }}{% endif %}
-                {% if postal_code %}Postcode: {{ postal_code }}{% endif %}
-                {% if residence %}Woonplaats: {{ residence }}{% endif %}
+Abonnement: {{ subscription_name }}
+Naam: {{ firstname }}{% if lastname %} {{ lastname }}{% endif %}
+{% if address %}Adres: {{ address }}{% endif %}
+{% if postal_code %}Postcode: {{ postal_code }}{% endif %}
+{% if residence %}Woonplaats: {{ residence }}{% endif %}
 
-                Ik vraag u vriendelijk om een bevestiging van mijn opzegging per e-mail. Uw bevestiging zie ik graag binnen twee weken tegemoet.
+De incassomachtiging dient tegelijkertijd te worden beëindigd.
 
-                Met vriendelijke groet,
+Daarnaast verzoek ik u hierbij tevens, overeenkomstig artikel 17 AVG, over te gaan tot onmiddellijke verwijdering van al mijn persoonsgegevens in de zin van artikel 4(1) AVG, behoudens in de gevallen zoals opgesomd in artikel 17(3) AVG. Graag zie ik de bevestiging van deze opzegging en de verwijdering van mijn persoonsgegevens tegemoet.
 
-                {{ firstname }}{% if lastname %} {{ lastname }}{% endif %}{% endverbatim %}
+Met vriendelijke groet,
+
+{{ firstname }}{% if lastname %} {{ lastname }}{% endif %}
+
+NB: Tevens wens ik gebruik te maken van mijn Recht van Verzet. Ik wil niet telefonisch benaderd worden door jullie en ook geen geadresseerde reclame meer van jullie ontvangen.{% endverbatim %}
             </code></div>
         </p>
         <h2>Template keuze</h2>
@@ -146,23 +150,27 @@
         <p>
             De standaard email template ziet er als volgt uit:
             <div class="markdown"><code>{% verbatim %}{% if forward_address %}
-                Doorsturen naar: {{ forward_address }}
-                {% endif %}
-                Geachte heer/mevrouw,
+Doorsturen naar: {{ forward_address }}
+{% endif %}
+Geachte heer/mevrouw,
 
-                Hierbij wil ik graag mijn abonnement bij uw dienst opzeggen. Het gaat hierbij om {{ subscription_name }}. Ik zeg mijn abonnement op per eerst mogelijke datum. Hierbij houd ik rekening met de opzegtermijn. Mijn gegevens:
+Hierbij zeg ik mijn abonnement met onderstaande gegevens per eerstvolgende mogelijkheid na dagtekening op.
 
-                Voornaam: {{ firstname }}
-                {% if lastname %}Achternaam: {{ lastname }}{% endif %}
-                {% if address %}Adres: {{ address }}{% endif %}
-                {% if postal_code %}Postcode: {{ postal_code }}{% endif %}
-                {% if residence %}Woonplaats: {{ residence }}{% endif %}
+Abonnement: {{ subscription_name }}
+Naam: {{ firstname }}{% if lastname %} {{ lastname }}{% endif %}
+{% if address %}Adres: {{ address }}{% endif %}
+{% if postal_code %}Postcode: {{ postal_code }}{% endif %}
+{% if residence %}Woonplaats: {{ residence }}{% endif %}
 
-                Ik vraag u vriendelijk om een bevestiging van mijn opzegging per e-mail. Uw bevestiging zie ik graag binnen twee weken tegemoet.
+De incassomachtiging dient tegelijkertijd te worden beëindigd.
 
-                Met vriendelijke groet,
+Daarnaast verzoek ik u hierbij tevens, overeenkomstig artikel 17 AVG, over te gaan tot onmiddellijke verwijdering van al mijn persoonsgegevens in de zin van artikel 4(1) AVG, behoudens in de gevallen zoals opgesomd in artikel 17(3) AVG. Graag zie ik de bevestiging van deze opzegging en de verwijdering van mijn persoonsgegevens tegemoet.
 
-                {{ firstname }}{% if lastname %} {{ lastname }}{% endif %}{% endverbatim %}
+Met vriendelijke groet,
+
+{{ firstname }}{% if lastname %} {{ lastname }}{% endif %}
+
+NB: Tevens wens ik gebruik te maken van mijn Recht van Verzet. Ik wil niet telefonisch benaderd worden door jullie en ook geen geadresseerde reclame meer van jullie ontvangen.{% endverbatim %}
             </code></div>
         </p>
         <h3>Brief templates maken</h3>
@@ -191,56 +199,60 @@
             </ul>
             De standaard brief template ziet er zo uit:
             <div class="markdown"><code>{% verbatim %}&lt;!DOCTYPE HTML&gt;
-                &lt;html&gt;
-                &lt;link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet"&gt;
-                &lt;style&gt;
-                    body {
-                        font-family: "Roboto", sans-serif;
-                    }
-                &lt;/style&gt;
+&lt;html&gt;
+&lt;link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet"&gt;
+&lt;style&gt;
+    body {
+        font-family: "Roboto", sans-serif;
+    }
+&lt;/style&gt;
 
-                &lt;header&gt;
-                    &lt;title&gt; Kanikervanaf: Opzegbrief &lt;/title&gt;
-                &lt;/header&gt;
-                &lt;body&gt;
-                &lt;div&gt;
-                    {{ subscription_name }}&lt;br&gt;
-                    {{ subscription_address }}&lt;br&gt;
-                    {{ subscription_postal_code }} {{ subscription_residence }}
-                &lt;/div&gt;
-                &lt;p style="text-align: right;"&gt;
-                    {% if residence %}{{ residence }}, {% endif %}{{ date }}
-                &lt;/p&gt;
+&lt;header&gt;
+    &lt;title&gt; Kanikervanaf: Opzegbrief &lt;/title&gt;
+&lt;/header&gt;
+&lt;body&gt;
+    &lt;div&gt;
+        {{ subscription_name }}&lt;br&gt;
+        {{ subscription_address }}&lt;br&gt;
+        {{ subscription_postal_code }}{% if subscription_residence %} {{ subscription_residence }}{% endif %}
+    &lt;/div&gt;
+    &lt;p style="text-align: right;"&gt;
+        {% if residence %}{{ residence }}, {% endif %}{{ date }}
+    &lt;/p&gt;
 
-                &lt;p&gt;
-                Onderwerp: Opzegging abonnement&lt;br&gt;
-                &lt;br&gt;
-                Beste heer/mevrouw,&lt;br&gt;
-                &lt;br&gt;
-                Hierbij wil ik graag mijn abonnement bij uw dienst opzeggen. Ik zeg mijn abonnement op per eerst mogelijke datum. Hierbij houd ik rekening met de opzegtermijn.&lt;br&gt;
-                &lt;br&gt;
-                Mijn gegevens zijn:
-                &lt;ul&gt;
-                    {% if firstname or lastname %}
-                        &lt;li&gt;{% if firstname %}{{ firstname }}{% endif %}{% if lastname %} {{ lastname }}{% endif %}&lt;/li&gt;
-                    {% endif %}
-                    {% if address %}
-                        &lt;li&gt;{{ address }}&lt;/li&gt;
-                    {% endif %}
-                    {% if postal_code or residence %}
-                        &lt;li&gt;{% if postal_code %}{{ postal_code }}{% endif %}{% if residence %} {{ residence }}{% endif %}&lt;/li&gt;
-                    {% endif %}
-                &lt;/ul&gt;
-                Ik vraag u vriendelijk om een bevestiging van mijn opzegging per brief.&lt;br&gt;
-                &lt;br&gt;
-                Uw bevestiging zie ik graag binnen twee weken tegemoet.&lt;br&gt;
-                &lt;br&gt;
-                Met vriendelijke groet,
-                &lt;br&gt;
-                {{ firstname }} {{ lastname }}
-                &lt;/body&gt;
+    &lt;p&gt;
+        Onderwerp: Opzegging abonnement&lt;br&gt;
+        &lt;br&gt;
+        Beste heer/mevrouw,&lt;br&gt;
+        &lt;br&gt;
+        Hierbij zeg ik mijn abonnement met onderstaande gegevens per eerstvolgende mogelijkheid na dagtekening op.&lt;br&gt;
+        &lt;ul&gt;
+            {% if firstname or lastname %}
+                &lt;li&gt;{% if firstname %}{{ firstname }}{% endif %}{% if lastname %} {{ lastname }}{% endif %}&lt;/li&gt;
+            {% endif %}
+            {% if address %}
+                &lt;li&gt;{{ address }}&lt;/li&gt;
+            {% endif %}
+            {% if postal_code or residence %}
+                &lt;li&gt;{% if postal_code %}{{ postal_code }}{% endif %}{% if residence %} {{ residence }}{% endif %}&lt;/li&gt;
+            {% endif %}
+        &lt;/ul&gt;
+        De incassomachtiging dient tegelijkertijd te worden beëindigd.&lt;br&gt;
+        &lt;br&gt;
+        Daarnaast verzoek ik u hierbij tevens, overeenkomstig artikel 17 AVG, over te gaan tot onmiddellijke
+        verwijdering van al mijn persoonsgegevens in de zin van artikel 4(1) AVG, behoudens in de gevallen zoals opgesomd
+        in artikel 17(3) AVG. Graag zie ik de bevestiging van deze opzegging en de verwijdering van mijn persoonsgegevens
+        tegemoet.&lt;br&gt;
+        &lt;br&gt;
+        Met vriendelijke groet,
+        &lt;br&gt;
+        {{ firstname }} {{ lastname }}&lt;br&gt;
+        &lt;br&gt;
+        NB: Tevens wens ik gebruik te maken van mijn Recht van Verzet. Ik wil niet telefonisch benaderd worden door
+        jullie en ook geen geadresseerde reclame meer van jullie ontvangen.
+&lt;/body&gt;
 
-                &lt;/html&gt;{% endverbatim %}
+&lt;/html&gt;{% endverbatim %}
             </code></div>
         </p>
         <h3>Uploaden van templates</h3>

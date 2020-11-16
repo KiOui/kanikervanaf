@@ -14,7 +14,7 @@
     <div>
         {{ subscription_name }}<br>
         {{ subscription_address }}<br>
-        {{ subscription_postal_code }} {{ subscription_residence }}
+        {{ subscription_postal_code }}{% if subscription_residence %} {{ subscription_residence }}{% endif %}
     </div>
     <p style="text-align: right;">
         {% if residence %}{{ residence }}, {% endif %}{{ date }}
@@ -25,9 +25,7 @@
         <br>
         Beste heer/mevrouw,<br>
         <br>
-        Hierbij wil ik graag mijn abonnement bij uw dienst opzeggen. Ik zeg mijn abonnement op per eerst mogelijke datum. Hierbij houd ik rekening met de opzegtermijn.<br>
-        <br>
-        Mijn gegevens zijn:
+        Hierbij zeg ik mijn abonnement met onderstaande gegevens per eerstvolgende mogelijkheid na dagtekening op.<br>
         <ul>
             {% if firstname or lastname %}
                 <li>{% if firstname %}{{ firstname }}{% endif %}{% if lastname %} {{ lastname }}{% endif %}</li>
@@ -39,13 +37,19 @@
                 <li>{% if postal_code %}{{ postal_code }}{% endif %}{% if residence %} {{ residence }}{% endif %}</li>
             {% endif %}
         </ul>
-        Ik vraag u vriendelijk om een bevestiging van mijn opzegging per brief.<br>
+        De incassomachtiging dient tegelijkertijd te worden beëindigd.<br>
         <br>
-        Uw bevestiging zie ik graag binnen twee weken tegemoet.<br>
+        Daarnaast verzoek ik u hierbij tevens, overeenkomstig artikel 17 AVG, over te gaan tot onmiddellijke
+        verwijdering van al mijn persoonsgegevens in de zin van artikel 4(1) AVG, behoudens in de gevallen zoals opgesomd
+        in artikel 17(3) AVG. Graag zie ik de bevestiging van deze opzegging en de verwijdering van mijn persoonsgegevens
+        tegemoet.<br>
         <br>
         Met vriendelijke groet,
         <br>
-        {{ firstname }} {{ lastname }}
+        {{ firstname }} {{ lastname }}<br>
+        <br>
+        NB: Tevens wens ik gebruik te maken van mijn Recht van Verzet. Ik wil niet telefonisch benaderd worden door
+        jullie en ook geen geadresseerde reclame meer van jullie ontvangen.
 </body>
 
 </html>

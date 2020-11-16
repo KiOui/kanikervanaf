@@ -18,6 +18,7 @@ from .views import (
     AdminRenderLetterView,
     AdminRenderEmailView,
     AdminTemplateInformationView,
+    AdminGetTemplateFileView,
 )
 from .converters import SubscriptionConverter, SubscriptionCategoryConverter
 
@@ -82,5 +83,10 @@ urlpatterns = [
         "admin/template-information",
         AdminTemplateInformationView.as_view(),
         name="admin_template_information",
+    ),
+    path(
+        "templates/<str:format>/<str:slug>/<str:template_name>",
+        AdminGetTemplateFileView.as_view(),
+        name="admin_get_template_file",
     ),
 ]
