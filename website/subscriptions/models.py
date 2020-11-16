@@ -131,6 +131,28 @@ class Subscription(models.Model):
         " this please check the template help information.",
     )
 
+    @staticmethod
+    def get_test_instance():
+        """Get a test instance."""
+        return Subscription(
+            name="Prikkl abonnement",
+            price=10.50,
+            support_email="info@prikkl.nl",
+            support_reply_number=12345,
+            support_postal_code="5261 BD",
+            support_city="Zwalk",
+            correspondence_address="Taalstraat 40B",
+            correspondence_city="Vught",
+            correspondence_postal_code="5261 BE",
+            support_phone_number="085-8000185",
+            cancellation_number="0628374918",
+            amount_used=5,
+            category=None,
+            slug="prikkl-abonnement",
+            letter_template=None,
+            email_template_text=None,
+        )
+
     def __str__(self):
         """
         Convert this object to string.

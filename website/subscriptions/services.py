@@ -26,16 +26,22 @@ def render_template_with_context(template: Template, context: Context):
     return template.render(context)
 
 
-def render_deregister_letter(user_information, item):
+def render_deregister_letter(user_information, item, letter_template=None):
     """
     Render a deregister letter.
 
+    :param letter_template: the letter template to use, if specified this template will be used instead of the one
+    registered in the subscription
     :param user_information: the user information
     :param item: the item to render the letter for
     :return:
     """
     item_address, item_postal_code, item_residence = item.get_address_information()
-    template = Template(get_file_contents(item.get_letter_template()))
+    template = (
+        Template(get_file_contents(item.get_letter_template()))
+        if letter_template is None
+        else Template(get_file_contents(letter_template))
+    )
     context = Context(
         {
             "firstname": user_information.firstname,
@@ -247,26 +253,38 @@ def send_deregister_emails(mail_list, direct_send=False) -> (set, set):
     return succeeded, failed
 
 
-def create_deregister_email(user_information, subscription, forward_address=False):
+def create_deregister_email(
+    user_information, item, email_template=None, forward_address=False
+):
     """
     Create a deregister email.
 
+    :param email_template: the email template to use, if specified this template will be used instead of the one
     :param user_information: the user information to put in the deregister email
-    :param subscription: the subscription name to put in the deregister email
+    :param item: the subscription to put in the deregister email
     :param forward_address: a forwarding address, if this mail is not send directly. This address is noted at the top
     of the created email
     :return: the deregister email with filled in user information
     """
-    template = Template(get_file_contents(subscription.get_email_template_text()))
+    item_address, item_postal_code, item_residence = item.get_address_information()
+    template = (
+        Template(get_file_contents(item.get_email_template_text()))
+        if email_template is None
+        else Template(get_file_contents(email_template))
+    )
 
     context = Context(
         {
             "firstname": user_information.firstname,
             "lastname": user_information.lastname,
             "address": user_information.address,
-            "postalcode": user_information.postal_code,
+            "postal_code": user_information.postal_code,
             "residence": user_information.residence,
-            "subscription": subscription.name,
+            "subscription_address": item_address,
+            "subscription_postal_code": item_postal_code,
+            "subscription_residence": item_residence,
+            "subscription_name": item.name,
+            "date": datetime.datetime.now().strftime("%d-%m-%Y"),
             "forward_address": forward_address,
         }
     )

@@ -15,6 +15,8 @@ from .views import (
     VerificationSendSucceeded,
     verify,
     VerificationSendFailed,
+    AdminRenderLetterView,
+    AdminRenderEmailView,
 )
 from .converters import SubscriptionConverter, SubscriptionCategoryConverter
 
@@ -64,5 +66,15 @@ urlpatterns = [
         "verification-request/failed",
         VerificationSendFailed.as_view(),
         name="verification_send_failed",
+    ),
+    path(
+        "admin/<str:format>/<str:slug>/generate-letter",
+        AdminRenderLetterView.as_view(),
+        name="admin_render_letter",
+    ),
+    path(
+        "admin/<str:format>/<str:slug>/generate-email",
+        AdminRenderEmailView.as_view(),
+        name="admin_render_email",
     ),
 ]
