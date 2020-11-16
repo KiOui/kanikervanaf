@@ -1,0 +1,257 @@
+{% extends "kanikervanaf/base.html" %}
+{% load static %}
+
+{% block title %}
+    Kanikervanaf: Template uitleg
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'subscriptions/css/admin-template-explanation.css' %}">
+{% endblock %}
+
+{% block page %}
+    <div class="container mt-5">
+        <h1>Admin template informatie</h1>
+        <p>
+            Deze pagina bevat informatie over het maken van brief en email templates voor deze website. Eerst wordt
+            uitgelegd hoe een template wordt gekozen voor een bepaald abonnement, daarna wordt uitgelegd hoe een
+            template wordt gegenereerd en hoe je zelf een template aan de website kan toevoegen.
+        </p>
+
+        <h2>Wat is een template?</h2>
+        <p>
+            Een template is de opmaak die wordt gebruikt om een email of brief te genereren. Voor het maken van
+            de opzegbrieven en emails gebruikt deze website de
+            <a href="https://docs.djangoproject.com/en/3.1/topics/templates/">Django Template engine</a>
+            , een veelgebruikte manier om templates op te stellen voor webpagina's. De webpagina's die worden
+            gegenereerd op deze website gebruiken ook allemaal de Django Template engine.
+        </p>
+        <p>
+            Voor het genereren van de opzegemails die naar de klanten worden gestuurd wordt gebruik gemaakt van een
+            template met normale tekst. Voor het genereren van opzegbrieven wordt gebruik gemaakt van een template met
+            <a href="https://html.com">HTML en CSS</a>. Een voorbeeld hiervan is het volgende template:
+            <div class="markdown"><code>{% verbatim %}{% if forward_address %}
+                Doorsturen naar: {{ forward_address }}
+                {% endif %}
+                Geachte heer/mevrouw,
+
+                Hierbij wil ik graag mijn abonnement bij uw dienst opzeggen. Het gaat hierbij om {{ subscription_name }}. Ik zeg mijn abonnement op per eerst mogelijke datum. Hierbij houd ik rekening met de opzegtermijn. Mijn gegevens:
+
+                Voornaam: {{ firstname }}
+                {% if lastname %}Achternaam: {{ lastname }}{% endif %}
+                {% if address %}Adres: {{ address }}{% endif %}
+                {% if postal_code %}Postcode: {{ postal_code }}{% endif %}
+                {% if residence %}Woonplaats: {{ residence }}{% endif %}
+
+                Ik vraag u vriendelijk om een bevestiging van mijn opzegging per e-mail. Uw bevestiging zie ik graag binnen twee weken tegemoet.
+
+                Met vriendelijke groet,
+
+                {{ firstname }}{% if lastname %} {{ lastname }}{% endif %}{% endverbatim %}
+            </code></div>
+        </p>
+        <h2>Template keuze</h2>
+        <p>
+            De website kiest automatisch een template gebaseerd op hiërarchie. Zoals je misschien al weet zijn er twee
+            modellen waaraan we templates kunnen koppelen, een <code>Subscription</code> (abonnement) en een
+            <code>SubscriptionCategory</code> (abonnement categorie). Deze zijn beide terug te vinden in het
+            <a href="{% url 'admin:index' %}">administrator dashboard</a> onder de <code>Subscriptions</code>
+            applicatie.
+        </p>
+        <p>
+            Alle instanties van de twee modellen (<code>Subscription</code> en <code>SubscriptionCategory</code>) vormen
+            samen een hiërarchie. Hier onder staat een voorbeeld van zo'n hiërarchie:
+            <img alt="Template hiërarchie" src="{% static 'subscriptions/img/Template-hierarchy.jpg' %}"/>
+            De gestippelde ronde vlakken zijn <code>Subscription</code> objecten, de normale ronde vlakken zijn
+            <code>SubscriptionCategory</code> objecten (behalve de 'Hoofdcategorie', deze bestaat eigenlijk niet).
+            'KPN Internet' valt dus onder de categorie 'KPN', en 'KPN' valt weer onder de categorie 'Multimedia'. De
+            categorieën die onder de 'Hoofdcategorie' vallen worden weergeven op de pagina van de
+            <a href="{% url 'subscriptions:overview' %}">eerste stap</a> van het opzegproces op deze website.
+        </p>
+        <p>
+            De categorie van een <code>Subscription</code> wordt op het
+            <a href="{% url 'admin:index' %}">administrator dashboard</a> aangeduid als de 'Category'. Als een
+            <code>SubscriptionCategory</code> onder een andere <code>SubscriptionCategory</code> valt wordt dit
+            aangeduid met de 'Parent' van een categorie. Zo heeft 'KPN' bijvoorbeeld 'Multimedia' als Parent.
+        </p>
+        <p>
+            Zoals al eerder genoemd kunnen templates worden gespecificeerd per <code>SubscriptionCategory</code> en per
+            <code>Subscription</code>. Er kan dus bijvoorbeeld een template worden ingesteld voor alle abonnementen die
+            vallen onder de 'KPN' categorie, of alle abonnementen die vallen onder de 'Multimedia' categorie. Een
+            probleem ontstaat als we een template hebben ingesteld voor beide categorieën. Wat als iemand 'KPN Internet'
+            opzegd? Welk template wordt dan gebruikt?
+        </p>
+        <p>
+            De algemene regel is: het meest specifieke template wordt gebruikt. Dit betekend dus dat voor ons voorbeeld
+            het template voor de 'KPN' categorie zal worden gebruikt. Meer volledig:
+            <ol>
+                <li>Als de <code>Subscription</code> een template bevat, dan wordt deze gebruikt.</li>
+                <li>Als (1) niet het geval is, dan wordt gekeken naar de categorie van de <code>Subscription</code>.
+                Als deze categorie een template bevat dan wordt deze gebruikt.</li>
+                <li>Als (2) ook niet het geval is dan wordt gekeken naar de 'Parent' categorie van de
+                    <code>SubscriptionCategory</code>. Als deze categorie een template bevat dan wordt deze gebruikt.
+                </li>
+                <li>We herhalen (2) totdat we een template hebben gevonden of bij de 'Hoofdcategorie' uitkomen, als de
+                'Hoofdcategorie' is bereikt dan zal het standaard template worden gebruikt.</li>
+            </ol>
+        </p>
+        <h2>Templates maken</h2>
+        <p>
+            Het maken van templates gaat erg eenvoudig. Het aanpassen kan gewoon via een normaal tekstdocument
+            (.txt, .html).
+        </p>
+        <h3>Email templates maken</h3>
+        <p>
+            Het maken van email templates is iets makkelijker dan het maken van brief templates omdat er in email
+            templates geen opmaak nodig is (een email is gewoon platte tekst). Het schrijven van een email template
+            gaat dan ook net zoals het schrijven van een normale mail alleen er zijn bepaalde controlestructuren die we
+            kunnen gebruiken voor het invoegen van de naam van de gebruiker bijvoorbeeld. Hieronder staat een overzicht
+            van alle variabelen die we kunnen gebruiken in het genereren van een email template:
+            <ul>
+                <li><code>firstname</code>: De voornaam van de gebruiker (verplicht).</li>
+                <li><code>lastname</code>: De achternaam van de gebruiker.</li>
+                <li><code>address</code>: Het adres van de gebruiker.</li>
+                <li><code>postal_code</code>: De postcode van de gebruiker.</li>
+                <li><code>residence</code>: De woonplaats van de gebruiker.</li>
+                <li><code>subscription_address</code>: Het adres van het abonnement, dit kan ook een postbus zijn
+                    (verplicht).</li>
+                <li><code>subscription_postal_code</code>: De postcode van het abonnement. (verplicht)</li>
+                <li><code>subscription_residence</code>: De plaats waar het adres van het abonnement is gevestigd.</li>
+                <li><code>subscription_name</code>: De naam van het abonnement. (verplicht)</li>
+                <li><code>date</code>: De datum waarop de brief wordt aangemaakt, als <code>dag-maand-jaar</code>
+                    (verplicht).</li>
+                <li><code>forward_address</code>: Het adres waar de mail naar wordt doorgestuurd.</li>
+            </ul>
+            Het invoegen van een variabele gaat erg gemakkelijk in een template. Om een variabele in te voegen moeten we
+            de naam van de variabele in dubbele krulhaakjes zetten
+            <code>{% verbatim %}{{ naam_variabele }}{% endverbatim %}</code>. Om bijvoorbeeld de voornaam van de
+            gebruiker in de email op te nemen gebruiken we {% verbatim %}<code>{{ firstname }}</code>{% endverbatim %}.
+        </p>
+        <p>
+            Misschien is het je al opgevallen dat niet alle velden die worden meegegeven verplicht zijn (en dus
+            mogelijk niet bestaan). We moeten in het template kunnen testen of een veld wel is ingevuld (we willen
+            bijvoorbeeld niet "{% verbatim %}{{ firstname }} woont in {{ residence }}{% endverbatim %}" in de mail
+            zetten als de gebruiker geen woonplaats heeft ingevuld. We moeten dus op een manier kunnen testen of een
+            variabele leeg is. Dit doen we op de volgende manier:
+            <div class="markdown"><code>{% verbatim %}{% if residence %}
+                    {{ firstname }} woont in {{ residence }}
+                {% else %}
+                    {{ firstname }} heeft geen woonplaats ingevuld
+                {% endif %}{% endverbatim %}
+            </code></div>
+            Met
+            {% verbatim %}<code>{% if %}</code>, <code>{% else %}</code> en <code>{% endif %}</code>{% endverbatim %}
+            kunnen we dus testen of een waarde is ingevuld of bestaat.
+        </p>
+        <p>
+            De standaard email template ziet er als volgt uit:
+            <div class="markdown"><code>{% verbatim %}{% if forward_address %}
+                Doorsturen naar: {{ forward_address }}
+                {% endif %}
+                Geachte heer/mevrouw,
+
+                Hierbij wil ik graag mijn abonnement bij uw dienst opzeggen. Het gaat hierbij om {{ subscription_name }}. Ik zeg mijn abonnement op per eerst mogelijke datum. Hierbij houd ik rekening met de opzegtermijn. Mijn gegevens:
+
+                Voornaam: {{ firstname }}
+                {% if lastname %}Achternaam: {{ lastname }}{% endif %}
+                {% if address %}Adres: {{ address }}{% endif %}
+                {% if postal_code %}Postcode: {{ postal_code }}{% endif %}
+                {% if residence %}Woonplaats: {{ residence }}{% endif %}
+
+                Ik vraag u vriendelijk om een bevestiging van mijn opzegging per e-mail. Uw bevestiging zie ik graag binnen twee weken tegemoet.
+
+                Met vriendelijke groet,
+
+                {{ firstname }}{% if lastname %} {{ lastname }}{% endif %}{% endverbatim %}
+            </code></div>
+        </p>
+        <h3>Brief templates maken</h3>
+        <p>
+            Het maken van brief templates gaat op dezelfde manier. Het enige verschil is dat we een manier nodig hebben
+            om de brief op te maken (zoals de datum die aan de rechterkant moet staan). Dit kan niet in normale platte
+            tekst en dus gebruikt de website voor het opmaken van de brieven <a href="https://html.com">HTML en CSS</a>.
+            Dit zijn dezelfde talen waarin de webpagina's op de website worden geschreven. Deze uitleg bevat geen uitleg
+            over HTML en CSS.
+        </p>
+        <p>
+            De variabelen die we kunnen gebruiken in brief templates zijn:
+            <ul>
+                <li><code>firstname</code>: De voornaam van de gebruiker (verplicht).</li>
+                <li><code>lastname</code>: De achternaam van de gebruiker.</li>
+                <li><code>address</code>: Het adres van de gebruiker.</li>
+                <li><code>postal_code</code>: De postcode van de gebruiker.</li>
+                <li><code>residence</code>: De woonplaats van de gebruiker.</li>
+                <li><code>subscription_address</code>: Het adres van het abonnement, dit kan ook een postbus zijn
+                    (verplicht).</li>
+                <li><code>subscription_postal_code</code>: De postcode van het abonnement. (verplicht)</li>
+                <li><code>subscription_residence</code>: De plaats waar het adres van het abonnement is gevestigd.</li>
+                <li><code>subscription_name</code>: De naam van het abonnement. (verplicht)</li>
+                <li><code>date</code>: De datum waarop de brief wordt aangemaakt, als <code>dag-maand-jaar</code>
+                    (verplicht).</li>
+            </ul>
+            De standaard brief template ziet er zo uit:
+            <div class="markdown"><code>{% verbatim %}&lt;!DOCTYPE HTML&gt;
+                &lt;html&gt;
+                &lt;link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet"&gt;
+                &lt;style&gt;
+                    body {
+                        font-family: "Roboto", sans-serif;
+                    }
+                &lt;/style&gt;
+
+                &lt;header&gt;
+                    &lt;title&gt; Kanikervanaf: Opzegbrief &lt;/title&gt;
+                &lt;/header&gt;
+                &lt;body&gt;
+                &lt;div&gt;
+                    {{ subscription_name }}&lt;br&gt;
+                    {{ subscription_address }}&lt;br&gt;
+                    {{ subscription_postal_code }} {{ subscription_residence }}
+                &lt;/div&gt;
+                &lt;p style="text-align: right;"&gt;
+                    {% if residence %}{{ residence }}, {% endif %}{{ date }}
+                &lt;/p&gt;
+
+                &lt;p&gt;
+                Onderwerp: Opzegging abonnement&lt;br&gt;
+                &lt;br&gt;
+                Beste heer/mevrouw,&lt;br&gt;
+                &lt;br&gt;
+                Hierbij wil ik graag mijn abonnement bij uw dienst opzeggen. Ik zeg mijn abonnement op per eerst mogelijke datum. Hierbij houd ik rekening met de opzegtermijn.&lt;br&gt;
+                &lt;br&gt;
+                Mijn gegevens zijn:
+                &lt;ul&gt;
+                    {% if firstname or lastname %}
+                        &lt;li&gt;{% if firstname %}{{ firstname }}{% endif %}{% if lastname %} {{ lastname }}{% endif %}&lt;/li&gt;
+                    {% endif %}
+                    {% if address %}
+                        &lt;li&gt;{{ address }}&lt;/li&gt;
+                    {% endif %}
+                    {% if postal_code or residence %}
+                        &lt;li&gt;{% if postal_code %}{{ postal_code }}{% endif %}{% if residence %} {{ residence }}{% endif %}&lt;/li&gt;
+                    {% endif %}
+                &lt;/ul&gt;
+                Ik vraag u vriendelijk om een bevestiging van mijn opzegging per brief.&lt;br&gt;
+                &lt;br&gt;
+                Uw bevestiging zie ik graag binnen twee weken tegemoet.&lt;br&gt;
+                &lt;br&gt;
+                Met vriendelijke groet,
+                &lt;br&gt;
+                {{ firstname }} {{ lastname }}
+                &lt;/body&gt;
+
+                &lt;/html&gt;{% endverbatim %}
+            </code></div>
+        </p>
+        <h3>Uploaden van templates</h3>
+        <p>
+            Om brief en email templates te uploaden ga je via het
+            <a href="{% url 'admin:index' %}">administrator dashboard</a> naar een <code>Subscription</code> of
+            <code>SubscriptionCategory</code>. Hier kun je een 'Letter template' (voor brieven) of een
+            'Email template text' (voor emails) uploaden. Druk op 'Save and continue editing' om op te slaan. Als het
+            opslaan is gelukt verschijnt er onderin het administratorscherm een 'Show letter' (voor brieven) of 'Show
+            email' (voor emails) knop. Als je op deze knop drukt wordt een testbrief/email aangemaakt en getoond. Met
+            deze knoppen kun je controleren of de template werkt.
+        </p>
+    </div>
+{% endblock %}

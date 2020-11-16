@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
     "django.contrib.sites",
+    "django_cleanup.apps.CleanupConfig",
     "admin_auto_filters",
     "import_export",
     "robots",

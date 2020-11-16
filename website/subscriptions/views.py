@@ -1,13 +1,27 @@
+import os
 import urllib.parse
 import json
 
+from django.conf import settings
 from django.core.paginator import Paginator
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import (
+    HttpResponse,
+    HttpResponseRedirect,
+    Http404,
+    HttpResponseForbidden,
+)
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from users.models import UserInformation
+
 from .models import Subscription, SubscriptionCategory, QueuedMailList
 from django.db.models import Q
-from .services import handle_verification_request, handle_deregister_request
+from .services import (
+    handle_verification_request,
+    handle_deregister_request,
+    render_deregister_letter,
+    create_deregister_email,
+)
 from django.urls import reverse
 from subscriptions.services import send_verification_email, send_request_email
 from .forms import RequestForm
@@ -351,6 +365,86 @@ class VerificationSendFailed(TemplateView):
         :return: a render of the verification_send.html page with a failed message
         """
         return render(request, self.template_name, {"succeeded": False})
+
+
+class AdminRenderLetterView(TemplateView):
+    """Render a test letter for the admin."""
+
+    def get(self, request, **kwargs):
+        """Render an admin letter."""
+        if request.user and request.user.is_staff:
+            format_obj = kwargs.get("format")
+            slug = kwargs.get("slug")
+            if format_obj == "subscription":
+                obj = Subscription
+            elif format_obj == "subscription-category":
+                obj = SubscriptionCategory
+            else:
+                raise Http404("Unknown format")
+            try:
+                instance = obj.objects.get(slug=slug)
+            except obj.DoesNotExist:
+                raise Http404("Object not found")
+            if instance.letter_template.name:
+                pdf = render_deregister_letter(
+                    UserInformation.get_test_instance(),
+                    Subscription.get_test_instance(),
+                    os.path.join(settings.MEDIA_ROOT, str(instance.letter_template)),
+                )
+                return HttpResponse(pdf, content_type="application/pdf")
+            else:
+                raise Http404("No template specified for this object")
+        else:
+            return HttpResponseForbidden()
+
+
+class AdminRenderEmailView(TemplateView):
+    """Render a test email for the admin."""
+
+    def get(self, request, **kwargs):
+        """Render an admin email."""
+        if request.user and request.user.is_staff:
+            format_obj = kwargs.get("format")
+            slug = kwargs.get("slug")
+            if format_obj == "subscription":
+                obj = Subscription
+            elif format_obj == "subscription-category":
+                obj = SubscriptionCategory
+            else:
+                raise Http404("Unknown format")
+            try:
+                instance = obj.objects.get(slug=slug)
+            except obj.DoesNotExist:
+                raise Http404("Object not found")
+            if instance.email_template_text.name:
+                return HttpResponse(
+                    "<span style='white-space: pre-line'>"
+                    + create_deregister_email(
+                        UserInformation.get_test_instance(),
+                        Subscription.get_test_instance(),
+                        os.path.join(
+                            settings.MEDIA_ROOT, str(instance.email_template_text)
+                        ),
+                    )
+                    + "</span>"
+                )
+            else:
+                raise Http404("No template specified for this object")
+        else:
+            return HttpResponseForbidden()
+
+
+class AdminTemplateInformationView(TemplateView):
+    """Admin template information view."""
+
+    template_name = "subscriptions/admin_template_explanation.html"
+
+    def get(self, request, **kwargs):
+        """Render the admin template information view."""
+        if request.user and request.user.is_staff:
+            return render(request, self.template_name)
+        else:
+            return HttpResponseForbidden()
 
 
 def search_database(request):

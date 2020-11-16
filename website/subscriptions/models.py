@@ -1,9 +1,40 @@
+import os
+
 from django.db import models
 from users.models import UserInformation
 import secrets
 import datetime
 import pytz
 from django.conf import settings
+
+
+TEMPLATE_FILE_DIRECTORY = "templates/"
+
+
+def letter_template_filename(instance, _):
+    """Get the template file name for a letter."""
+    return template_filename(instance, "letter_template.html")
+
+
+def email_template_filename(instance, _):
+    """Get the template file name for an email."""
+    return template_filename(instance, "email_template.txt")
+
+
+def template_filename(instance, filename):
+    """Get the template filename."""
+    if type(instance) == Subscription:
+        return TEMPLATE_FILE_DIRECTORY + "subscription/{}/{}".format(
+            instance.slug, filename
+        )
+    elif type(instance) == SubscriptionCategory:
+        return TEMPLATE_FILE_DIRECTORY + "subscription-category/{}/{}".format(
+            instance.slug, filename
+        )
+    else:
+        return TEMPLATE_FILE_DIRECTORY + "null/{}/{}".format(
+            instance.slug if instance.slug is not None else instance, filename
+        )
 
 
 class Subscription(models.Model):
@@ -68,7 +99,7 @@ class Subscription(models.Model):
         max_length=1024,
         blank=True,
         null=True,
-        help_text="The cancellation number (possible paid).",
+        help_text="The cancellation number (possibly paid).",
     )
     amount_used = models.PositiveIntegerField(
         default=1,
@@ -85,6 +116,43 @@ class Subscription(models.Model):
         help_text="The last part of the URL for the page of the subscription provider.",
     )
 
+    letter_template = models.FileField(
+        upload_to=letter_template_filename,
+        null=True,
+        blank=True,
+        help_text="The template of the letter to generate. For more information about"
+        " this please check the template help information.",
+    )
+    email_template_text = models.FileField(
+        upload_to=email_template_filename,
+        null=True,
+        blank=True,
+        help_text="The template of the email to generate (as text). For more information about"
+        " this please check the template help information.",
+    )
+
+    @staticmethod
+    def get_test_instance():
+        """Get a test instance."""
+        return Subscription(
+            name="Prikkl abonnement",
+            price=10.50,
+            support_email="info@prikkl.nl",
+            support_reply_number=12345,
+            support_postal_code="5261 BD",
+            support_city="Zwalk",
+            correspondence_address="Taalstraat 40B",
+            correspondence_city="Vught",
+            correspondence_postal_code="5261 BE",
+            support_phone_number="085-8000185",
+            cancellation_number="0628374918",
+            amount_used=5,
+            category=None,
+            slug="prikkl-abonnement",
+            letter_template=None,
+            email_template_text=None,
+        )
+
     def __str__(self):
         """
         Convert this object to string.
@@ -92,6 +160,46 @@ class Subscription(models.Model):
         :return: a string with the name of the subscription
         """
         return self.name
+
+    def get_letter_template(self):
+        """
+        Get the letter template location of this object.
+
+        :return: the template file location
+        """
+        if self.category is not None:
+            if not self.letter_template:
+                return self.category.get_letter_template()
+            else:
+                return os.path.join(settings.MEDIA_ROOT, str(self.letter_template))
+        else:
+            if not self.letter_template:
+                return os.path.join(
+                    settings.BASE_DIR,
+                    "subscriptions/templates/pdf/deregister_letter.html",
+                )
+            else:
+                return os.path.join(settings.MEDIA_ROOT, str(self.letter_template))
+
+    def get_email_template_text(self):
+        """
+        Get the email template location of this object.
+
+        :return: the template file location
+        """
+        if self.category is not None:
+            if not self.email_template_text:
+                return self.category.get_email_template_text()
+            else:
+                return os.path.join(settings.MEDIA_ROOT, str(self.email_template_text))
+        else:
+            if not self.email_template_text:
+                return os.path.join(
+                    settings.BASE_DIR,
+                    "subscriptions/templates/email/deregister_mail.txt",
+                )
+            else:
+                return os.path.join(settings.MEDIA_ROOT, str(self.email_template_text))
 
     @staticmethod
     def top_category(category, max_items=5, order_by=None):
@@ -229,6 +337,21 @@ class SubscriptionCategory(models.Model):
         on_delete=models.SET_NULL,
     )
 
+    letter_template = models.FileField(
+        upload_to=letter_template_filename,
+        null=True,
+        blank=True,
+        help_text="The template of the letter to generate. For more information about"
+        " this please check the template help information.",
+    )
+    email_template_text = models.FileField(
+        upload_to=email_template_filename,
+        null=True,
+        blank=True,
+        help_text="The template of the email to generate (as text). For more information about"
+        " this please check the template help information.",
+    )
+
     class Meta:
         """Enforcing that there can not be two categories under a parent with same slug."""
 
@@ -243,6 +366,46 @@ class SubscriptionCategory(models.Model):
         :return: a string with the name of the category
         """
         return self.name
+
+    def get_letter_template(self):
+        """
+        Get the letter template location of this object.
+
+        :return: the template file location
+        """
+        if self.parent is not None:
+            if not self.letter_template:
+                return self.parent.get_letter_template()
+            else:
+                return os.path.join(settings.MEDIA_ROOT, str(self.letter_template))
+        else:
+            if not self.letter_template:
+                return os.path.join(
+                    settings.BASE_DIR,
+                    "subscriptions/templates/pdf/deregister_letter.html",
+                )
+            else:
+                return os.path.join(settings.MEDIA_ROOT, str(self.letter_template))
+
+    def get_email_template_text(self):
+        """
+        Get the email template location of this object.
+
+        :return: the template file location
+        """
+        if self.parent is not None:
+            if not self.email_template_text:
+                return self.parent.get_email_template_text()
+            else:
+                return os.path.join(settings.MEDIA_ROOT, str(self.email_template_text))
+        else:
+            if not self.email_template_text:
+                return os.path.join(
+                    settings.BASE_DIR,
+                    "subscriptions/templates/email/deregister_mail.txt",
+                )
+            else:
+                return os.path.join(settings.MEDIA_ROOT, str(self.email_template_text))
 
     def get_subcategories(self, order="name"):
         """

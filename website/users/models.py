@@ -16,6 +16,18 @@ class UserInformation(models.Model):
     postal_code = models.CharField(max_length=256, blank=True)
     residence = models.CharField(max_length=1024, blank=True)
 
+    @staticmethod
+    def get_test_instance():
+        """Get a test instance."""
+        return UserInformation(
+            firstname="John",
+            lastname="Doe",
+            email_address="johndoe@science.ru.nl",
+            address="Heyendaalseweg 135",
+            postal_code="6525 AJ",
+            residence="Nijmegen",
+        )
+
     def __str__(self):
         """
         Casts this object to a string format.
