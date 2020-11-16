@@ -3,16 +3,20 @@ Doorsturen naar: {{ forward_address }}
 {% endif %}
 Geachte heer/mevrouw,
 
-Hierbij wil ik graag mijn abonnement bij uw dienst opzeggen. Het gaat hierbij om {{ subscription_name }}. Ik zeg mijn abonnement op per eerst mogelijke datum. Hierbij houd ik rekening met de opzegtermijn. Mijn gegevens:
+Hierbij zeg ik mijn abonnement met onderstaande gegevens per eerstvolgende mogelijkheid na dagtekening op.
 
-Voornaam: {{ firstname }}
-{% if lastname %}Achternaam: {{ lastname }}{% endif %}
+Abonnement: {{ subscription_name }}
+Naam: {{ firstname }}{% if lastname %} {{ lastname }}{% endif %}
 {% if address %}Adres: {{ address }}{% endif %}
 {% if postal_code %}Postcode: {{ postal_code }}{% endif %}
 {% if residence %}Woonplaats: {{ residence }}{% endif %}
 
-Ik vraag u vriendelijk om een bevestiging van mijn opzegging per e-mail. Uw bevestiging zie ik graag binnen twee weken tegemoet.
+De incassomachtiging dient tegelijkertijd te worden beëindigd.
+
+Daarnaast verzoek ik u hierbij tevens, overeenkomstig artikel 17 AVG, over te gaan tot onmiddellijke verwijdering van al mijn persoonsgegevens in de zin van artikel 4(1) AVG, behoudens in de gevallen zoals opgesomd in artikel 17(3) AVG. Graag zie ik de bevestiging van deze opzegging en de verwijdering van mijn persoonsgegevens tegemoet.
 
 Met vriendelijke groet,
 
 {{ firstname }}{% if lastname %} {{ lastname }}{% endif %}
+
+NB: Tevens wens ik gebruik te maken van mijn Recht van Verzet. Ik wil niet telefonisch benaderd worden door jullie en ook geen geadresseerde reclame meer van jullie ontvangen.
