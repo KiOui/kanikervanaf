@@ -17,6 +17,7 @@ from .views import (
     VerificationSendFailed,
     AdminRenderLetterView,
     AdminRenderEmailView,
+    AdminTemplateInformationView,
 )
 from .converters import SubscriptionConverter, SubscriptionCategoryConverter
 
@@ -76,5 +77,10 @@ urlpatterns = [
         "admin/<str:format>/<str:slug>/generate-email",
         AdminRenderEmailView.as_view(),
         name="admin_render_email",
+    ),
+    path(
+        "admin/template-information",
+        AdminTemplateInformationView.as_view(),
+        name="admin_template_information",
     ),
 ]

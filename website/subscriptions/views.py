@@ -434,6 +434,19 @@ class AdminRenderEmailView(TemplateView):
             return HttpResponseForbidden()
 
 
+class AdminTemplateInformationView(TemplateView):
+    """Admin template information view."""
+
+    template_name = "subscriptions/admin_template_explanation.html"
+
+    def get(self, request, **kwargs):
+        """Render the admin template information view."""
+        if request.user and request.user.is_staff:
+            return render(request, self.template_name)
+        else:
+            return HttpResponseForbidden()
+
+
 def search_database(request):
     """
     Search all Subscription objects for a specific Subscription.
