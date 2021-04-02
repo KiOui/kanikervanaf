@@ -77,7 +77,7 @@ h2, h3, h4, h5, h6 {
     color: var(--button-hover-contrast);
 }
 
-.btn-primary:not(:disabled):not(.disabled):active {
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:focus, .btn-primary.focus {
     background-color: var(--button-hover-background);
     border-color: var(--button-hover-border-color);
     color: var(--button-hover-contrast);
