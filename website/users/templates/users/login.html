@@ -1,39 +1,25 @@
+{% extends "kanikervanaf/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>
-        Kanikervanaf: Inloggen
-    </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" type="image/png" href="{% static 'kanikervanaf/img/favicon.ico' %}"/>
-    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'kanikervanaf/css/bootstrap.css' %}"/>
-    <link rel="stylesheet" href="{% static 'users/css/centered-container.css' %}"/>
-    <link rel="icon" href="{% static "kanikervanaf/img/browser/icon.jpg" %}">
-    <link rel="apple-touch-icon" href="{% static "kanikervanaf/img/browser/apple-touch-icon.jpg" %}">
-    <meta name="msapplication-square32x32logo"
-          content="{% static "kanikervanaf/img/browser/icon-smalltile.jpg" %}">
-    <meta name="msapplication-square150x150logo"
-          content="{% static "kanikervanaf/img/browser/icon-mediumtile.jpg" %}">
-    <meta name="msapplication-wide272x182logo"
-          content="{% static "kanikervanaf/img/browser/icon-widetile.jpg" %}">
-    <meta name="msapplication-square300x300logo"
-          content="{% static "kanikervanaf/img/browser/icon-largetile.jpg" %}">
-    <meta name="description" content="Inloggen op kanikervanaf.nl.">
-    <script src="https://kit.fontawesome.com/4e8cabe8e2.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.tiny.cloud/1/sx4eugpieda3a9a2mjzq9xh0ht6h59prb6wgd8gd3yqcjif5/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
-</head>
-<body>
+
+{% block title %}
+    Kanikervanaf: Inloggen
+{% endblock %}
+
+{% block styles %}
+    <link href="{% static "users/css/centered-container.css" %}" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block header %}
     <nav class="navbar navbar-expand-md navbar-light sticky-top site-header mb-5">
         <div class="container-fluid">
             <a class="navbar-brand" href="/"><img src="{% static 'kanikervanaf/img/logo.png' %}" height="50"/></a>
         </div>
     </nav>
-    <div class="container-sm flex-container">
-        <div class="container-centered">
+{% endblock %}
+
+{% block page %}
+    <div class="container-sm d-flex align-items-center justify-content-center">
+        <div style="max-width: 400px">
             <h1>Login</h1>
             <form method="POST" class="centered-form">
                 {% csrf_token %}
@@ -47,7 +33,7 @@
             <a href="{% url "home" %}"> ← Terug naar Kanikervanaf.nl</a>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-</body>
-</html>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

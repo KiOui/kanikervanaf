@@ -1,0 +1,100 @@
+:root {
+    --background-color: #ffffff;
+    --background-shade: #a0a0a0;
+
+    --button-background: #34af99;
+    --button-contrast: #ffffff;
+    --button-border-color: #34af99;
+    --button-hover-background: #2b927f;
+    --button-hover-contrast: #ffffff;
+    --button-hover-border-color: #288877;
+    --button-disabled-background-color: #696969;
+
+    --card-background: #ffffff;
+    --card-background-shade: rgba(0, 0, 0, 0.03);
+    --card-background-contrast: #000000;
+
+    --title-color: #000000;
+    --sub-title-color: #000000;
+    --link-color: #34af99;
+    --link-color-hover: #2b927f;
+    --text-color: #000000;
+
+    --nav-background-color: #34af99;
+    --nav-link-color: #ffffff;
+    --nav-link-hover-color: rgba(255,255,255,0.75);
+
+    --footer-background-color: #000000;
+    --footer-text-color: #ffffff;
+
+    --primary: #34af99;
+    --primary-shade: #2b927f;
+    --primary-contrast: #ffffff;
+    --primary-contrast-hover: #ffffff;
+
+    --secondary: #ffffff;
+    --secondary-hover: #dddddd;
+    --secondary-contrast: #000000;
+
+    --success: #28a745;
+    --success-hover: #218838;
+    --success-contrast: #ffffff;
+    --warning: #ffc107;
+    --warning-hover: #e0a800;
+    --warning-contrast: #ffffff;
+    --danger: #dc3545;
+    --danger-hover: #c82333;
+    --danger-contrast: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #202020;
+        --background-shade-dark: #101010;
+        --background-shade: #404040;
+        --background-shade-light: #696969;
+
+        --button-background: #34af99;
+        --button-contrast: #ffffff;
+        --button-border-color: #34af99;
+        --button-hover-background: #2b927f;
+        --button-hover-contrast: #ffffff;
+        --button-hover-border-color: #288877;
+        --button-disabled-background-color: #696969;
+
+        --card-background: #696969;
+        --card-background-shade: #404040;
+        --card-background-contrast: #ffffff;
+
+        --title-color: #ffffff;
+        --sub-title-color: #ffffff;
+        --link-color: #34af99;
+        --text-color: #ffffff;
+
+        --nav-background-color: #34af99;
+        --nav-link-color: #ffffff;
+        --nav-link-hover-color: rgba(255,255,255,0.75);
+
+        --footer-background-color: #101010;
+        --footer-text-color: #ffffff;
+
+        --primary: #e8b365;
+        --primary-hover: #c8831e;
+        --primary-contrast: #ffffff;
+        --primary-contrast-hover: #dddddd;
+
+        --secondary: #000000;
+        --secondary-hover: #212121;
+        --secondary-contrast: #ffffff;
+
+        --success: #28a745;
+        --success-hover: #218838;
+        --success-contrast: #ffffff;
+        --warning: #ffc107;
+        --warning-hover: #e0a800;
+        --warning-contrast: #ffffff;
+        --danger: #dc3545;
+        --danger-hover: #c82333;
+        --danger-contrast: #ffffff;
+    }
+}

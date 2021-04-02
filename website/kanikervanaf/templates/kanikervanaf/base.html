@@ -11,7 +11,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'kanikervanaf/img/favicon.ico' %}"/>
     <link rel="icon" type="image/x-icon" href="{% static 'kanikervanaf/img/favicon.ico' %}"/>
     <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'kanikervanaf/css/bootstrap.css' %}"/>
+    <link rel="stylesheet" href="{% static 'kanikervanaf/css/bootstrap/bootstrap.css' %}"/>
     {% block styles %}{% endblock %}
     <link rel="icon" href="{% static "kanikervanaf/img/browser/icon.jpg" %}">
     <link rel="apple-touch-icon" href="{% static "kanikervanaf/img/browser/apple-touch-icon.jpg" %}">
@@ -28,6 +28,8 @@
     <script src="https://kit.fontawesome.com/4e8cabe8e2.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.tiny.cloud/1/sx4eugpieda3a9a2mjzq9xh0ht6h59prb6wgd8gd3yqcjif5/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <!-- Base CSS -->
+    <link href="{% static "kanikervanaf/css/base.css" %}" rel="stylesheet" type="text/css">
 </head>
 <body>
     {% block header %}
@@ -91,14 +93,14 @@
     {% endblock %}
     {% block page %}{% endblock %}
     {% block footer %}
-        <footer class="page-footer font-small pt-4">
-            <div class="footer-copyright text-center py-3">© 2020 Copyright:
-                <a href="/">kanikervanaf.nl</a> - <a href="{% url "privacy" %}">Privacybeleid</a>
+        <footer class="page-footer font-small mt-4">
+            <div class="footer-copyright text-center py-3">© 2021 Copyright:
+                <a href="{% url "home" %}">kanikervanaf.nl</a> - <a href="{% url "privacy" %}">Privacybeleid</a>
             </div>
         </footer>
     {% endblock %}
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="{% static 'kanikervanaf/js/bootstrap/bootstrap.js' %}"></script>
     <script>
         CSRF_TOKEN = "{{ csrf_token }}";
     </script>
