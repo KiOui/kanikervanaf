@@ -78,10 +78,10 @@
         --footer-background-color: #101010;
         --footer-text-color: #ffffff;
 
-        --primary: #e8b365;
-        --primary-hover: #c8831e;
+        --primary: #34af99;
+        --primary-shade: #2b927f;
         --primary-contrast: #ffffff;
-        --primary-contrast-hover: #dddddd;
+        --primary-contrast-hover: #ffffff;
 
         --secondary: #000000;
         --secondary-hover: #212121;
