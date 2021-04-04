@@ -76,4 +76,5 @@ urlpatterns = [
     ),
     path("users/", include(("users.urls", "users"), namespace="users")),
     path("posts/", include(("posts.urls", "posts"), namespace="posts")),
+    path("api/", include("kanikervanaf.api.urls")),
 ]

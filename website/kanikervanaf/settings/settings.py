@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     "django_cleanup.apps.CleanupConfig",
     "admin_auto_filters",
     "import_export",
+    "rest_framework",
+    "oauth2_provider",
     "robots",
     "captcha",
     "kanikervanaf",
