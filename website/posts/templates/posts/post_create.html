@@ -44,7 +44,9 @@
 {% block js %}
     <script>
         tinyMCE.init({
-          selector: "#post_content"
+            selector: "#post_content",
+            skin: (window.matchMedia("(prefers-color-scheme: dark)").matches ? "oxide-dark" : ""),
+            content_css: (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "")
         });
     </script>
 {% endblock %}

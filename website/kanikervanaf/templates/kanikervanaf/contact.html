@@ -35,7 +35,9 @@
 {% block js %}
     <script>
         tinymce.init({
-            selector: '#contact_content'
+            selector: '#contact_content',
+            skin: (window.matchMedia("(prefers-color-scheme: dark)").matches ? "oxide-dark" : ""),
+            content_css: (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "")
         });
     </script>
 {% endblock %}

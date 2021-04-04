@@ -1,0 +1,111 @@
+@import "variables.css";
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.site-header {
+    background-color: var(--nav-background-color);
+    color: var(--nav-link-color);
+}
+
+.page-footer {
+    background-color: var(--footer-background-color);
+    color: var(--footer-text-color);
+}
+
+a {
+    color: var(--link-color);
+}
+
+a:hover {
+    color: var(--link-color-hover);
+}
+
+.navbar-expand-md .navbar-nav .nav-link {
+    color: var(--nav-link-color);
+}
+
+.navbar-expand-md .navbar-nav .nav-link:hover {
+    color: var(--nav-link-hover-color);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='#ffffff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+h1 {
+    color: var(--title-color);
+}
+
+h2, h3, h4, h5, h6 {
+    color: var(--sub-title-color);
+}
+
+.card {
+    background-color: var(--card-background);
+    color: var(--card-background-contrast);
+}
+
+.card-header, .modal-header {
+    background-color: var(--card-background-shade);
+}
+
+.card-body, .modal-body {
+    background-color: var(--card-background);
+}
+
+.card-footer, .modal-footer {
+    background-color: var(--card-background-shade);
+}
+
+.close {
+    color: var(--text-color);
+}
+
+.btn-primary {
+    background-color: var(--button-background);
+    border-color: var(--button-border-color);
+    color: var(--button-contrast);
+}
+
+.btn-primary:hover {
+    background-color: var(--button-hover-background);
+    border-color: var(--button-hover-border-color);
+    color: var(--button-hover-contrast);
+}
+
+.btn-primary:not(:disabled):not(.disabled):active, .btn-primary:focus, .btn-primary.focus {
+    background-color: var(--button-hover-background);
+    border-color: var(--button-hover-border-color);
+    color: var(--button-hover-contrast);
+}
+
+.disabled {
+    background-color: var(--button-disabled-background-color);
+}
+
+.container-fluid {
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: auto;
+}
+
+input {
+    border-radius: 5px;
+    padding: 3px;
+    border: 1px solid var(--background-shade);
+}
+
+input[type=text], input[type=email], input[type=password] {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.dropdown-item:active {
+    background-color: var(--button-background);
+    color: var(--button-contrast);
+}
