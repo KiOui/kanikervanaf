@@ -1,9 +1,13 @@
 from django.contrib import admin
 from django.core.exceptions import ValidationError
-from django.urls import reverse
+from django.urls import reverse, path, register_converter
 from subscriptions import models
 from admin_auto_filters.filters import AutocompleteFilter
 from import_export.admin import ImportExportModelAdmin
+
+from subscriptions.converters import SubscriptionConverter
+from subscriptions.models import Subscription
+from subscriptions.views import AdminRenderLetterView
 
 
 class SubscriptionCategoryFilter(AutocompleteFilter):

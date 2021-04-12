@@ -66,6 +66,7 @@ urlpatterns = [
         name="django.contrib.sitemaps.views.sitemap",
     ),
     path("robots.txt", include("robots.urls")),
+    path("oauth/", include("oauth2_provider.urls", namespace="oauth2_provider")),
     path("faq", FAQView.as_view(), name="faq"),
     path("privacybeleid", PrivacyPolicy.as_view(), name="privacy"),
     path("contact", ContactView.as_view(), name="contact"),

@@ -57,16 +57,13 @@ class Post(models.Model):
         return "{}".format(self.created_on.strftime(self.DATE_FORMAT))
 
     @property
-    def get_author(self):
+    def author_name(self):
         """
         Get the posts author.
 
         :return: the username of the author, Anoniem if the author is not set
         """
-        if self.author:
-            return self.author.username
-        else:
-            return "Anoniem"
+        return self.author.username
 
     def __str__(self):
         """

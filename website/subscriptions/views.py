@@ -371,20 +371,18 @@ class VerificationSendFailed(TemplateView):
 class AdminRenderLetterView(TemplateView):
     """Render a test letter for the admin."""
 
+    def __init__(self, render_class, *args, **kwargs):
+        """Initialize."""
+        self.render_class = render_class
+        super(AdminRenderLetterView, self).__init__(*args, **kwargs)
+
     def get(self, request, **kwargs):
         """Render an admin letter."""
         if request.user and request.user.is_staff:
-            format_obj = kwargs.get("format")
             slug = kwargs.get("slug")
-            if format_obj == "subscription":
-                obj = Subscription
-            elif format_obj == "subscription-category":
-                obj = SubscriptionCategory
-            else:
-                raise Http404("Unknown format")
             try:
-                instance = obj.objects.get(slug=slug)
-            except obj.DoesNotExist:
+                instance = self.render_class.objects.get(slug=slug)
+            except self.render_class.DoesNotExist:
                 raise Http404("Object not found")
             if instance.letter_template.name:
                 pdf = render_deregister_letter(

@@ -6,6 +6,8 @@ from kanikervanaf.api.openapi import OpenAPISchemaGenerator
 app_name = "kanikervanaf"
 
 urlpatterns = [
+    path("subscriptions/", include("subscriptions.api.v1.urls")),
+    path("posts/", include("posts.api.v1.urls")),
     path(
         "schema",
         get_schema_view(
