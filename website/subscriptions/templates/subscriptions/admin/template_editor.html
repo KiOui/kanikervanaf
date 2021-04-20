@@ -3,7 +3,7 @@
 
 {% block extrastyle %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% static 'subscriptions/admin/codemirror-5.60.0/lib/codemirror.css' %}">
+    <link rel="stylesheet" href="{% static 'subscriptions/admin/codemirror/codemirror.css' %}">
     <link href="{% static "subscriptions/admin/css/template-editor.css" %}" rel="stylesheet">
 {% endblock %}
 
@@ -83,11 +83,11 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
-    <script type="text/javascript" src="{% static "subscriptions/admin/codemirror-5.60.0/lib/codemirror.js" %}"></script>
-    <script type="text/javascript" src="{% static "subscriptions/admin/codemirror-5.60.0/addon/mode/overlay.js" %}"></script>
-    <script type="text/javascript" src="{% static "subscriptions/admin/codemirror-5.60.0/mode/xml/xml.js" %}"></script>
-    <script type="text/javascript" src="{% static "subscriptions/admin/codemirror-5.60.0/mode/htmlmixed/htmlmixed.js" %}"></script>
-    <script type="text/javascript" src="{% static "subscriptions/admin/codemirror-5.60.0/mode/django/django.js" %}"></script>
+    <script type="text/javascript" src="{% static "subscriptions/admin/codemirror/codemirror.js" %}"></script>
+    <script type="text/javascript" src="{% static "subscriptions/admin/codemirror/addon/mode/overlay.js" %}"></script>
+    <script type="text/javascript" src="{% static "subscriptions/admin/codemirror/mode/xml/xml.js" %}"></script>
+    <script type="text/javascript" src="{% static "subscriptions/admin/codemirror/mode/htmlmixed/htmlmixed.js" %}"></script>
+    <script type="text/javascript" src="{% static "subscriptions/admin/codemirror/mode/django/django.js" %}"></script>
     <script>
         let template_vue = new Vue({
             el: '#vue-template-container',
