@@ -32,6 +32,11 @@
             </ul>
         {% endif %}
         <h1>{{ view_name }}</h1>
+        <ul class="object-tools">
+            <li>
+                <a href="{% url 'subscriptions:admin_template_information' %}">Template information</a>
+            </li>
+        </ul>
         <div class="template-editor-container">
             <h2>Template editor</h2>
             <label for="template-editor"></label>
