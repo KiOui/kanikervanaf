@@ -1,0 +1,185 @@
+{% extends 'admin/change_form.html' %}
+{% load i18n admin_urls static %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'subscriptions/admin/codemirror/codemirror.css' %}">
+    <link href="{% static "subscriptions/admin/css/template-editor.css" %}" rel="stylesheet">
+{% endblock %}
+
+{% if not is_popup %}
+    {% block breadcrumbs %}
+        <div class="breadcrumbs">
+            <a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+            &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+            &rsaquo; {% if has_view_permission %}<a href="{% url opts|admin_urlname:'changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>{% else %}{{ opts.verbose_name_plural|capfirst }}{% endif %}
+            &rsaquo; <a href="{% url opts|admin_urlname:'change' original.id %}">{{ original|truncatewords:"18" }}</a>
+            &rsaquo; {{ view_name }}
+        </div>
+    {% endblock %}
+{% endif %}
+
+{% block content %}
+    <div id="vue-template-container">
+        {% if saved or error %}
+            <ul class="messagelist">
+                {% if saved %}
+                    <li class="succes">File saved successfully.</li>
+                {% endif %}
+                {% if error %}
+                    <p class="error">An error occurred while saving the template, please contact an administrator.</p>
+                {% endif %}
+            </ul>
+        {% endif %}
+        <h1>{{ view_name }}</h1>
+        <ul class="object-tools">
+            <li>
+                <a href="{% url 'subscriptions:admin_template_information' %}">Template information</a>
+            </li>
+        </ul>
+        <div class="template-editor-container">
+            <h2>Template editor</h2>
+            <label for="template-editor"></label>
+            <form ref="form" method="POST">
+                {% csrf_token %}
+                <textarea ref="original_editor" id="template-editor" name="source">{{ saved_template }}</textarea>
+            </form>
+            <div class="button button-disabled" v-if="loading_pdf">Opslaan <span class="loader"></span></div>
+            <input v-else type="button" value="Opslaan" v-on:click="save"/>
+
+            <div class="button button-disabled" v-if="loading_pdf">Maak voorbeeld <span class="loader"></span></div>
+            <input v-else type="button" value="Maak voorbeeld" v-on:click="render_pdf"/>
+        </div>
+        <div id="template-container">
+            <div class="template-editor-left">
+                <div class="template-form-container">
+                    <h2>Gegevens</h2>
+                    <form class="template-form">
+                        <label for="firstname">Voornaam</label>
+                        <input v-model="template_data.firstname" type="text" id="firstname">
+                        <label for="lastname">Achternaam</label>
+                        <input v-model="template_data.lastname" type="text" id="lastname">
+                        <label for="email_address">E-mail adres</label>
+                        <input v-model="template_data.email_address" type="text" id="email_address">
+                        <label for="address">Adres</label>
+                        <input v-model="template_data.address" type="text" id="address">
+                        <label for="postal_code">Postcode</label>
+                        <input v-model="template_data.postal_code" type="text" id="postal_code">
+                        <label for="residence">Woonplaats</label>
+                        <input v-model="template_data.residence" type="text" id="residence">
+                        <label for="residence">Abonnement naam</label>
+                        <input v-model="template_data.subscription_name" type="text" id="residence">
+                        <label for="residence">Abonnement adres</label>
+                        <input v-model="template_data.subscription_address" type="text" id="residence">
+                        <label for="residence">Abonnement postcode</label>
+                        <input v-model="template_data.subscription_postal_code" type="text" id="residence">
+                        <label for="residence">Abonnement plaats</label>
+                        <input v-model="template_data.subscription_residence" type="text" id="residence">
+                    </form>
+                </div>
+            </div>
+            <div class="template-editor-right">
+                <div class="preview">
+                    <h2>Voorbeeld</h2>
+                    <iframe v-if="pdf !== null" :src="pdf" class="preview-frame"></iframe>
+                    <p v-if="error !== null" class="errornote"><% error %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
+    <script type="text/javascript" src="{% static "subscriptions/admin/codemirror/codemirror.js" %}"></script>
+    <script type="text/javascript" src="{% static "subscriptions/admin/codemirror/addon/mode/overlay.js" %}"></script>
+    <script type="text/javascript" src="{% static "subscriptions/admin/codemirror/mode/xml/xml.js" %}"></script>
+    <script type="text/javascript" src="{% static "subscriptions/admin/codemirror/mode/htmlmixed/htmlmixed.js" %}"></script>
+    <script type="text/javascript" src="{% static "subscriptions/admin/codemirror/mode/django/django.js" %}"></script>
+    <script>
+        let template_vue = new Vue({
+            el: '#vue-template-container',
+            delimiters: ['<%', '%>'],
+            data: {
+                template_data: {
+                    firstname: "John",
+                    lastname: "Doe",
+                    email_address: "johndoe@email.com",
+                    address: "Heyendaalseweg 135",
+                    postal_code: "6525 AJ",
+                    residence: "Nijmegen",
+                    subscription_name: "{% autoescape on %}{{ instance_name }}{% endautoescape %}",
+                    subscription_address: "{% autoescape on %}{{ instance_address }}{% endautoescape %}",
+                    subscription_postal_code: "{% autoescape on %}{{ instance_postal_code }}{% endautoescape %}",
+                    subscription_residence: "{% autoescape on %}{{ instance_city }}{% endautoescape %}",
+                },
+                editor: null,
+                pdf: null,
+                loading_pdf: false,
+                error: null,
+            },
+            methods: {
+                save: function() {
+                    this.loading_pdf = true;
+                    this.$refs.original_editor.value = this.editor.getValue();
+                    if (confirm("Wil je opslaan?")) {
+                        this.$refs.form.submit();
+                    }
+                    this.loading_pdf = false;
+                },
+                render_pdf: function () {
+                    this.loading_pdf = true;
+                    let source = this.editor.getValue();
+                    fetch("{% url 'v1:render_template' %}",
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': "{{ csrf_token }}",
+                            'Accept': "{{ accepts }}"
+                        },
+                        method: "POST",
+                        body: JSON.stringify({
+                            csrfmiddlewaretoken: "{{ csrf_token }}",
+                            source: source,
+                            context: this.template_data
+                        })
+                    })
+                    .then(
+                        async function(res)
+                        {
+                            template_vue.loading_pdf = false;
+                            if (res.status !== 200) {
+                                template_vue.pdf = null;
+                                res.json().then(json => {
+                                    if (json.detail) {
+                                        template_vue.error = `Template rendering failed with status code ${res.status}: ${json.detail}`;
+                                    }
+                                    else {
+                                        template_vue.error = `Template rendering failed with status code ${res.status}`;
+                                    }
+                                });
+                            }
+                            else {
+                                template_vue.pdf = window.URL.createObjectURL(await res.blob());
+                                template_vue.error = null;
+                            }
+                        })
+                    .catch(
+                        function(res)
+                        {
+                            template_vue.loading_pdf = false;
+                            template_vue.pdf = null;
+                            template_vue.error = `Template rendering failed with status code ${res.status}`;
+                        })
+                }
+            },
+            mounted() {
+                this.editor = CodeMirror.fromTextArea(document.getElementById("template-editor"), {
+                    mode: "django",
+                    indentUnit: 2,
+                    indentWithTabs: true,
+                    lineNumbers: true,
+                    lineWrapping: true,
+                });
+                this.render_pdf();
+            }
+        });
+    </script>
+{% endblock %}

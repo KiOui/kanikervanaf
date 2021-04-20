@@ -161,25 +161,37 @@ class Subscription(models.Model):
         """
         return self.name
 
+    @property
+    def letter_template_full_path(self):
+        """Get full path letter template."""
+        if self.letter_template:
+            return os.path.join(settings.MEDIA_ROOT, str(self.letter_template))
+        else:
+            return None
+
+    @property
+    def email_template_text_full_path(self):
+        """Get full path email template."""
+        if self.email_template_text:
+            return os.path.join(settings.MEDIA_ROOT, str(self.email_template_text))
+        else:
+            return None
+
     def get_letter_template(self):
         """
         Get the letter template location of this object.
 
         :return: the template file location
         """
-        if self.category is not None:
-            if not self.letter_template:
-                return self.category.get_letter_template()
-            else:
-                return os.path.join(settings.MEDIA_ROOT, str(self.letter_template))
+        letter_template = self.letter_template_full_path
+        if letter_template is not None:
+            return letter_template
+        elif self.category is not None:
+            return self.category.get_letter_template()
         else:
-            if not self.letter_template:
-                return os.path.join(
-                    settings.BASE_DIR,
-                    "subscriptions/templates/pdf/deregister_letter.html",
-                )
-            else:
-                return os.path.join(settings.MEDIA_ROOT, str(self.letter_template))
+            return os.path.join(
+                settings.BASE_DIR, "subscriptions/templates/pdf/deregister_letter.html",
+            )
 
     def get_email_template_text(self):
         """
@@ -187,19 +199,15 @@ class Subscription(models.Model):
 
         :return: the template file location
         """
-        if self.category is not None:
-            if not self.email_template_text:
-                return self.category.get_email_template_text()
-            else:
-                return os.path.join(settings.MEDIA_ROOT, str(self.email_template_text))
+        email_template = self.email_template_text_full_path
+        if email_template is not None:
+            return email_template
+        elif self.category is not None:
+            return self.category.get_email_template_text()
         else:
-            if not self.email_template_text:
-                return os.path.join(
-                    settings.BASE_DIR,
-                    "subscriptions/templates/email/deregister_mail.txt",
-                )
-            else:
-                return os.path.join(settings.MEDIA_ROOT, str(self.email_template_text))
+            return os.path.join(
+                settings.BASE_DIR, "subscriptions/templates/email/deregister_mail.txt",
+            )
 
     @staticmethod
     def top_category(category, max_items=5, order_by=None):
@@ -367,25 +375,37 @@ class SubscriptionCategory(models.Model):
         """
         return self.name
 
+    @property
+    def letter_template_full_path(self):
+        """Get full path letter template."""
+        if self.letter_template:
+            return os.path.join(settings.MEDIA_ROOT, str(self.letter_template))
+        else:
+            return None
+
+    @property
+    def email_template_text_full_path(self):
+        """Get full path email template."""
+        if self.email_template_text:
+            return os.path.join(settings.MEDIA_ROOT, str(self.email_template_text))
+        else:
+            return None
+
     def get_letter_template(self):
         """
         Get the letter template location of this object.
 
         :return: the template file location
         """
-        if self.parent is not None:
-            if not self.letter_template:
-                return self.parent.get_letter_template()
-            else:
-                return os.path.join(settings.MEDIA_ROOT, str(self.letter_template))
+        letter_template = self.letter_template_full_path
+        if letter_template is not None:
+            return letter_template
+        elif self.parent is not None:
+            return self.parent.get_letter_template()
         else:
-            if not self.letter_template:
-                return os.path.join(
-                    settings.BASE_DIR,
-                    "subscriptions/templates/pdf/deregister_letter.html",
-                )
-            else:
-                return os.path.join(settings.MEDIA_ROOT, str(self.letter_template))
+            return os.path.join(
+                settings.BASE_DIR, "subscriptions/templates/pdf/deregister_letter.html",
+            )
 
     def get_email_template_text(self):
         """
@@ -393,19 +413,15 @@ class SubscriptionCategory(models.Model):
 
         :return: the template file location
         """
-        if self.parent is not None:
-            if not self.email_template_text:
-                return self.parent.get_email_template_text()
-            else:
-                return os.path.join(settings.MEDIA_ROOT, str(self.email_template_text))
+        email_template = self.email_template_text_full_path
+        if email_template is not None:
+            return email_template
+        elif self.parent is not None:
+            return self.parent.get_email_template_text()
         else:
-            if not self.email_template_text:
-                return os.path.join(
-                    settings.BASE_DIR,
-                    "subscriptions/templates/email/deregister_mail.txt",
-                )
-            else:
-                return os.path.join(settings.MEDIA_ROOT, str(self.email_template_text))
+            return os.path.join(
+                settings.BASE_DIR, "subscriptions/templates/email/deregister_mail.txt",
+            )
 
     def get_subcategories(self, order="name"):
         """

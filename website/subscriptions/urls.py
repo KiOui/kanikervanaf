@@ -15,10 +15,7 @@ from .views import (
     VerificationSendSucceeded,
     verify,
     VerificationSendFailed,
-    AdminRenderLetterView,
-    AdminRenderEmailView,
     AdminTemplateInformationView,
-    AdminGetTemplateFileView,
 )
 from .converters import SubscriptionConverter, SubscriptionCategoryConverter
 
@@ -70,23 +67,8 @@ urlpatterns = [
         name="verification_send_failed",
     ),
     path(
-        "admin/<str:format>/<str:slug>/generate-letter",
-        AdminRenderLetterView.as_view(),
-        name="admin_render_letter",
-    ),
-    path(
-        "admin/<str:format>/<str:slug>/generate-email",
-        AdminRenderEmailView.as_view(),
-        name="admin_render_email",
-    ),
-    path(
         "admin/template-information",
         AdminTemplateInformationView.as_view(),
         name="admin_template_information",
-    ),
-    path(
-        "templates/<str:format>/<str:slug>/<str:template_name>",
-        AdminGetTemplateFileView.as_view(),
-        name="admin_get_template_file",
     ),
 ]

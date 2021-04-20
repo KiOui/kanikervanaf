@@ -20,7 +20,7 @@
     <div class="container-sm mb-5">
         <div class="mb-3">
             <h1><strong>{{ post.title }}</strong></h1>
-            <p>Geplaatst door: {% if post.author %}{{ post.get_author }}{% else %}Anoniem{% endif %}</p>
+            <p>Geplaatst door: {% if post.author %}{{ post.author_name }}{% else %}Anoniem{% endif %}</p>
             <p>{{ post.content|safe }}</p>
         </div>
         <div class="border mb-2"></div>
@@ -33,7 +33,7 @@
                     <div class="mb-4">
                         <p><strong>{{ post.title }}</strong></p>
                         <p>{{ post.content|striptags }}</p>
-                        <p class="font-italic">Door {{ post.get_author }} op {{ post.post_date }}</p>
+                        <p class="font-italic">Door {% if post.author %}{{ post.author_name }}{% else %}Anoniem{% endif %} op {{ post.post_date }}</p>
                     </div>
                     <div class="border mb-3"></div>
                 {% endfor %}
