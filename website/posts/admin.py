@@ -1,9 +1,11 @@
 from django.contrib import admin, messages
+from django.urls import reverse
+
 from .models import Post, STATUS_DRAFT, STATUS_PUBLISHED
 
 
 @admin.register(Post)
-class SubscriptionCategoryAdmin(admin.ModelAdmin):
+class PostAdmin(admin.ModelAdmin):
     """Admin model for subscription categories."""
 
     list_display = ["title", "author", "response_to", "status"]
@@ -42,6 +44,18 @@ class SubscriptionCategoryAdmin(admin.ModelAdmin):
         return request
 
     make_published.short_description = "Make selected posts published"
+
+    def view_on_site(self, obj):
+        """
+        Get the URL for the frontend view of the post.
+
+        :param obj: the post to get the frontend view for
+        :return: the url to the post on the frontend
+        """
+        if obj.status == STATUS_PUBLISHED:
+            return reverse("posts:details", kwargs={"post": obj, "page": 1})
+        else:
+            return None
 
     class Media:
         """Necessary to use AutocompleteFilter."""

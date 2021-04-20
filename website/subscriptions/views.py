@@ -1,27 +1,22 @@
-import os
 import urllib.parse
 import json
 
-from django.conf import settings
 from django.core.paginator import Paginator
 from django.http import (
     HttpResponse,
     HttpResponseRedirect,
     Http404,
     HttpResponseForbidden,
-    FileResponse,
 )
+
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from users.models import UserInformation
 
 from .models import Subscription, SubscriptionCategory, QueuedMailList
 from django.db.models import Q
 from .services import (
     handle_verification_request,
     handle_deregister_request,
-    render_deregister_letter,
-    create_deregister_email,
 )
 from django.urls import reverse
 from subscriptions.services import send_verification_email, send_request_email
@@ -368,71 +363,6 @@ class VerificationSendFailed(TemplateView):
         return render(request, self.template_name, {"succeeded": False})
 
 
-class AdminRenderLetterView(TemplateView):
-    """Render a test letter for the admin."""
-
-    def __init__(self, render_class, *args, **kwargs):
-        """Initialize."""
-        self.render_class = render_class
-        super(AdminRenderLetterView, self).__init__(*args, **kwargs)
-
-    def get(self, request, **kwargs):
-        """Render an admin letter."""
-        if request.user and request.user.is_staff:
-            slug = kwargs.get("slug")
-            try:
-                instance = self.render_class.objects.get(slug=slug)
-            except self.render_class.DoesNotExist:
-                raise Http404("Object not found")
-            if instance.letter_template.name:
-                pdf = render_deregister_letter(
-                    UserInformation.get_test_instance(),
-                    Subscription.get_test_instance(),
-                    os.path.join(settings.MEDIA_ROOT, str(instance.letter_template)),
-                )
-                return HttpResponse(pdf, content_type="application/pdf")
-            else:
-                raise Http404("No template specified for this object")
-        else:
-            return HttpResponseForbidden()
-
-
-class AdminRenderEmailView(TemplateView):
-    """Render a test email for the admin."""
-
-    def get(self, request, **kwargs):
-        """Render an admin email."""
-        if request.user and request.user.is_staff:
-            format_obj = kwargs.get("format")
-            slug = kwargs.get("slug")
-            if format_obj == "subscription":
-                obj = Subscription
-            elif format_obj == "subscription-category":
-                obj = SubscriptionCategory
-            else:
-                raise Http404("Unknown format")
-            try:
-                instance = obj.objects.get(slug=slug)
-            except obj.DoesNotExist:
-                raise Http404("Object not found")
-            if instance.email_template_text.name:
-                return HttpResponse(
-                    "<span style='white-space: pre-line'>"
-                    + create_deregister_email(
-                        UserInformation.get_test_instance(),
-                        Subscription.get_test_instance(),
-                        os.path.join(
-                            settings.MEDIA_ROOT, str(instance.email_template_text)
-                        ),
-                    )
-                    + "</span>"
-                )
-            else:
-                raise Http404("No template specified for this object")
-        else:
-            return HttpResponseForbidden()
-
-
 class AdminTemplateInformationView(TemplateView):
     """Admin template information view."""
 
@@ -442,42 +372,6 @@ class AdminTemplateInformationView(TemplateView):
         """Render the admin template information view."""
         if request.user and request.user.is_staff:
             return render(request, self.template_name)
-        else:
-            return HttpResponseForbidden()
-
-
-class AdminGetTemplateFileView(TemplateView):
-    """Get admin template file view."""
-
-    def get(self, request, **kwargs):
-        """Get an admin template file."""
-        if request.user and request.user.is_staff:
-            format_obj = kwargs.get("format")
-            slug = kwargs.get("slug")
-            template_name = kwargs.get("template_name")
-            if format_obj == "subscription":
-                obj = Subscription
-            elif format_obj == "subscription-category":
-                obj = SubscriptionCategory
-            else:
-                raise Http404()
-            try:
-                instance = obj.objects.get(slug=slug)
-            except obj.DoesNotExist:
-                raise Http404()
-            if template_name == "letter":
-                file_handle = instance.letter_template.open()
-            elif template_name == "email_text":
-                file_handle = instance.email_template_text.open()
-            else:
-                raise Http404()
-            response = FileResponse(file_handle, content_type="text/plain")
-            response["Content-Length"] = file_handle.size
-            response["Content-Disposition"] = (
-                'attachment; filename="%s"' % file_handle.name
-            )
-
-            return response
         else:
             return HttpResponseForbidden()
 

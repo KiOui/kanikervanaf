@@ -7,8 +7,8 @@
     {% url opts|admin_urlname:'delete' original.pk|admin_urlquote as delete_url %}
     <p class="deletelink-box"><a href="{% add_preserved_filters delete_url %}" class="deletelink">Delete</a></p>
 {% endif %}
-{% if show_letter %}<a class="closelink" target="_blank" rel="noopener noreferrer" href="{% url 'subscriptions:admin_render_letter' format=format slug=original.slug %}">Show letter</a>{% endif %}
-{% if show_email %}<a class="closelink" target="_blank" rel="noopener noreferrer" href="{% url 'subscriptions:admin_render_email' format=format slug=original.slug %}">Show e-mail</a>{% endif %}
+{% if show_edit_letter %}<a class="closelink" rel="noopener noreferrer" href="{% if format == "subscription" %}{% url "admin:subscription_template_editor_letter" instance=original %}{% else %}{% url "admin:subscription_category_template_editor_letter" instance=original %}{% endif %}">Edit letter</a>{% endif %}
+{% if show_edit_email %}<a class="closelink" rel="noopener noreferrer" href="{% if format == "subscription" %}{% url "admin:subscription_template_editor_email" instance=original %}{% else %}{% url "admin:subscription_category_template_editor_email" instance=original %}{% endif %}">Edit email</a>{% endif %}
 {% if show_save_as_new %}<input type="submit" value="Save as new" name="_saveasnew">{% endif %}
 {% if show_save_and_add_another %}<input type="submit" value="Save and add another" name="_addanother">{% endif %}
 {% if show_save_and_continue %}<input type="submit" value="{% if can_change %}Save and continue editing{% else %}Save and view{% endif %}" name="_continue">{% endif %}

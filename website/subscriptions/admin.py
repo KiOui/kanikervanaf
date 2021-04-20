@@ -5,9 +5,16 @@ from subscriptions import models
 from admin_auto_filters.filters import AutocompleteFilter
 from import_export.admin import ImportExportModelAdmin
 
-from subscriptions.converters import SubscriptionConverter
-from subscriptions.models import Subscription
-from subscriptions.views import AdminRenderLetterView
+from subscriptions.admin_views import (
+    SubscriptionLetterTemplateEditorView,
+    SubscriptionEmailTemplateEditorView,
+    SubscriptionCategoryEmailTemplateEditorView,
+    SubscriptionCategoryLetterTemplateEditorView,
+)
+from subscriptions.converters import (
+    SubscriptionPkConverter,
+    SubscriptionCategoryPkConverter,
+)
 
 
 class SubscriptionCategoryFilter(AutocompleteFilter):
@@ -41,18 +48,34 @@ class SubscriptionAdmin(ImportExportModelAdmin):
         except models.Subscription.DoesNotExist:
             obj = None
         try:
-            extra_context["show_letter"] = obj is not None and obj.letter_template.name
-            extra_context["show_email"] = (
-                obj is not None and obj.email_template_text.name
-            )
+            extra_context["show_edit_letter"] = obj is not None
+            extra_context["show_edit_email"] = obj is not None
             extra_context["format"] = "subscription"
         except TypeError:
             extra_context = {
-                "show_letter": obj is not None and obj.letter_template.name,
-                "show_email": obj is not None and obj.email_template_text.name,
+                "show_edit_letter": obj is not None,
+                "show_edit_email": obj is not None,
                 "format": "subscription",
             }
         return self.changeform_view(request, object_id, form_url, extra_context)
+
+    def get_urls(self):
+        """Get admin urls."""
+        register_converter(SubscriptionPkConverter, "subscription")
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                "template-editor/<subscription:instance>/letter",
+                SubscriptionLetterTemplateEditorView.as_view(),
+                name="subscription_template_editor_letter",
+            ),
+            path(
+                "template-editor/<subscription:instance>/email",
+                SubscriptionEmailTemplateEditorView.as_view(),
+                name="subscription_template_editor_email",
+            ),
+        ]
+        return custom_urls + urls
 
     def view_on_site(self, obj):
         """
@@ -100,22 +123,38 @@ class SubscriptionCategoryAdmin(ImportExportModelAdmin):
         :return: changeform_view with added context
         """
         try:
-            obj = models.SubscriptionCategory.objects.get(id=object_id)
-        except models.SubscriptionCategory.DoesNotExist:
+            obj = models.Subscription.objects.get(id=object_id)
+        except models.Subscription.DoesNotExist:
             obj = None
         try:
-            extra_context["show_letter"] = obj is not None and obj.letter_template.name
-            extra_context["show_email"] = (
-                obj is not None and obj.email_template_text.name
-            )
+            extra_context["show_edit_letter"] = obj is not None
+            extra_context["show_edit_email"] = obj is not None
             extra_context["format"] = "subscription-category"
         except TypeError:
             extra_context = {
-                "show_letter": obj is not None and obj.letter_template.name,
-                "show_email": obj is not None and obj.email_template_text.name,
+                "show_edit_letter": obj is not None,
+                "show_edit_email": obj is not None,
                 "format": "subscription-category",
             }
         return self.changeform_view(request, object_id, form_url, extra_context)
+
+    def get_urls(self):
+        """Get admin urls."""
+        register_converter(SubscriptionCategoryPkConverter, "category")
+        urls = super().get_urls()
+        custom_urls = [
+            path(
+                "template-editor/<category:instance>/letter",
+                SubscriptionCategoryLetterTemplateEditorView.as_view(),
+                name="subscription_category_template_editor_letter",
+            ),
+            path(
+                "template-editor/<category:instance>/email",
+                SubscriptionCategoryEmailTemplateEditorView.as_view(),
+                name="subscription_category_template_editor_email",
+            ),
+        ]
+        return custom_urls + urls
 
     class Media:
         """Necessary to use AutocompleteFilter."""

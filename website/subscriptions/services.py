@@ -1,11 +1,11 @@
 import os
 
 from django.contrib.sites.models import Site
-from django.template import Template, Context
+from django.template import Template, Context, Engine
 from weasyprint import HTML
 from .models import QueuedMailList, Subscription
 from users.models import UserInformation
-from django.template.loader import get_template, render_to_string
+from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from smtplib import SMTPException
@@ -15,15 +15,20 @@ import datetime
 logger = logging.getLogger(__name__)
 
 
-def render_template_with_context_to_pdf(template: Template, context: Context):
+def render_string_to_pdf(template: str, context: dict, use_django_engine=False):
     """Render a template with context to pdf."""
-    source = render_template_with_context(template, context)
-    return HTML(string=source).write_pdf()
+    rendered_str = render_string(template, context, use_django_engine=use_django_engine)
+    return HTML(string=rendered_str).write_pdf()
 
 
-def render_template_with_context(template: Template, context: Context):
-    """Render a template with context to string."""
-    return template.render(context)
+def render_string(template: str, context: dict, use_django_engine=False):
+    """Render template string with context."""
+    if use_django_engine:
+        engine = None
+    else:
+        engine = Engine()
+
+    return Template(template, engine=engine).render(Context(context))
 
 
 def render_deregister_letter(user_information, item, letter_template=None):
@@ -38,25 +43,23 @@ def render_deregister_letter(user_information, item, letter_template=None):
     """
     item_address, item_postal_code, item_residence = item.get_address_information()
     template = (
-        Template(get_file_contents(item.get_letter_template()))
+        get_file_contents(item.get_letter_template())
         if letter_template is None
-        else Template(get_file_contents(letter_template))
+        else get_file_contents(letter_template)
     )
-    context = Context(
-        {
-            "firstname": user_information.firstname,
-            "lastname": user_information.lastname,
-            "address": user_information.address,
-            "postal_code": user_information.postal_code,
-            "residence": user_information.residence,
-            "subscription_address": item_address,
-            "subscription_postal_code": item_postal_code,
-            "subscription_residence": item_residence,
-            "subscription_name": item.name,
-            "date": datetime.datetime.now().strftime("%d-%m-%Y"),
-        }
-    )
-    return render_template_with_context_to_pdf(template, context)
+    context = {
+        "firstname": user_information.firstname,
+        "lastname": user_information.lastname,
+        "address": user_information.address,
+        "postal_code": user_information.postal_code,
+        "residence": user_information.residence,
+        "subscription_address": item_address,
+        "subscription_postal_code": item_postal_code,
+        "subscription_residence": item_residence,
+        "subscription_name": item.name,
+        "date": datetime.datetime.now().strftime("%d-%m-%Y"),
+    }
+    return render_string_to_pdf(template, context)
 
 
 def send_verification_email(first_name, email_address, verification_url):
@@ -268,28 +271,26 @@ def create_deregister_email(
     """
     item_address, item_postal_code, item_residence = item.get_address_information()
     template = (
-        Template(get_file_contents(item.get_email_template_text()))
+        get_file_contents(item.get_email_template_text())
         if email_template is None
-        else Template(get_file_contents(email_template))
+        else get_file_contents(email_template)
     )
 
-    context = Context(
-        {
-            "firstname": user_information.firstname,
-            "lastname": user_information.lastname,
-            "address": user_information.address,
-            "postal_code": user_information.postal_code,
-            "residence": user_information.residence,
-            "subscription_address": item_address,
-            "subscription_postal_code": item_postal_code,
-            "subscription_residence": item_residence,
-            "subscription_name": item.name,
-            "date": datetime.datetime.now().strftime("%d-%m-%Y"),
-            "forward_address": forward_address,
-        }
-    )
+    context = {
+        "firstname": user_information.firstname,
+        "lastname": user_information.lastname,
+        "address": user_information.address,
+        "postal_code": user_information.postal_code,
+        "residence": user_information.residence,
+        "subscription_address": item_address,
+        "subscription_postal_code": item_postal_code,
+        "subscription_residence": item_residence,
+        "subscription_name": item.name,
+        "date": datetime.datetime.now().strftime("%d-%m-%Y"),
+        "forward_address": forward_address,
+    }
 
-    return render_template_with_context(template, context)
+    return render_string(template, context)
 
 
 def send_request_email(name, email_address, subscription, message):
@@ -390,7 +391,7 @@ def get_file_contents(filename):
     retrieved
     """
     if os.path.exists(str(filename)):
-        with open(filename) as file:
+        with open(filename, "r") as file:
             try:
                 return file.read()
             except IOError:
