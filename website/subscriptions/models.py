@@ -23,18 +23,12 @@ def email_template_filename(instance, _):
 
 def template_filename(instance, filename):
     """Get the template filename."""
-    if type(instance) == Subscription:
-        return TEMPLATE_FILE_DIRECTORY + "subscription/{}/{}".format(
-            instance.slug, filename
-        )
-    elif type(instance) == SubscriptionCategory:
-        return TEMPLATE_FILE_DIRECTORY + "subscription-category/{}/{}".format(
-            instance.slug, filename
+    if type(instance) == Subscription or type(instance) == SubscriptionCategory:
+        return TEMPLATE_FILE_DIRECTORY + "{}/{}/{}".format(
+            instance._meta.model_name, instance.slug, filename
         )
     else:
-        return TEMPLATE_FILE_DIRECTORY + "null/{}/{}".format(
-            instance.slug if instance.slug is not None else instance, filename
-        )
+        raise Exception("There is no defined template filename for this model class")
 
 
 class Subscription(models.Model):
