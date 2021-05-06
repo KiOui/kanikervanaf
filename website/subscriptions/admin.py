@@ -10,10 +10,14 @@ from subscriptions.admin_views import (
     SubscriptionEmailTemplateEditorView,
     SubscriptionCategoryEmailTemplateEditorView,
     SubscriptionCategoryLetterTemplateEditorView,
+    AdminEmailTemplateView,
+    AdminLetterTemplateView,
 )
 from subscriptions.converters import (
     SubscriptionPkConverter,
     SubscriptionCategoryPkConverter,
+    SubscriptionConverter,
+    SubscriptionCategoryConverter,
 )
 
 
@@ -61,18 +65,29 @@ class SubscriptionAdmin(ImportExportModelAdmin):
 
     def get_urls(self):
         """Get admin urls."""
-        register_converter(SubscriptionPkConverter, "subscription")
+        register_converter(SubscriptionPkConverter, "subscriptionpk")
+        register_converter(SubscriptionConverter, "subscription")
         urls = super().get_urls()
         custom_urls = [
             path(
-                "template-editor/<subscription:instance>/letter",
+                "template-editor/<subscriptionpk:instance>/letter",
                 SubscriptionLetterTemplateEditorView.as_view(),
                 name="subscription_template_editor_letter",
             ),
             path(
-                "template-editor/<subscription:instance>/email",
+                "template-editor/<subscriptionpk:instance>/email",
                 SubscriptionEmailTemplateEditorView.as_view(),
                 name="subscription_template_editor_email",
+            ),
+            path(
+                "templates/<subscription:obj>/email",
+                AdminEmailTemplateView.as_view(),
+                name="subscription_email_template_download",
+            ),
+            path(
+                "templates/<subscription:obj>/letter",
+                AdminLetterTemplateView.as_view(),
+                name="subscription_letter_template_download",
             ),
         ]
         return custom_urls + urls
@@ -140,18 +155,29 @@ class SubscriptionCategoryAdmin(ImportExportModelAdmin):
 
     def get_urls(self):
         """Get admin urls."""
-        register_converter(SubscriptionCategoryPkConverter, "category")
+        register_converter(SubscriptionCategoryPkConverter, "categorypk")
+        register_converter(SubscriptionCategoryConverter, "category")
         urls = super().get_urls()
         custom_urls = [
             path(
-                "template-editor/<category:instance>/letter",
+                "template-editor/<categorypk:instance>/letter",
                 SubscriptionCategoryLetterTemplateEditorView.as_view(),
                 name="subscription_category_template_editor_letter",
             ),
             path(
-                "template-editor/<category:instance>/email",
+                "template-editor/<categorypk:instance>/email",
                 SubscriptionCategoryEmailTemplateEditorView.as_view(),
                 name="subscription_category_template_editor_email",
+            ),
+            path(
+                "templates/<category:obj>/email",
+                AdminEmailTemplateView.as_view(),
+                name="subscription_category_email_template_download",
+            ),
+            path(
+                "templates/<category:obj>/letter",
+                AdminLetterTemplateView.as_view(),
+                name="subscription_category_letter_template_download",
             ),
         ]
         return custom_urls + urls
