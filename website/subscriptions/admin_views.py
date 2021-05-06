@@ -5,6 +5,10 @@ from django.core.files.base import ContentFile
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.contrib.admin.sites import site
+from django.http import (
+    Http404,
+    FileResponse,
+)
 
 from subscriptions.models import Subscription, SubscriptionCategory
 from subscriptions.services import get_file_contents
@@ -181,3 +185,38 @@ class SubscriptionCategoryEmailTemplateEditorView(
     def save(self, source):
         """Save file contents."""
         self.get_instance_obj().email_template_text.save("", ContentFile(source))
+
+
+class AdminEmailTemplateView(PermissionRequiredMixin, TemplateView):
+    """Get Email template file view."""
+
+    permission_required = "is_staff"
+
+    def get_file_handle(self):
+        """Get file handle."""
+        if self.kwargs.get("obj").email_template_text is not None:
+            return self.kwargs.get("obj").email_template_text.open()
+        else:
+            return None
+
+    def get(self, request, **kwargs):
+        """Get an admin template file."""
+        file_handle = self.get_file_handle()
+        if file_handle is None:
+            raise Http404()
+        response = FileResponse(file_handle, content_type="text/plain")
+        response["Content-Length"] = file_handle.size
+        response["Content-Disposition"] = 'attachment; filename="%s"' % file_handle.name
+
+        return response
+
+
+class AdminLetterTemplateView(AdminEmailTemplateView):
+    """Get Letter template file view."""
+
+    def get_file_handle(self):
+        """Get file handle."""
+        if self.kwargs.get("obj").letter_template is not None:
+            return self.kwargs.get("obj").letter_template.open()
+        else:
+            return None
