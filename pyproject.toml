@@ -22,6 +22,8 @@ django-cleanup = "^5.1.0"
 djangorestframework = "^3.12.4"
 django-oauth-toolkit = "^1.5.0"
 uritemplate = "^3.0.1"
+pdf2docx = "^0.5.2"
+django-filter = "^2.4.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"

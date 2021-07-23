@@ -76,7 +76,7 @@ NB: Tevens wens ik gebruik te maken van mijn Recht van Verzet. Ik wil niet telef
             De categorie van een <code>Subscription</code> wordt op het
             <a href="{% url 'admin:index' %}">administrator dashboard</a> aangeduid als de 'Category'. Als een
             <code>SubscriptionCategory</code> onder een andere <code>SubscriptionCategory</code> valt wordt dit
-            aangeduid met de 'Parent' van een categorie. Zo heeft 'KPN' bijvoorbeeld 'Multimedia' als Parent.
+            aangeduid met de 'Category' (parent) van een categorie. Zo heeft 'KPN' bijvoorbeeld 'Multimedia' als Category.
         </p>
         <p>
             Zoals al eerder genoemd kunnen templates worden gespecificeerd per <code>SubscriptionCategory</code> en per
@@ -92,7 +92,7 @@ NB: Tevens wens ik gebruik te maken van mijn Recht van Verzet. Ik wil niet telef
                 <li>Als de <code>Subscription</code> een template bevat, dan wordt deze gebruikt.</li>
                 <li>Als (1) niet het geval is, dan wordt gekeken naar de categorie van de <code>Subscription</code>.
                 Als deze categorie een template bevat dan wordt deze gebruikt.</li>
-                <li>Als (2) ook niet het geval is dan wordt gekeken naar de 'Parent' categorie van de
+                <li>Als (2) ook niet het geval is dan wordt gekeken naar de 'Category' (parent) categorie van de
                     <code>SubscriptionCategory</code>. Als deze categorie een template bevat dan wordt deze gebruikt.
                 </li>
                 <li>We herhalen (2) totdat we een template hebben gevonden of bij de 'Hoofdcategorie' uitkomen, als de

@@ -3,26 +3,41 @@ import os
 from django.contrib.sites.models import Site
 from django.template import Template, Context, Engine
 from weasyprint import HTML
-from .models import QueuedMailList, Subscription
-from users.models import UserInformation
+from .models import QueuedMailList, Subscription, SubscriptionObject
 from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from smtplib import SMTPException
 import logging
 import datetime
+from pdf2docx import parse
+import tempfile
 
 logger = logging.getLogger(__name__)
 
 
-def render_string_to_pdf(template: str, context: dict, use_django_engine=False):
-    """Render a template with context to pdf."""
+def render_string_to_pdf(template: str, context: dict, use_django_engine=False) -> bytes:
+    """
+    Render a string template to a PDF document.
+
+    :param template: a string including the template text to render in HTML format
+    :param context: a dictionary with the context in which to render the template string
+    :param use_django_engine: whether or not to include the django engine while rendering
+    :return: a bytes array which includes a rendered PDF document
+    """
     rendered_str = render_string(template, context, use_django_engine=use_django_engine)
     return HTML(string=rendered_str).write_pdf()
 
 
-def render_string(template: str, context: dict, use_django_engine=False):
-    """Render template string with context."""
+def render_string(template: str, context: dict, use_django_engine=False) -> str:
+    """
+    Render a string template.
+
+    :param template: a string including the template text to render
+    :param context: a dictionary with the context in which to render the template string
+    :param use_django_engine: whether or not to include the django engine while rendering
+    :return: a string which includes the rendered template string
+    """
     if use_django_engine:
         engine = None
     else:
@@ -31,15 +46,15 @@ def render_string(template: str, context: dict, use_django_engine=False):
     return Template(template, engine=engine).render(Context(context))
 
 
-def render_deregister_letter(user_information, item, letter_template=None):
+def render_deregister_letter_pdf(template_context: dict, item: SubscriptionObject, letter_template=None) -> bytes:
     """
-    Render a deregister letter.
+    Render a deregister letter to PDF.
 
+    :param template_context: the template context
+    :param item: the item to render the letter for
     :param letter_template: the letter template to use, if specified this template will be used instead of the one
     registered in the subscription
-    :param user_information: the user information
-    :param item: the item to render the letter for
-    :return:
+    :return: a rendered PDF as bytes
     """
     item_address, item_postal_code, item_residence = item.get_address_information()
     template = (
@@ -47,12 +62,8 @@ def render_deregister_letter(user_information, item, letter_template=None):
         if letter_template is None
         else get_file_contents(letter_template)
     )
+
     context = {
-        "firstname": user_information.firstname,
-        "lastname": user_information.lastname,
-        "address": user_information.address,
-        "postal_code": user_information.postal_code,
-        "residence": user_information.residence,
         "subscription_address": item_address,
         "subscription_postal_code": item_postal_code,
         "subscription_residence": item_residence,
@@ -60,6 +71,39 @@ def render_deregister_letter(user_information, item, letter_template=None):
         "date": datetime.datetime.now().strftime("%d-%m-%Y"),
     }
     return render_string_to_pdf(template, context)
+
+
+def render_deregister_letter_docx(template_context: dict, item: SubscriptionObject, letter_template=None) -> bytes:
+    """
+    Render a letter as a Word document (docx).
+
+    This function uses the pdf2docx library for rendering a docx document. We first render the HTML to PDF and then
+    write it to a file to convert it to a Word document. Then the binary content of the Word document is returned.
+    :param template_context: the template context
+    :param item: the item to render the letter for
+    :param letter_template: the letter template to use, if specified this template will be used instead of the one
+    registered in the subscription
+    :return: a rendered Word document as bytes
+    """
+    # First render the PDF
+    pdf = render_deregister_letter_pdf(template_context, item, letter_template=letter_template)
+    # Then save the PDF temporarily
+    pdf_file = tempfile.NamedTemporaryFile()
+    pdf_file.write(pdf)
+    # Now create a temporary file for storing the docx document as the library only support reading from/writing to files
+    docx_file = tempfile.NamedTemporaryFile()
+    # Convert the document
+    parse(pdf_file.name, docx_file.name)
+    # Close the PDF file as we do not need it anymore (it will also probably be deleted after closing)
+    pdf_file.close()
+    # Now the docx file with in another file and read the content
+    written_docx_file = open(docx_file.name, 'rb')
+    docx_content = written_docx_file.read()
+    # Close both files as we have read the content
+    written_docx_file.close()
+    docx_file.close()
+    return docx_content
+
 
 
 def send_verification_email(first_name, email_address, verification_url):
@@ -107,7 +151,7 @@ def send_summary_email(
     succeeded_letters,
     failed_letters,
     pdfs: list,
-    user_information: UserInformation,
+    user_information: QueuedMailList,
     direct_send: bool = False,
 ):
     """

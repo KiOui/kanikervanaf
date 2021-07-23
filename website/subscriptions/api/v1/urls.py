@@ -6,8 +6,6 @@ from subscriptions.api.v1.views import (
     SubscriptionCategoryRetrieveAPIView,
     SubscriptionRenderLetterAPIView,
     SubscriptionRenderEmailAPIView,
-    SubscriptionCategoryRenderLetterAPIView,
-    SubscriptionCategoryRenderEmailAPIView,
     TemplateAPIView,
 )
 
@@ -26,21 +24,6 @@ urlpatterns = [
         "<int:pk>/render-email",
         SubscriptionRenderEmailAPIView.as_view(),
         name="subscription_render_email",
-    ),
-    path(
-        "categories",
-        SubscriptionCategoryListAPIView.as_view(),
-        name="subscription_category_list",
-    ),
-    path(
-        "categories/<int:pk>/render-letter",
-        SubscriptionCategoryRenderLetterAPIView.as_view(),
-        name="subscription_category_render_letter",
-    ),
-    path(
-        "categories/<int:pk>/render-email",
-        SubscriptionCategoryRenderEmailAPIView.as_view(),
-        name="subscription_category_render_email",
     ),
     path(
         "categories/<int:pk>",
