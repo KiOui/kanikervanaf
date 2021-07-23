@@ -1,7 +1,6 @@
 import os
 
 from django.db import models
-from users.models import UserInformation
 import secrets
 import datetime
 import pytz

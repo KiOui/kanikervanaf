@@ -23,7 +23,7 @@ from subscriptions.models import Subscription, SubscriptionCategory
 from subscriptions.services import (
     render_deregister_letter_pdf,
     render_deregister_letter_docx,
-    create_deregister_email,
+    render_deregister_email,
     render_string,
     render_string_to_pdf,
 )
@@ -137,31 +137,32 @@ class SubscriptionRenderEmailAPIView(APIView):
 
     Use this endpoint to render the email of a Subscription.
     """
+    schema = CustomAutoSchema(
+        request_schema={
+            "type": "object",
+            "properties": {
+                "context": {"type": "object", "example": {x: "string" for x in settings.DEFAULT_TEMPLATE_PARAMETERS}},
+            },
+        }
+    )
 
     renderer_classes = [PlainTextRenderer]
 
-    def get(self, request, **kwargs):
+    def post(self, request, **kwargs):
         """Get request."""
         try:
             instance = Subscription.objects.get(pk=kwargs.get("pk"))
         except Subscription.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        if instance.email_template_text:
-            text = self.render(instance)
-            return Response(
-                status=status.HTTP_200_OK, data=text, content_type="text/plain"
-            )
-        else:
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def render(self, instance):
-        """Render email."""
-        return create_deregister_email(
-            UserInformation.get_test_instance(),
-            Subscription.get_test_instance(),
-            os.path.join(
-                settings.MEDIA_ROOT, str(instance.email_template_text)
-            ),
+        context = {}
+        context.update(settings.DEFAULT_TEMPLATE_PARAMETERS)
+        context.update(request.data.get("context", {}))
+        email = render_deregister_email(
+            context,
+            instance,
+        )
+        return Response(
+            status=status.HTTP_200_OK, data=email, content_type="text/plain"
         )
 
 

@@ -6,37 +6,6 @@ import datetime
 from django.conf import settings
 
 
-class UserInformation(models.Model):
-    """User information object."""
-
-    firstname = models.CharField(max_length=1024)
-    lastname = models.CharField(max_length=1024, blank=True)
-    email_address = models.EmailField(max_length=1024)
-    address = models.CharField(max_length=1024, blank=True)
-    postal_code = models.CharField(max_length=256, blank=True)
-    residence = models.CharField(max_length=1024, blank=True)
-
-    @staticmethod
-    def get_test_instance():
-        """Get a test instance."""
-        return UserInformation(
-            firstname="John",
-            lastname="Doe",
-            email_address="johndoe@science.ru.nl",
-            address="Heyendaalseweg 135",
-            postal_code="6525 AJ",
-            residence="Nijmegen",
-        )
-
-    def __str__(self):
-        """
-        Casts this object to a string format.
-
-        :return: the firstname and lastname of this object seperated by a space
-        """
-        return "{} {}".format(self.firstname, self.lastname)
-
-
 class UserManager(BaseUserManager):
     """User manager object."""
 
