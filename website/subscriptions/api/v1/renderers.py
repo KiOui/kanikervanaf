@@ -33,8 +33,11 @@ class PlainTextRenderer(BaseRenderer):
 
 
 class WordDocumentRenderer(BaseRenderer):
+    """Word document Renderer."""
 
-    media_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    media_type = (
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    )
     format = "docx"
 
     def render(self, data, accepted_media_type=None, renderer_context=None):

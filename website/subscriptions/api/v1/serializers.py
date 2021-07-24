@@ -12,6 +12,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "name",
+            "slug",
             "price",
             "support_email",
             "support_reply_number",

@@ -17,7 +17,9 @@ from typing import Union
 logger = logging.getLogger(__name__)
 
 
-def render_string_to_pdf(template: str, context: dict, use_django_engine=False) -> bytes:
+def render_string_to_pdf(
+    template: str, context: dict, use_django_engine=False
+) -> bytes:
     """
     Render a string template to a PDF document.
 
@@ -47,7 +49,9 @@ def render_string(template: str, context: dict, use_django_engine=False) -> str:
     return Template(template, engine=engine).render(Context(context))
 
 
-def render_deregister_letter_pdf(template_context: dict, item: Subscription, letter_template=None) -> bytes:
+def render_deregister_letter_pdf(
+    template_context: dict, item: Subscription, letter_template=None
+) -> bytes:
     """
     Render a deregister letter to PDF.
 
@@ -75,7 +79,9 @@ def render_deregister_letter_pdf(template_context: dict, item: Subscription, let
     return render_string_to_pdf(template, context)
 
 
-def render_deregister_letter_docx(template_context: dict, item: Subscription, letter_template=None) -> bytes:
+def render_deregister_letter_docx(
+    template_context: dict, item: Subscription, letter_template=None
+) -> bytes:
     """
     Render a letter as a Word document (docx).
 
@@ -88,7 +94,9 @@ def render_deregister_letter_docx(template_context: dict, item: Subscription, le
     :return: a rendered Word document as bytes
     """
     # First render the PDF
-    pdf = render_deregister_letter_pdf(template_context, item, letter_template=letter_template)
+    pdf = render_deregister_letter_pdf(
+        template_context, item, letter_template=letter_template
+    )
     # Then save the PDF temporarily
     pdf_file = tempfile.NamedTemporaryFile()
     pdf_file.write(pdf)
@@ -99,7 +107,7 @@ def render_deregister_letter_docx(template_context: dict, item: Subscription, le
     # Close the PDF file as we do not need it anymore (it will also probably be deleted after closing)
     pdf_file.close()
     # Now the docx file with in another file and read the content
-    written_docx_file = open(docx_file.name, 'rb')
+    written_docx_file = open(docx_file.name, "rb")
     docx_content = written_docx_file.read()
     # Close both files as we have read the content
     written_docx_file.close()
@@ -107,8 +115,9 @@ def render_deregister_letter_docx(template_context: dict, item: Subscription, le
     return docx_content
 
 
-
-def send_verification_email(first_name: str, email_address: str, verification_url: str) -> bool:
+def send_verification_email(
+    first_name: str, email_address: str, verification_url: str
+) -> bool:
     """
     Send a verification email to a specified email address.
 
@@ -204,7 +213,9 @@ def send_summary_email(
     return True
 
 
-def create_deregister_letters(mail_list: QueuedMailList) -> ([Subscription], [Subscription], [Subscription]):
+def create_deregister_letters(
+    mail_list: QueuedMailList,
+) -> ([Subscription], [Subscription], [Subscription]):
     """
     Create deregister letters.
 
@@ -255,7 +266,9 @@ def handle_deregister_request(mail_list: QueuedMailList) -> bool:
     return retvalue
 
 
-def send_deregister_emails(mail_list: QueuedMailList, direct_send: bool=False) -> (set, set):
+def send_deregister_emails(
+    mail_list: QueuedMailList, direct_send: bool = False
+) -> (set, set):
     """
     Send all deregister emails for subscriptions in mail_list.
 
@@ -302,7 +315,9 @@ def send_deregister_emails(mail_list: QueuedMailList, direct_send: bool=False) -
     return succeeded, failed
 
 
-def render_deregister_email(template_context: dict, item: Subscription, email_template=None) -> bytes:
+def render_deregister_email(
+    template_context: dict, item: Subscription, email_template=None
+) -> bytes:
     """
     Render a deregister email as text.
 
@@ -331,7 +346,9 @@ def render_deregister_email(template_context: dict, item: Subscription, email_te
     return render_string(template, context)
 
 
-def send_request_email(name: str, email_address: str, subscription: Subscription, message: str) -> bool:
+def send_request_email(
+    name: str, email_address: str, subscription: Subscription, message: str
+) -> bool:
     """
     Construct and send a request email.
 
@@ -390,7 +407,9 @@ def store_subscription_list(subscription_list: [int]) -> [Subscription]:
     return subscription_objects
 
 
-def handle_verification_request(user_information: dict, subscription_list: [int]) -> Union[QueuedMailList,bool]:
+def handle_verification_request(
+    user_information: dict, subscription_list: [int]
+) -> Union[QueuedMailList, bool]:
     """
     Handle a verification request, generate a QueuedMailList.
 
@@ -408,7 +427,7 @@ def handle_verification_request(user_information: dict, subscription_list: [int]
                 user_information.get("address", ""),
                 user_information.get("postal_code", ""),
                 user_information.get("residence", ""),
-                subscription_objects
+                subscription_objects,
             )
         except Exception as e:
             logger.error(e)

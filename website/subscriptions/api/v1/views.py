@@ -14,7 +14,11 @@ from rest_framework.views import APIView
 
 from kanikervanaf.api.openapi import CustomAutoSchema
 from subscriptions.api.v1.pagination import StandardResultsSetPagination
-from subscriptions.api.v1.renderers import PDFRenderer, PlainTextRenderer, WordDocumentRenderer
+from subscriptions.api.v1.renderers import (
+    PDFRenderer,
+    PlainTextRenderer,
+    WordDocumentRenderer,
+)
 from subscriptions.api.v1.serializers import (
     SubscriptionSerializer,
     SubscriptionCategorySerializer,
@@ -43,9 +47,9 @@ class SubscriptionListAPIView(ListAPIView):
     queryset = Subscription.objects.all()
     pagination_class = StandardResultsSetPagination
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['category']
-    search_fields = ['name', 'subscriptionsearchterm__name']
-    ordering_fields = ['name', 'amount_used']
+    filterset_fields = ["category"]
+    search_fields = ["name", "subscriptionsearchterm__name"]
+    ordering_fields = ["name", "amount_used"]
 
 
 class SubscriptionRetrieveAPIView(RetrieveAPIView):
@@ -95,7 +99,12 @@ class SubscriptionRenderLetterAPIView(APIView):
         request_schema={
             "type": "object",
             "properties": {
-                "context": {"type": "object", "example": {x: "string" for x in settings.DEFAULT_TEMPLATE_PARAMETERS}},
+                "context": {
+                    "type": "object",
+                    "example": {
+                        x: "string" for x in settings.DEFAULT_TEMPLATE_PARAMETERS
+                    },
+                },
             },
         }
     )
@@ -125,7 +134,9 @@ class SubscriptionRenderLetterAPIView(APIView):
         else:
             docx = render_deregister_letter_docx(context, subscription)
             return Response(
-                status=status.HTTP_200_OK, data=docx, content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                status=status.HTTP_200_OK,
+                data=docx,
+                content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             )
 
 
@@ -137,11 +148,17 @@ class SubscriptionRenderEmailAPIView(APIView):
 
     Use this endpoint to render the email of a Subscription.
     """
+
     schema = CustomAutoSchema(
         request_schema={
             "type": "object",
             "properties": {
-                "context": {"type": "object", "example": {x: "string" for x in settings.DEFAULT_TEMPLATE_PARAMETERS}},
+                "context": {
+                    "type": "object",
+                    "example": {
+                        x: "string" for x in settings.DEFAULT_TEMPLATE_PARAMETERS
+                    },
+                },
             },
         }
     )
@@ -157,10 +174,7 @@ class SubscriptionRenderEmailAPIView(APIView):
         context = {}
         context.update(settings.DEFAULT_TEMPLATE_PARAMETERS)
         context.update(request.data.get("context", {}))
-        email = render_deregister_email(
-            context,
-            instance,
-        )
+        email = render_deregister_email(context, instance,)
         return Response(
             status=status.HTTP_200_OK, data=email, content_type="text/plain"
         )

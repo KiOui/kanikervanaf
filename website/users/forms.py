@@ -17,9 +17,12 @@ class PasswordForgotForm(forms.Form):
     email = forms.EmailField(label="Email adres")
 
     def __init__(self, *args, **kwargs):
+        """Only load captcha on production."""
         super().__init__(*args, **kwargs)
         if settings.RECAPTCHA_PUBLIC_KEY != "" and settings.RECAPTCHA_PRIVATE_KEY != "":
-            self.fields['captcha'] = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
+            self.fields["captcha"] = ReCaptchaField(
+                widget=ReCaptchaV3(api_params={"hl": "nl"}), label=""
+            )
 
 
 class PasswordResetForm(forms.Form):
@@ -31,9 +34,12 @@ class PasswordResetForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
+        """Only load captcha on production."""
         super().__init__(*args, **kwargs)
         if settings.RECAPTCHA_PUBLIC_KEY != "" and settings.RECAPTCHA_PRIVATE_KEY != "":
-            self.fields['captcha'] = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
+            self.fields["captcha"] = ReCaptchaField(
+                widget=ReCaptchaV3(api_params={"hl": "nl"}), label=""
+            )
 
     def clean(self):
         """
@@ -55,9 +61,12 @@ class UserLoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput, label="Wachtwoord")
 
     def __init__(self, *args, **kwargs):
+        """Only load captcha on production."""
         super().__init__(*args, **kwargs)
         if settings.RECAPTCHA_PUBLIC_KEY != "" and settings.RECAPTCHA_PRIVATE_KEY != "":
-            self.fields['captcha'] = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
+            self.fields["captcha"] = ReCaptchaField(
+                widget=ReCaptchaV3(api_params={"hl": "nl"}), label=""
+            )
 
     def clean(self, *args, **kwargs):
         """
@@ -88,9 +97,12 @@ class UserRegisterForm(forms.ModelForm):
     password2 = forms.CharField(widget=forms.PasswordInput, label="Herhaal wachtwoord")
 
     def __init__(self, *args, **kwargs):
+        """Only load captcha on production."""
         super().__init__(*args, **kwargs)
         if settings.RECAPTCHA_PUBLIC_KEY != "" and settings.RECAPTCHA_PRIVATE_KEY != "":
-            self.fields['captcha'] = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
+            self.fields["captcha"] = ReCaptchaField(
+                widget=ReCaptchaV3(api_params={"hl": "nl"}), label=""
+            )
 
     class Meta:
         """Meta class for user registration."""
@@ -281,9 +293,12 @@ class UserUpdateForm(forms.Form):
     residence = forms.CharField(label="Woonplaats", required=False)
 
     def __init__(self, *args, **kwargs):
+        """Only load captcha on production."""
         super().__init__(*args, **kwargs)
         if settings.RECAPTCHA_PUBLIC_KEY != "" and settings.RECAPTCHA_PRIVATE_KEY != "":
-            self.fields['captcha'] = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
+            self.fields["captcha"] = ReCaptchaField(
+                widget=ReCaptchaV3(api_params={"hl": "nl"}), label=""
+            )
 
     def __init__(self, *args, **kwargs):
         """
@@ -314,9 +329,12 @@ class EmailUpdateForm(forms.Form):
     email_address = forms.EmailField(label="Email-adres", required=True)
 
     def __init__(self, *args, **kwargs):
+        """Only load captcha on production."""
         super().__init__(*args, **kwargs)
         if settings.RECAPTCHA_PUBLIC_KEY != "" and settings.RECAPTCHA_PRIVATE_KEY != "":
-            self.fields['captcha'] = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
+            self.fields["captcha"] = ReCaptchaField(
+                widget=ReCaptchaV3(api_params={"hl": "nl"}), label=""
+            )
 
     def __init__(self, *args, **kwargs):
         """

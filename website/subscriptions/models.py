@@ -31,14 +31,10 @@ def template_filename(instance, filename):
 
 
 class SubscriptionObject(models.Model):
+    """Abstract model for overlapping Subscriptions and SubscriptionCategories."""
 
     name = models.CharField(max_length=1024)
-    slug = models.SlugField(
-        null=False,
-        blank=False,
-        unique=True,
-        max_length=100,
-    )
+    slug = models.SlugField(null=False, blank=False, unique=True, max_length=100,)
     category = models.ForeignKey(
         "SubscriptionCategory", null=True, blank=True, on_delete=models.SET_NULL
     )
@@ -325,7 +321,9 @@ class SubscriptionCategory(SubscriptionObject):
         :param order: how to order the subcategories
         :return: a QuerySet of SubscriptionCategory objects
         """
-        subcategories = SubscriptionCategory.objects.filter(category=self).order_by(order)
+        subcategories = SubscriptionCategory.objects.filter(category=self).order_by(
+            order
+        )
         return subcategories
 
     @staticmethod
@@ -407,7 +405,15 @@ class QueuedMailList(models.Model):
     residence = models.CharField(max_length=1024, blank=True)
 
     @staticmethod
-    def generate(firstname: str, lastname: str, email_address: str, address: str, postal_code: str, residence: str, subscription_list: [Subscription]):
+    def generate(
+        firstname: str,
+        lastname: str,
+        email_address: str,
+        address: str,
+        postal_code: str,
+        residence: str,
+        subscription_list: [Subscription],
+    ):
         """
         Generate a new QueuedMailList by first creating a new random hexadecimal token of 32 bytes.
 
@@ -423,7 +429,13 @@ class QueuedMailList(models.Model):
         """
         random_token = secrets.token_hex(32)
         mail_list = QueuedMailList.objects.create(
-            token=random_token, firstname=firstname, lastname=lastname, email_address=email_address, address=address, postal_code=postal_code, residence=residence
+            token=random_token,
+            firstname=firstname,
+            lastname=lastname,
+            email_address=email_address,
+            address=address,
+            postal_code=postal_code,
+            residence=residence,
         )
         for item in subscription_list:
             mail_list.item_list.add(item)
