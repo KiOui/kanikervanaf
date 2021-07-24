@@ -1,5 +1,7 @@
 {% load static %}
 
+<script src="{% static 'kanikervanaf/js/general.js' %}"></script>
+
 <div class="container-fluid">
     <h1 class="mb-5"><strong>Selecteer abonnementen</strong></h1>
     <p>
@@ -16,15 +18,86 @@
         hebben voor het abonnement, die prijs zult u in het totaal terug zien.
     </p>
 </div>
-<div>
+<div id="subscription-search">
     <input id="searchfor" type="text" maxlength="75" autocorrect="off" spellcheck="false" autocomplete="off"
-       autocapitalize="off" placeholder="Zoek een abonnement..." class="container-fluid">
-    <div id="selection-container-id">
-
+       autocapitalize="off" placeholder="Zoek een abonnement..." class="container-fluid" v-on:keyup="set_timer"
+           v-model="search_query" />
+    <div id="selection-container-id" v-if="search_query != ''">
+        <template v-if="subscriptions.length > 0">
+            <div v-for="subscription in subscriptions" class="menu-link">
+                <input name="checkbox-search-list" type="checkbox" class="normal-checkbox" v-on:change="toggle_checkbox(this, subscription, in_list(selected_subscriptions, subscription.id))" :checked="in_list(selected_subscriptions, subscription.id)" :id="`checkbox-search-${subscription.id}`"></input>
+                <label :for="`checkbox-search-${subscription.id}`"><% subscription.name %></label>
+                <div class="icons">
+                    <i v-if="has_price(subscription)" class='far fa-euro-sign'></i>
+                    <i v-if="has_mail(subscription)" class='fas fa-at'></i>
+                    <i v-if="has_letter(subscription)" class='far fa-envelope'></i>
+                </div>
+            </div>
+        </template>
+        <template v-else-if="subscriptions.length == 0">
+            <div class='menu-link'>
+                <p>
+                    Dat abonnement is nog niet bij ons bekend! Door op de pijl te drukken kunt u doorgeven dat dit
+                    abonnement nog niet in onze database staat. Wij zullen dan ons best doen om onze database aan te
+                    vullen.
+                <p>
+                <a class='icons' style='cursor: pointer;' href="{% url 'subscriptions:request' %}">
+                    <i class='fas fa-arrow-right'></i>
+                </a>
+            </div>
+        </template>
     </div>
 </div>
 
-<script src="{% static 'subscriptions/js/search.js' %}"></script>
 <script>
-    SEARCH_URL = "{% url 'subscriptions:search' %}";
+    let subscription_search_vue = new Vue({
+        el: '#subscription-search',
+        delimiters: ['<%', '%>'],
+        data: {
+            subscriptions: [],
+            search_query: "",
+            typing_timer: null,
+            loading: false,
+            selected_subscriptions: [],
+        },
+        created() {
+            this.selected_subscriptions = get_list();
+        },
+        methods: {
+            set_timer() {
+                clearTimeout(this.typing_timer);
+                if (this.search_query) {
+                    this.typing_timer = setTimeout(this.search, 200);
+                }
+            },
+            search() {
+                this.loading = true;
+                fetch(`{% url "v1:subscription_list" %}?search=${this.search_query}&page_size=5`)
+                .then(response => response.json())
+                .then(json => {
+                    this.subscriptions = json.results;
+                    this.loading = false;
+                });
+            },
+            toggle_checkbox(checkbox, subscription, checked) {
+                let list = get_list();
+                if (!checked) {
+                    if (!in_list(list, subscription.id)) {
+                        list.push({"id": subscription.id, "price": subscription.price, "name": subscription.name, "has_email": has_mail(subscription), "has_letter": has_letter(subscription), "has_price": has_price(subscription)});
+                    }
+                }
+                else {
+                    let newlist = [];
+                    for (let i = 0; i < list.length; i++) {
+                        if (list[i].id !== subscription.id) {
+                            newlist.push(list[i]);
+                        }
+                    }
+                    list = newlist;
+                }
+                set_list(list);
+                refresh_all();
+            },
+        }
+    });
 </script>

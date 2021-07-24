@@ -12,6 +12,7 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "name",
+            "slug",
             "price",
             "support_email",
             "support_reply_number",
@@ -33,4 +34,4 @@ class SubscriptionCategorySerializer(serializers.ModelSerializer):
         """Meta class."""
 
         model = SubscriptionCategory
-        fields = ["id", "name", "parent"]
+        fields = ["id", "name", "category"]

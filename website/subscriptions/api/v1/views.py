@@ -1,5 +1,7 @@
 import datetime
 import os
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter, SearchFilter
 
 import django.template.exceptions
 from django.conf import settings
@@ -12,19 +14,24 @@ from rest_framework.views import APIView
 
 from kanikervanaf.api.openapi import CustomAutoSchema
 from subscriptions.api.v1.pagination import StandardResultsSetPagination
-from subscriptions.api.v1.renderers import PDFRenderer, PlainTextRenderer
+from subscriptions.api.v1.renderers import (
+    PDFRenderer,
+    PlainTextRenderer,
+    WordDocumentRenderer,
+)
 from subscriptions.api.v1.serializers import (
     SubscriptionSerializer,
     SubscriptionCategorySerializer,
 )
 from subscriptions.models import Subscription, SubscriptionCategory
 from subscriptions.services import (
-    render_deregister_letter,
-    create_deregister_email,
+    render_deregister_letter_pdf,
+    render_deregister_letter_docx,
+    render_deregister_email,
     render_string,
     render_string_to_pdf,
 )
-from users.models import UserInformation
+from django.conf import settings
 
 
 class SubscriptionListAPIView(ListAPIView):
@@ -39,6 +46,10 @@ class SubscriptionListAPIView(ListAPIView):
     serializer_class = SubscriptionSerializer
     queryset = Subscription.objects.all()
     pagination_class = StandardResultsSetPagination
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ["category"]
+    search_fields = ["name", "subscriptionsearchterm__name"]
+    ordering_fields = ["name", "amount_used"]
 
 
 class SubscriptionRetrieveAPIView(RetrieveAPIView):
@@ -82,41 +93,51 @@ class SubscriptionCategoryRetrieveAPIView(RetrieveAPIView):
 
 
 class SubscriptionRenderLetterAPIView(APIView):
-    """
-    Subscription Render Letter API View.
+    """Subscription Render Letter API View."""
 
-    Permission required: None
+    schema = CustomAutoSchema(
+        request_schema={
+            "type": "object",
+            "properties": {
+                "context": {
+                    "type": "object",
+                    "example": {
+                        x: "string" for x in settings.DEFAULT_TEMPLATE_PARAMETERS
+                    },
+                },
+            },
+        }
+    )
 
-    Use this endpoint to render the letter of a Subscription.
-    """
+    renderer_classes = [WordDocumentRenderer, PDFRenderer]
 
-    renderer_classes = [PDFRenderer]
-    render_obj = Subscription
-    render_obj_value_name = "letter_template"
+    def post(self, request, **kwargs):
+        """
+        Render a letter to PDF or Word document.
 
-    def get(self, request, **kwargs):
-        """Get request."""
+        Permission required: None
+
+        A context dictionary may be provided that includes context variables that can be passed to the template.
+        """
         try:
-            instance = self.render_obj.objects.get(pk=kwargs.get("pk"))
-        except self.render_obj.DoesNotExist:
+            subscription = Subscription.objects.get(pk=kwargs.get("pk"))
+        except Subscription.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        if instance.__dict__[self.render_obj_value_name]:
-            pdf = self.render(instance)
+        context = {}
+        context.update(settings.DEFAULT_TEMPLATE_PARAMETERS)
+        context.update(request.data.get("context", {}))
+        if request.accepted_renderer.format == "pdf":
+            pdf = render_deregister_letter_pdf(context, subscription)
             return Response(
                 status=status.HTTP_200_OK, data=pdf, content_type="application/pdf"
             )
         else:
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def render(self, instance):
-        """Render letter."""
-        return render_deregister_letter(
-            UserInformation.get_test_instance(),
-            Subscription.get_test_instance(),
-            os.path.join(
-                settings.MEDIA_ROOT, str(instance.__dict__[self.render_obj_value_name])
-            ),
-        )
+            docx = render_deregister_letter_docx(context, subscription)
+            return Response(
+                status=status.HTTP_200_OK,
+                data=docx,
+                content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            )
 
 
 class SubscriptionRenderEmailAPIView(APIView):
@@ -128,57 +149,35 @@ class SubscriptionRenderEmailAPIView(APIView):
     Use this endpoint to render the email of a Subscription.
     """
 
-    renderer_classes = [PlainTextRenderer]
-    render_obj = Subscription
-    render_obj_value_name = "email_template_text"
+    schema = CustomAutoSchema(
+        request_schema={
+            "type": "object",
+            "properties": {
+                "context": {
+                    "type": "object",
+                    "example": {
+                        x: "string" for x in settings.DEFAULT_TEMPLATE_PARAMETERS
+                    },
+                },
+            },
+        }
+    )
 
-    def get(self, request, **kwargs):
+    renderer_classes = [PlainTextRenderer]
+
+    def post(self, request, **kwargs):
         """Get request."""
         try:
-            instance = self.render_obj.objects.get(pk=kwargs.get("pk"))
-        except self.render_obj.DoesNotExist:
+            instance = Subscription.objects.get(pk=kwargs.get("pk"))
+        except Subscription.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        if instance.__dict__[self.render_obj_value_name]:
-            text = self.render(instance)
-            return Response(
-                status=status.HTTP_200_OK, data=text, content_type="text/plain"
-            )
-        else:
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def render(self, instance):
-        """Render email."""
-        return create_deregister_email(
-            UserInformation.get_test_instance(),
-            Subscription.get_test_instance(),
-            os.path.join(
-                settings.MEDIA_ROOT, str(instance.__dict__[self.render_obj_value_name])
-            ),
+        context = {}
+        context.update(settings.DEFAULT_TEMPLATE_PARAMETERS)
+        context.update(request.data.get("context", {}))
+        email = render_deregister_email(context, instance,)
+        return Response(
+            status=status.HTTP_200_OK, data=email, content_type="text/plain"
         )
-
-
-class SubscriptionCategoryRenderLetterAPIView(SubscriptionRenderLetterAPIView):
-    """
-    Subscription Category Render Letter API View.
-
-    Permission required: None
-
-    Use this endpoint to render the letter of a SubscriptionCategory.
-    """
-
-    render_obj = SubscriptionCategory
-
-
-class SubscriptionCategoryRenderEmailAPIView(SubscriptionRenderEmailAPIView):
-    """
-    Subscription Category Render Letter API View.
-
-    Permission required: None
-
-    Use this endpoint to render the email of a SubscriptionCategory.
-    """
-
-    render_obj = SubscriptionCategory
 
 
 class TemplateAPIView(APIView):
@@ -200,7 +199,7 @@ class TemplateAPIView(APIView):
         }
     )
 
-    renderer_classes = [PDFRenderer, PlainTextRenderer]
+    renderer_classes = [WordDocumentRenderer, PDFRenderer, PlainTextRenderer]
     permission_classes = [IsAdminUser]
 
     def post(self, request, **kwargs):

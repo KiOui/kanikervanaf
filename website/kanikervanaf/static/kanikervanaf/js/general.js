@@ -107,8 +107,8 @@ function set_list(list) {
 }
 
 function refresh_all() {
-	if (typeof renew_search === "function") {
-		renew_search();
+	if (typeof subscription_search_vue === "object") {
+		subscription_search_vue.selected_subscriptions = get_list();
 	}
 	if (typeof renew_list === "function") {
 		renew_list();
@@ -159,6 +159,23 @@ function eraseAll() {
 
 function eraseCookie(name) {   
     document.cookie = name+'=; path=/; domain=kanikervanaf.nl; Max-Age=-99999999;';  
+}
+
+function has_price(subscription) {
+	return subscription.price != "0.00";
+}
+
+function has_mail(subscription) {
+	if (subscription.support_email) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+function has_letter(subscription) {
+	return !!subscription.support_reply_number && !!subscription.support_postal_code ||
+		!!subscription.correspondence_address && !!subscription.correspondence_postal_code;
 }
 
 jQuery(document).ready(function($) {

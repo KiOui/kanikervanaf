@@ -3,26 +3,44 @@ import os
 from django.contrib.sites.models import Site
 from django.template import Template, Context, Engine
 from weasyprint import HTML
-from .models import QueuedMailList, Subscription
-from users.models import UserInformation
+from .models import QueuedMailList, Subscription, SubscriptionObject
 from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
 from smtplib import SMTPException
 import logging
 import datetime
+from pdf2docx import parse
+import tempfile
+from typing import Union
 
 logger = logging.getLogger(__name__)
 
 
-def render_string_to_pdf(template: str, context: dict, use_django_engine=False):
-    """Render a template with context to pdf."""
+def render_string_to_pdf(
+    template: str, context: dict, use_django_engine=False
+) -> bytes:
+    """
+    Render a string template to a PDF document.
+
+    :param template: a string including the template text to render in HTML format
+    :param context: a dictionary with the context in which to render the template string
+    :param use_django_engine: whether or not to include the django engine while rendering
+    :return: a bytes array which includes a rendered PDF document
+    """
     rendered_str = render_string(template, context, use_django_engine=use_django_engine)
     return HTML(string=rendered_str).write_pdf()
 
 
-def render_string(template: str, context: dict, use_django_engine=False):
-    """Render template string with context."""
+def render_string(template: str, context: dict, use_django_engine=False) -> str:
+    """
+    Render a string template.
+
+    :param template: a string including the template text to render
+    :param context: a dictionary with the context in which to render the template string
+    :param use_django_engine: whether or not to include the django engine while rendering
+    :return: a string which includes the rendered template string
+    """
     if use_django_engine:
         engine = None
     else:
@@ -31,15 +49,17 @@ def render_string(template: str, context: dict, use_django_engine=False):
     return Template(template, engine=engine).render(Context(context))
 
 
-def render_deregister_letter(user_information, item, letter_template=None):
+def render_deregister_letter_pdf(
+    template_context: dict, item: Subscription, letter_template=None
+) -> bytes:
     """
-    Render a deregister letter.
+    Render a deregister letter to PDF.
 
+    :param template_context: the template context
+    :param item: the item to render the letter for
     :param letter_template: the letter template to use, if specified this template will be used instead of the one
     registered in the subscription
-    :param user_information: the user information
-    :param item: the item to render the letter for
-    :return:
+    :return: a rendered PDF as bytes
     """
     item_address, item_postal_code, item_residence = item.get_address_information()
     template = (
@@ -47,22 +67,57 @@ def render_deregister_letter(user_information, item, letter_template=None):
         if letter_template is None
         else get_file_contents(letter_template)
     )
+
     context = {
-        "firstname": user_information.firstname,
-        "lastname": user_information.lastname,
-        "address": user_information.address,
-        "postal_code": user_information.postal_code,
-        "residence": user_information.residence,
         "subscription_address": item_address,
         "subscription_postal_code": item_postal_code,
         "subscription_residence": item_residence,
         "subscription_name": item.name,
         "date": datetime.datetime.now().strftime("%d-%m-%Y"),
     }
+    context.update(template_context)
     return render_string_to_pdf(template, context)
 
 
-def send_verification_email(first_name, email_address, verification_url):
+def render_deregister_letter_docx(
+    template_context: dict, item: Subscription, letter_template=None
+) -> bytes:
+    """
+    Render a letter as a Word document (docx).
+
+    This function uses the pdf2docx library for rendering a docx document. We first render the HTML to PDF and then
+    write it to a file to convert it to a Word document. Then the binary content of the Word document is returned.
+    :param template_context: the template context
+    :param item: the item to render the letter for
+    :param letter_template: the letter template to use, if specified this template will be used instead of the one
+    registered in the subscription
+    :return: a rendered Word document as bytes
+    """
+    # First render the PDF
+    pdf = render_deregister_letter_pdf(
+        template_context, item, letter_template=letter_template
+    )
+    # Then save the PDF temporarily
+    pdf_file = tempfile.NamedTemporaryFile()
+    pdf_file.write(pdf)
+    # Now create a temporary file for storing the docx document as the library only support reading from/writing to files
+    docx_file = tempfile.NamedTemporaryFile()
+    # Convert the document
+    parse(pdf_file.name, docx_file.name)
+    # Close the PDF file as we do not need it anymore (it will also probably be deleted after closing)
+    pdf_file.close()
+    # Now the docx file with in another file and read the content
+    written_docx_file = open(docx_file.name, "rb")
+    docx_content = written_docx_file.read()
+    # Close both files as we have read the content
+    written_docx_file.close()
+    docx_file.close()
+    return docx_content
+
+
+def send_verification_email(
+    first_name: str, email_address: str, verification_url: str
+) -> bool:
     """
     Send a verification email to a specified email address.
 
@@ -107,9 +162,9 @@ def send_summary_email(
     succeeded_letters,
     failed_letters,
     pdfs: list,
-    user_information: UserInformation,
+    user_information: QueuedMailList,
     direct_send: bool = False,
-):
+) -> bool:
     """
     Send a summary email.
 
@@ -158,7 +213,9 @@ def send_summary_email(
     return True
 
 
-def create_deregister_letters(mail_list):
+def create_deregister_letters(
+    mail_list: QueuedMailList,
+) -> ([Subscription], [Subscription], [Subscription]):
     """
     Create deregister letters.
 
@@ -184,7 +241,7 @@ def create_deregister_letters(mail_list):
     return succeeded, failed, pdfs
 
 
-def handle_deregister_request(mail_list):
+def handle_deregister_request(mail_list: QueuedMailList) -> bool:
     """
     Handle a deregister request.
 
@@ -209,7 +266,9 @@ def handle_deregister_request(mail_list):
     return retvalue
 
 
-def send_deregister_emails(mail_list, direct_send=False) -> (set, set):
+def send_deregister_emails(
+    mail_list: QueuedMailList, direct_send: bool = False
+) -> (set, set):
     """
     Send all deregister emails for subscriptions in mail_list.
 
@@ -256,18 +315,17 @@ def send_deregister_emails(mail_list, direct_send=False) -> (set, set):
     return succeeded, failed
 
 
-def create_deregister_email(
-    user_information, item, email_template=None, forward_address=False
-):
+def render_deregister_email(
+    template_context: dict, item: Subscription, email_template=None
+) -> bytes:
     """
-    Create a deregister email.
+    Render a deregister email as text.
 
+    :param template_context: the template context
+    :param item: the item to render the email for
     :param email_template: the email template to use, if specified this template will be used instead of the one
-    :param user_information: the user information to put in the deregister email
-    :param item: the subscription to put in the deregister email
-    :param forward_address: a forwarding address, if this mail is not send directly. This address is noted at the top
-    of the created email
-    :return: the deregister email with filled in user information
+    registered in the subscription
+    :return: a rendered email as string
     """
     item_address, item_postal_code, item_residence = item.get_address_information()
     template = (
@@ -277,23 +335,20 @@ def create_deregister_email(
     )
 
     context = {
-        "firstname": user_information.firstname,
-        "lastname": user_information.lastname,
-        "address": user_information.address,
-        "postal_code": user_information.postal_code,
-        "residence": user_information.residence,
         "subscription_address": item_address,
         "subscription_postal_code": item_postal_code,
         "subscription_residence": item_residence,
         "subscription_name": item.name,
         "date": datetime.datetime.now().strftime("%d-%m-%Y"),
-        "forward_address": forward_address,
     }
+    context.update(template_context)
 
     return render_string(template, context)
 
 
-def send_request_email(name, email_address, subscription, message):
+def send_request_email(
+    name: str, email_address: str, subscription: Subscription, message: str
+) -> bool:
     """
     Construct and send a request email.
 
@@ -336,7 +391,7 @@ def send_request_email(name, email_address, subscription, message):
     return True
 
 
-def store_subscription_list(subscription_list):
+def store_subscription_list(subscription_list: [int]) -> [Subscription]:
     """
     Create a set with all ids corresponding to subscription items in subscription_list.
 
@@ -352,7 +407,9 @@ def store_subscription_list(subscription_list):
     return subscription_objects
 
 
-def handle_verification_request(user_information, subscription_list):
+def handle_verification_request(
+    user_information: dict, subscription_list: [int]
+) -> Union[QueuedMailList, bool]:
     """
     Handle a verification request, generate a QueuedMailList.
 
@@ -362,27 +419,24 @@ def handle_verification_request(user_information, subscription_list):
     """
     subscription_objects = store_subscription_list(subscription_list)
     if "email" in user_information and "first_name" in user_information:
-        user_information_object = UserInformation.objects.create(
-            firstname=user_information.get("first_name"),
-            lastname=user_information.get("second_name", ""),
-            address=user_information.get("address", ""),
-            postal_code=user_information.get("postal_code", ""),
-            residence=user_information.get("residence", ""),
-            email_address=user_information.get("email"),
-        )
         try:
             return QueuedMailList.generate(
-                user_information_object, subscription_objects
+                user_information.get("first_name"),
+                user_information.get("second_name", ""),
+                user_information.get("email"),
+                user_information.get("address", ""),
+                user_information.get("postal_code", ""),
+                user_information.get("residence", ""),
+                subscription_objects,
             )
         except Exception as e:
             logger.error(e)
-            user_information_object.delete()
             return False
     else:
         return False
 
 
-def get_file_contents(filename):
+def get_file_contents(filename: str) -> str:
     """
     Get the file contents of a file with filename.
 

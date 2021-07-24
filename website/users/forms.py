@@ -6,6 +6,7 @@ from captcha.widgets import ReCaptchaV3
 import random
 import string
 from .services import send_new_account
+from django.conf import settings
 
 User = get_user_model()
 
@@ -14,7 +15,14 @@ class PasswordForgotForm(forms.Form):
     """Form for a forgotten password."""
 
     email = forms.EmailField(label="Email adres")
-    captcha = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
+
+    def __init__(self, *args, **kwargs):
+        """Only load captcha on production."""
+        super().__init__(*args, **kwargs)
+        if settings.RECAPTCHA_PUBLIC_KEY != "" and settings.RECAPTCHA_PRIVATE_KEY != "":
+            self.fields["captcha"] = ReCaptchaField(
+                widget=ReCaptchaV3(api_params={"hl": "nl"}), label=""
+            )
 
 
 class PasswordResetForm(forms.Form):
@@ -24,7 +32,14 @@ class PasswordResetForm(forms.Form):
     password2 = forms.CharField(
         widget=forms.PasswordInput, label="Herhaal nieuw wachtwoord"
     )
-    captcha = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
+
+    def __init__(self, *args, **kwargs):
+        """Only load captcha on production."""
+        super().__init__(*args, **kwargs)
+        if settings.RECAPTCHA_PUBLIC_KEY != "" and settings.RECAPTCHA_PRIVATE_KEY != "":
+            self.fields["captcha"] = ReCaptchaField(
+                widget=ReCaptchaV3(api_params={"hl": "nl"}), label=""
+            )
 
     def clean(self):
         """
@@ -44,7 +59,14 @@ class UserLoginForm(forms.Form):
 
     username = forms.EmailField(label="Email adres")
     password = forms.CharField(widget=forms.PasswordInput, label="Wachtwoord")
-    captcha = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
+
+    def __init__(self, *args, **kwargs):
+        """Only load captcha on production."""
+        super().__init__(*args, **kwargs)
+        if settings.RECAPTCHA_PUBLIC_KEY != "" and settings.RECAPTCHA_PRIVATE_KEY != "":
+            self.fields["captcha"] = ReCaptchaField(
+                widget=ReCaptchaV3(api_params={"hl": "nl"}), label=""
+            )
 
     def clean(self, *args, **kwargs):
         """
@@ -73,7 +95,14 @@ class UserRegisterForm(forms.ModelForm):
     username = forms.CharField(label="Gebruikersnaam")
     password = forms.CharField(widget=forms.PasswordInput, label="Wachtwoord")
     password2 = forms.CharField(widget=forms.PasswordInput, label="Herhaal wachtwoord")
-    captcha = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
+
+    def __init__(self, *args, **kwargs):
+        """Only load captcha on production."""
+        super().__init__(*args, **kwargs)
+        if settings.RECAPTCHA_PUBLIC_KEY != "" and settings.RECAPTCHA_PRIVATE_KEY != "":
+            self.fields["captcha"] = ReCaptchaField(
+                widget=ReCaptchaV3(api_params={"hl": "nl"}), label=""
+            )
 
     class Meta:
         """Meta class for user registration."""
@@ -262,7 +291,14 @@ class UserUpdateForm(forms.Form):
     address = forms.CharField(label="Adres", required=False)
     postal_code = forms.CharField(label="Postcode", required=False)
     residence = forms.CharField(label="Woonplaats", required=False)
-    captcha = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
+
+    def __init__(self, *args, **kwargs):
+        """Only load captcha on production."""
+        super().__init__(*args, **kwargs)
+        if settings.RECAPTCHA_PUBLIC_KEY != "" and settings.RECAPTCHA_PRIVATE_KEY != "":
+            self.fields["captcha"] = ReCaptchaField(
+                widget=ReCaptchaV3(api_params={"hl": "nl"}), label=""
+            )
 
     def __init__(self, *args, **kwargs):
         """
@@ -291,7 +327,14 @@ class EmailUpdateForm(forms.Form):
     """Update email address."""
 
     email_address = forms.EmailField(label="Email-adres", required=True)
-    captcha = ReCaptchaField(widget=ReCaptchaV3(api_params={"hl": "nl"}), label="")
+
+    def __init__(self, *args, **kwargs):
+        """Only load captcha on production."""
+        super().__init__(*args, **kwargs)
+        if settings.RECAPTCHA_PUBLIC_KEY != "" and settings.RECAPTCHA_PRIVATE_KEY != "":
+            self.fields["captcha"] = ReCaptchaField(
+                widget=ReCaptchaV3(api_params={"hl": "nl"}), label=""
+            )
 
     def __init__(self, *args, **kwargs):
         """

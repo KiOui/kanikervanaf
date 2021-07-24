@@ -1,7 +1,6 @@
 import os
 
 from django.db import models
-from users.models import UserInformation
 import secrets
 import datetime
 import pytz
@@ -31,10 +30,93 @@ def template_filename(instance, filename):
         raise Exception("There is no defined template filename for this model class")
 
 
-class Subscription(models.Model):
+class SubscriptionObject(models.Model):
+    """Abstract model for overlapping Subscriptions and SubscriptionCategories."""
+
+    name = models.CharField(max_length=1024)
+    slug = models.SlugField(null=False, blank=False, unique=True, max_length=100,)
+    category = models.ForeignKey(
+        "SubscriptionCategory", null=True, blank=True, on_delete=models.SET_NULL
+    )
+    letter_template = models.FileField(
+        upload_to=letter_template_filename,
+        null=True,
+        blank=True,
+        help_text="The template of the letter to generate.",
+    )
+    email_template_text = models.FileField(
+        upload_to=email_template_filename,
+        null=True,
+        blank=True,
+        help_text="The template of the email to generate (as text).",
+    )
+
+    def __str__(self):
+        """
+        Convert this object to string.
+
+        :return: a string with the name of the subscription object
+        """
+        return self.name
+
+    @property
+    def letter_template_full_path(self):
+        """Get full path letter template."""
+        if self.letter_template:
+            return os.path.join(settings.MEDIA_ROOT, str(self.letter_template))
+        else:
+            return None
+
+    @property
+    def email_template_text_full_path(self):
+        """Get full path email template."""
+        if self.email_template_text:
+            return os.path.join(settings.MEDIA_ROOT, str(self.email_template_text))
+        else:
+            return None
+
+    def get_letter_template(self):
+        """
+        Get the full path to the letter template location of this object.
+
+        :return: the template file location
+        """
+        letter_template = self.letter_template_full_path
+        if letter_template is not None:
+            return letter_template
+        elif self.category is not None:
+            return self.category.get_letter_template()
+        else:
+            return os.path.join(
+                settings.BASE_DIR, "subscriptions/templates/pdf/deregister_letter.html",
+            )
+
+    def get_email_template_text(self):
+        """
+        Get the email template location of this object.
+
+        :return: the template file location
+        """
+        email_template = self.email_template_text_full_path
+        if email_template is not None:
+            return email_template
+        elif self.category is not None:
+            return self.category.get_email_template_text()
+        else:
+            return os.path.join(
+                settings.BASE_DIR, "subscriptions/templates/email/deregister_mail.txt",
+            )
+
+    class Meta:
+        """Meta class."""
+
+        unique_together = ("slug", "category")
+        abstract = True
+
+
+class Subscription(SubscriptionObject):
     """Subscription model."""
 
-    name = models.CharField(max_length=1024, help_text="The name of the subscription.")
     price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
@@ -99,109 +181,6 @@ class Subscription(models.Model):
         default=1,
         help_text="The amount of times the subscription was used at deregistering of customers.",
     )
-    category = models.ForeignKey(
-        "SubscriptionCategory", null=True, blank=True, on_delete=models.SET_NULL
-    )
-    slug = models.SlugField(
-        null=False,
-        blank=False,
-        unique=True,
-        max_length=100,
-        help_text="The last part of the URL for the page of the subscription provider.",
-    )
-
-    letter_template = models.FileField(
-        upload_to=letter_template_filename,
-        null=True,
-        blank=True,
-        help_text="The template of the letter to generate. For more information about"
-        " this please check the template help information.",
-    )
-    email_template_text = models.FileField(
-        upload_to=email_template_filename,
-        null=True,
-        blank=True,
-        help_text="The template of the email to generate (as text). For more information about"
-        " this please check the template help information.",
-    )
-
-    @staticmethod
-    def get_test_instance():
-        """Get a test instance."""
-        return Subscription(
-            name="Prikkl abonnement",
-            price=10.50,
-            support_email="info@prikkl.nl",
-            support_reply_number=12345,
-            support_postal_code="5261 BD",
-            support_city="Zwalk",
-            correspondence_address="Taalstraat 40B",
-            correspondence_city="Vught",
-            correspondence_postal_code="5261 BE",
-            support_phone_number="085-8000185",
-            cancellation_number="0628374918",
-            amount_used=5,
-            category=None,
-            slug="prikkl-abonnement",
-            letter_template=None,
-            email_template_text=None,
-        )
-
-    def __str__(self):
-        """
-        Convert this object to string.
-
-        :return: a string with the name of the subscription
-        """
-        return self.name
-
-    @property
-    def letter_template_full_path(self):
-        """Get full path letter template."""
-        if self.letter_template:
-            return os.path.join(settings.MEDIA_ROOT, str(self.letter_template))
-        else:
-            return None
-
-    @property
-    def email_template_text_full_path(self):
-        """Get full path email template."""
-        if self.email_template_text:
-            return os.path.join(settings.MEDIA_ROOT, str(self.email_template_text))
-        else:
-            return None
-
-    def get_letter_template(self):
-        """
-        Get the letter template location of this object.
-
-        :return: the template file location
-        """
-        letter_template = self.letter_template_full_path
-        if letter_template is not None:
-            return letter_template
-        elif self.category is not None:
-            return self.category.get_letter_template()
-        else:
-            return os.path.join(
-                settings.BASE_DIR, "subscriptions/templates/pdf/deregister_letter.html",
-            )
-
-    def get_email_template_text(self):
-        """
-        Get the email template location of this object.
-
-        :return: the template file location
-        """
-        email_template = self.email_template_text_full_path
-        if email_template is not None:
-            return email_template
-        elif self.category is not None:
-            return self.category.get_email_template_text()
-        else:
-            return os.path.join(
-                settings.BASE_DIR, "subscriptions/templates/email/deregister_mail.txt",
-            )
 
     @staticmethod
     def top_category(category, max_items=5, order_by=None):
@@ -326,96 +305,14 @@ class Subscription(models.Model):
         ordering = ["name"]
 
 
-class SubscriptionCategory(models.Model):
+class SubscriptionCategory(SubscriptionObject):
     """Category for subscriptions."""
-
-    name = models.CharField(max_length=1024)
-    slug = models.SlugField(max_length=100, null=False, blank=False, unique=True)
-    parent = models.ForeignKey(
-        "self",
-        blank=True,
-        null=True,
-        related_name="children",
-        on_delete=models.SET_NULL,
-    )
-
-    letter_template = models.FileField(
-        upload_to=letter_template_filename,
-        null=True,
-        blank=True,
-        help_text="The template of the letter to generate. For more information about"
-        " this please check the template help information.",
-    )
-    email_template_text = models.FileField(
-        upload_to=email_template_filename,
-        null=True,
-        blank=True,
-        help_text="The template of the email to generate (as text). For more information about"
-        " this please check the template help information.",
-    )
 
     class Meta:
         """Enforcing that there can not be two categories under a parent with same slug."""
 
-        unique_together = ("slug", "parent")
         verbose_name = "Subscription category"
         verbose_name_plural = "Subscription categories"
-
-    def __str__(self):
-        """
-        Convert this object to a string.
-
-        :return: a string with the name of the category
-        """
-        return self.name
-
-    @property
-    def letter_template_full_path(self):
-        """Get full path letter template."""
-        if self.letter_template:
-            return os.path.join(settings.MEDIA_ROOT, str(self.letter_template))
-        else:
-            return None
-
-    @property
-    def email_template_text_full_path(self):
-        """Get full path email template."""
-        if self.email_template_text:
-            return os.path.join(settings.MEDIA_ROOT, str(self.email_template_text))
-        else:
-            return None
-
-    def get_letter_template(self):
-        """
-        Get the letter template location of this object.
-
-        :return: the template file location
-        """
-        letter_template = self.letter_template_full_path
-        if letter_template is not None:
-            return letter_template
-        elif self.parent is not None:
-            return self.parent.get_letter_template()
-        else:
-            return os.path.join(
-                settings.BASE_DIR, "subscriptions/templates/pdf/deregister_letter.html",
-            )
-
-    def get_email_template_text(self):
-        """
-        Get the email template location of this object.
-
-        :return: the template file location
-        """
-        email_template = self.email_template_text_full_path
-        if email_template is not None:
-            return email_template
-        elif self.parent is not None:
-            return self.parent.get_email_template_text()
-        else:
-            return os.path.join(
-                settings.BASE_DIR, "subscriptions/templates/email/deregister_mail.txt",
-            )
 
     def get_subcategories(self, order="name"):
         """
@@ -424,7 +321,9 @@ class SubscriptionCategory(models.Model):
         :param order: how to order the subcategories
         :return: a QuerySet of SubscriptionCategory objects
         """
-        subcategories = SubscriptionCategory.objects.filter(parent=self).order_by(order)
+        subcategories = SubscriptionCategory.objects.filter(category=self).order_by(
+            order
+        )
         return subcategories
 
     @staticmethod
@@ -434,7 +333,7 @@ class SubscriptionCategory(models.Model):
 
         :return: a set with all top level categories
         """
-        return SubscriptionCategory.objects.filter(parent=None)
+        return SubscriptionCategory.objects.filter(category=None)
 
     def get_children(self):
         """
@@ -442,7 +341,7 @@ class SubscriptionCategory(models.Model):
 
         :return: a QuerySet with all children of the category
         """
-        return SubscriptionCategory.objects.filter(parent=self)
+        return SubscriptionCategory.objects.filter(category=self)
 
     def get_family_tree(self, already_visited=None):
         """
@@ -471,10 +370,10 @@ class SubscriptionCategory(models.Model):
         :return: a list where the first category is a top level category and the next ones the children to the category
         where this function is called upon
         """
-        if self.parent is None:
+        if self.category is None:
             return [self]
         else:
-            return self.parent.get_path_to_me() + [self]
+            return self.category.get_path_to_me() + [self]
 
 
 class SubscriptionSearchTerm(models.Model):
@@ -497,23 +396,46 @@ class QueuedMailList(models.Model):
 
     token = models.CharField(max_length=64, null=False, blank=False, unique=True)
     item_list = models.ManyToManyField(Subscription)
-    user_information = models.ForeignKey(
-        UserInformation, blank=False, on_delete=models.CASCADE
-    )
     created = models.DateTimeField(auto_now_add=True)
+    firstname = models.CharField(max_length=1024)
+    lastname = models.CharField(max_length=1024, blank=True)
+    email_address = models.EmailField(max_length=1024)
+    address = models.CharField(max_length=1024, blank=True)
+    postal_code = models.CharField(max_length=256, blank=True)
+    residence = models.CharField(max_length=1024, blank=True)
 
     @staticmethod
-    def generate(user_information, subscription_list):
+    def generate(
+        firstname: str,
+        lastname: str,
+        email_address: str,
+        address: str,
+        postal_code: str,
+        residence: str,
+        subscription_list: [Subscription],
+    ):
         """
         Generate a new QueuedMailList by first creating a new random hexadecimal token of 32 bytes.
 
-        :param user_information: the user information to add to the QueuedMailList
-        :param subscription_list: the list with Subscription objects to add to the QueuedMailList
-        :return: a QueuedMailList with a fresh token
+        :param firstname: User's first name
+        :param lastname: User's last name (optional)
+        :param email_address: User's email address
+        :param address: User's address (optional)
+        :param postal_code: User's postal code (optional)
+        :param residence: User's residence (optional)
+        :param subscription_list: list of Subscription objects to add to the Queued Mail list (Subscriptions the user
+        wants to deregister from)
+        :return: Created QueuedMailList with a fresh random token
         """
         random_token = secrets.token_hex(32)
         mail_list = QueuedMailList.objects.create(
-            token=random_token, user_information=user_information
+            token=random_token,
+            firstname=firstname,
+            lastname=lastname,
+            email_address=email_address,
+            address=address,
+            postal_code=postal_code,
+            residence=residence,
         )
         for item in subscription_list:
             mail_list.item_list.add(item)

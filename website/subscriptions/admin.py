@@ -115,16 +115,17 @@ class QueuedMailListAdmin(admin.ModelAdmin):
 class CategoryParentFilter(AutocompleteFilter):
     """Filter for subscription categories parents."""
 
-    title = "parent"
-    field_name = "parent"
+    title = "category"
+    field_name = "category"
 
 
 @admin.register(models.SubscriptionCategory)
 class SubscriptionCategoryAdmin(ImportExportModelAdmin):
     """Admin model for subscription categories."""
 
-    list_display = ["name", "parent"]
-    list_filter = [CategoryParentFilter, "parent"]
+    search_fields = ["name"]
+    list_display = ["name", "category"]
+    list_filter = [CategoryParentFilter, "category"]
     prepopulated_fields = {"slug": ("name",)}
 
     def change_view(self, request, object_id, form_url="", extra_context=None):

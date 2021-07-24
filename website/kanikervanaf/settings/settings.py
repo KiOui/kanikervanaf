@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "admin_auto_filters",
     "import_export",
     "rest_framework",
+    "django_filters",
     "oauth2_provider",
     "robots",
     "captcha",
@@ -139,3 +140,11 @@ ROBOTS_CACHE_TIMEOUT = 60 * 60 * 24
 
 RECAPTCHA_PUBLIC_KEY = ""
 RECAPTCHA_PRIVATE_KEY = ""
+
+DEFAULT_TEMPLATE_PARAMETERS = {
+    "firstname": "Voornaam",
+    "lastname": "Achternaam",
+    "address": "Straat, huisnummer",
+    "postal_code": "Postcode",
+    "residence": "Woonplaats",
+}

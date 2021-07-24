@@ -7,6 +7,8 @@ class PDFRenderer(BaseRenderer):
 
     media_type = "application/pdf"
     format = "pdf"
+    charset = None
+    render_style = "binary"
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
         """Return PDF data as is."""
@@ -28,3 +30,16 @@ class PlainTextRenderer(BaseRenderer):
     def render(self, data, accepted_media_type=None, renderer_context=None):
         """Return text data as smart text."""
         return smart_text(data, encoding=self.charset)
+
+
+class WordDocumentRenderer(BaseRenderer):
+    """Word document Renderer."""
+
+    media_type = (
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    )
+    format = "docx"
+
+    def render(self, data, accepted_media_type=None, renderer_context=None):
+        """Render docx data as is."""
+        return data
