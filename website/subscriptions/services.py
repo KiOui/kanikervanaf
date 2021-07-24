@@ -229,10 +229,7 @@ def create_deregister_letters(
     for item in mail_list.item_list.iterator():
         if item.can_generate_pdf():
             pdfs.append(
-                {
-                    "item": item,
-                    "pdf": render_deregister_letter(mail_list.user_information, item),
-                }
+                {"item": item, "pdf": render_deregister_letter(mail_list, item),}
             )
             succeeded.append(item)
         else:
@@ -256,11 +253,10 @@ def handle_deregister_request(mail_list: QueuedMailList) -> bool:
         succeeded_letters,
         failed_letters,
         pdfs,
-        mail_list.user_information,
+        mail_list,
     )
     for subscription in mail_list.item_list.iterator():
         subscription.deregistered()
-    mail_list.user_information.delete()
     mail_list.delete()
     QueuedMailList.remove_expired()
     return retvalue
@@ -284,7 +280,7 @@ def send_deregister_emails(
     for subscription in mail_list.item_list.iterator():
         if subscription.support_email is not None and subscription.support_email != "":
             deregister_email = create_deregister_email(
-                mail_list.user_information,
+                mail_list,
                 subscription,
                 forward_address=False if direct_send else subscription.support_email,
             )
@@ -294,15 +290,15 @@ def send_deregister_emails(
                     deregister_email,
                     settings.EMAIL_HOST_USER,
                     [subscription.support_email],
-                    cc=[mail_list.user_information.email_address],
-                    reply_to=mail_list.user_information.email_address,
+                    cc=[mail_list.email_address],
+                    reply_to=mail_list.email_address,
                 )
             else:
                 msg = EmailMultiAlternatives(
                     "Kanikervanaf: {}".format(subscription.name),
                     deregister_email,
                     settings.EMAIL_HOST_USER,
-                    [mail_list.user_information.email_address],
+                    [mail_list.email_address],
                 )
             try:
                 msg.send()
