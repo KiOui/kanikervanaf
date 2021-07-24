@@ -229,7 +229,19 @@ def create_deregister_letters(
     for item in mail_list.item_list.iterator():
         if item.can_generate_pdf():
             pdfs.append(
-                {"item": item, "pdf": render_deregister_letter(mail_list, item),}
+                {
+                    "item": item,
+                    "pdf": render_deregister_letter_pdf(
+                        {
+                            "firstname": mail_list.firstname,
+                            "lastname": mail_list.lastname,
+                            "address": mail_list.address,
+                            "postal_code": mail_list.postal_code,
+                            "residence": mail_list.residence,
+                        },
+                        item,
+                    ),
+                }
             )
             succeeded.append(item)
         else:
@@ -279,10 +291,18 @@ def send_deregister_emails(
 
     for subscription in mail_list.item_list.iterator():
         if subscription.support_email is not None and subscription.support_email != "":
-            deregister_email = create_deregister_email(
-                mail_list,
+            deregister_email = render_deregister_email(
+                {
+                    "firstname": mail_list.firstname,
+                    "lastname": mail_list.lastname,
+                    "address": mail_list.address,
+                    "postal_code": mail_list.postal_code,
+                    "residence": mail_list.residence,
+                    "forward_address": False
+                    if direct_send
+                    else subscription.support_email,
+                },
                 subscription,
-                forward_address=False if direct_send else subscription.support_email,
             )
             if direct_send:
                 msg = EmailMultiAlternatives(
@@ -336,6 +356,7 @@ def render_deregister_email(
         "subscription_residence": item_residence,
         "subscription_name": item.name,
         "date": datetime.datetime.now().strftime("%d-%m-%Y"),
+        "forward_address": False,
     }
     context.update(template_context)
 
