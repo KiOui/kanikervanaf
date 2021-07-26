@@ -1,0 +1,420 @@
+[
+{
+    "model": "subscriptions.subscription",
+    "pk": 1,
+    "fields": {
+        "name": "Lottery USA",
+        "slug": "lottery-usa",
+        "category": 2,
+        "letter_template": "",
+        "email_template_text": "",
+        "price": "36.00",
+        "support_email": null,
+        "support_reply_number": null,
+        "support_postal_code": null,
+        "support_city": null,
+        "correspondence_address": null,
+        "correspondence_postal_code": null,
+        "correspondence_city": null,
+        "support_phone_number": null,
+        "cancellation_number": null,
+        "amount_used": 1
+    }
+},
+{
+    "model": "subscriptions.subscription",
+    "pk": 2,
+    "fields": {
+        "name": "Green card lottery",
+        "slug": "green-card-lottery",
+        "category": 2,
+        "letter_template": "",
+        "email_template_text": "",
+        "price": "0.00",
+        "support_email": null,
+        "support_reply_number": null,
+        "support_postal_code": null,
+        "support_city": null,
+        "correspondence_address": null,
+        "correspondence_postal_code": null,
+        "correspondence_city": null,
+        "support_phone_number": null,
+        "cancellation_number": null,
+        "amount_used": 1
+    }
+},
+{
+    "model": "subscriptions.subscription",
+    "pk": 3,
+    "fields": {
+        "name": "Fit for free Netherlands",
+        "slug": "fit-for-free-netherlands",
+        "category": 9,
+        "letter_template": "",
+        "email_template_text": "",
+        "price": "0.00",
+        "support_email": null,
+        "support_reply_number": null,
+        "support_postal_code": null,
+        "support_city": null,
+        "correspondence_address": null,
+        "correspondence_postal_code": null,
+        "correspondence_city": null,
+        "support_phone_number": null,
+        "cancellation_number": null,
+        "amount_used": 1
+    }
+},
+{
+    "model": "subscriptions.subscription",
+    "pk": 4,
+    "fields": {
+        "name": "Fit for free Belgium",
+        "slug": "fit-for-free-belgium",
+        "category": 9,
+        "letter_template": "",
+        "email_template_text": "",
+        "price": "0.00",
+        "support_email": null,
+        "support_reply_number": "12346",
+        "support_postal_code": "3322AB",
+        "support_city": "Test city",
+        "correspondence_address": "Test address 2",
+        "correspondence_postal_code": "3333CC",
+        "correspondence_city": "Test city",
+        "support_phone_number": null,
+        "cancellation_number": null,
+        "amount_used": 1
+    }
+},
+{
+    "model": "subscriptions.subscription",
+    "pk": 5,
+    "fields": {
+        "name": "Fit for free France",
+        "slug": "fit-for-free-france",
+        "category": 9,
+        "letter_template": "",
+        "email_template_text": "",
+        "price": "0.00",
+        "support_email": null,
+        "support_reply_number": null,
+        "support_postal_code": null,
+        "support_city": null,
+        "correspondence_address": null,
+        "correspondence_postal_code": null,
+        "correspondence_city": null,
+        "support_phone_number": null,
+        "cancellation_number": null,
+        "amount_used": 1
+    }
+},
+{
+    "model": "subscriptions.subscription",
+    "pk": 6,
+    "fields": {
+        "name": "Basic fit Netherlands",
+        "slug": "basic-fit-netherlands",
+        "category": 8,
+        "letter_template": "",
+        "email_template_text": "",
+        "price": "0.00",
+        "support_email": null,
+        "support_reply_number": null,
+        "support_postal_code": null,
+        "support_city": null,
+        "correspondence_address": "Test address 1",
+        "correspondence_postal_code": "2222BB",
+        "correspondence_city": "Test city",
+        "support_phone_number": null,
+        "cancellation_number": null,
+        "amount_used": 1
+    }
+},
+{
+    "model": "subscriptions.subscription",
+    "pk": 7,
+    "fields": {
+        "name": "Basic Fit Belgie",
+        "slug": "basic-fit-belgie",
+        "category": 8,
+        "letter_template": "",
+        "email_template_text": "",
+        "price": "0.00",
+        "support_email": null,
+        "support_reply_number": "12345",
+        "support_postal_code": "1111AA",
+        "support_city": "Test city",
+        "correspondence_address": null,
+        "correspondence_postal_code": null,
+        "correspondence_city": null,
+        "support_phone_number": null,
+        "cancellation_number": null,
+        "amount_used": 1
+    }
+},
+{
+    "model": "subscriptions.subscription",
+    "pk": 8,
+    "fields": {
+        "name": "T-Mobile phone",
+        "slug": "t-mobile-phone",
+        "category": 5,
+        "letter_template": "",
+        "email_template_text": "",
+        "price": "456.00",
+        "support_email": null,
+        "support_reply_number": null,
+        "support_postal_code": null,
+        "support_city": null,
+        "correspondence_address": null,
+        "correspondence_postal_code": null,
+        "correspondence_city": null,
+        "support_phone_number": null,
+        "cancellation_number": null,
+        "amount_used": 1
+    }
+},
+{
+    "model": "subscriptions.subscription",
+    "pk": 9,
+    "fields": {
+        "name": "T-Mobile data",
+        "slug": "t-mobile-data",
+        "category": 5,
+        "letter_template": "",
+        "email_template_text": "",
+        "price": "0.00",
+        "support_email": null,
+        "support_reply_number": null,
+        "support_postal_code": null,
+        "support_city": null,
+        "correspondence_address": null,
+        "correspondence_postal_code": null,
+        "correspondence_city": null,
+        "support_phone_number": null,
+        "cancellation_number": null,
+        "amount_used": 1
+    }
+},
+{
+    "model": "subscriptions.subscription",
+    "pk": 10,
+    "fields": {
+        "name": "New York Times",
+        "slug": "new-york-times",
+        "category": 1,
+        "letter_template": "",
+        "email_template_text": "",
+        "price": "0.00",
+        "support_email": null,
+        "support_reply_number": null,
+        "support_postal_code": null,
+        "support_city": null,
+        "correspondence_address": null,
+        "correspondence_postal_code": null,
+        "correspondence_city": null,
+        "support_phone_number": null,
+        "cancellation_number": null,
+        "amount_used": 6
+    }
+},
+{
+    "model": "subscriptions.subscription",
+    "pk": 11,
+    "fields": {
+        "name": "The Guardian",
+        "slug": "the-guardian",
+        "category": 1,
+        "letter_template": "",
+        "email_template_text": "",
+        "price": "0.00",
+        "support_email": null,
+        "support_reply_number": null,
+        "support_postal_code": null,
+        "support_city": null,
+        "correspondence_address": null,
+        "correspondence_postal_code": null,
+        "correspondence_city": null,
+        "support_phone_number": null,
+        "cancellation_number": null,
+        "amount_used": 1
+    }
+},
+{
+    "model": "subscriptions.subscription",
+    "pk": 12,
+    "fields": {
+        "name": "AT&T mobile",
+        "slug": "att-mobile",
+        "category": 6,
+        "letter_template": "",
+        "email_template_text": "",
+        "price": "0.00",
+        "support_email": null,
+        "support_reply_number": null,
+        "support_postal_code": null,
+        "support_city": null,
+        "correspondence_address": null,
+        "correspondence_postal_code": null,
+        "correspondence_city": null,
+        "support_phone_number": null,
+        "cancellation_number": null,
+        "amount_used": 1
+    }
+},
+{
+    "model": "subscriptions.subscription",
+    "pk": 13,
+    "fields": {
+        "name": "AT&T data",
+        "slug": "att-data",
+        "category": 6,
+        "letter_template": "",
+        "email_template_text": "",
+        "price": "456.00",
+        "support_email": "something@att.com",
+        "support_reply_number": null,
+        "support_postal_code": null,
+        "support_city": null,
+        "correspondence_address": null,
+        "correspondence_postal_code": null,
+        "correspondence_city": null,
+        "support_phone_number": null,
+        "cancellation_number": null,
+        "amount_used": 1
+    }
+},
+{
+    "model": "subscriptions.subscriptioncategory",
+    "pk": 1,
+    "fields": {
+        "name": "News papers",
+        "slug": "news-papers",
+        "category": null,
+        "letter_template": "",
+        "email_template_text": ""
+    }
+},
+{
+    "model": "subscriptions.subscriptioncategory",
+    "pk": 2,
+    "fields": {
+        "name": "Lotteries",
+        "slug": "lotteries",
+        "category": null,
+        "letter_template": "",
+        "email_template_text": ""
+    }
+},
+{
+    "model": "subscriptions.subscriptioncategory",
+    "pk": 3,
+    "fields": {
+        "name": "Fitness",
+        "slug": "fitness",
+        "category": null,
+        "letter_template": "",
+        "email_template_text": ""
+    }
+},
+{
+    "model": "subscriptions.subscriptioncategory",
+    "pk": 4,
+    "fields": {
+        "name": "Multimedia",
+        "slug": "multimedia",
+        "category": null,
+        "letter_template": "",
+        "email_template_text": ""
+    }
+},
+{
+    "model": "subscriptions.subscriptioncategory",
+    "pk": 5,
+    "fields": {
+        "name": "T-Mobile",
+        "slug": "t-mobile",
+        "category": 4,
+        "letter_template": "",
+        "email_template_text": ""
+    }
+},
+{
+    "model": "subscriptions.subscriptioncategory",
+    "pk": 6,
+    "fields": {
+        "name": "AT&T",
+        "slug": "att",
+        "category": 4,
+        "letter_template": "",
+        "email_template_text": ""
+    }
+},
+{
+    "model": "subscriptions.subscriptioncategory",
+    "pk": 7,
+    "fields": {
+        "name": "Verizon",
+        "slug": "verizon",
+        "category": 4,
+        "letter_template": "",
+        "email_template_text": ""
+    }
+},
+{
+    "model": "subscriptions.subscriptioncategory",
+    "pk": 8,
+    "fields": {
+        "name": "Basic Fit",
+        "slug": "basic-fit",
+        "category": 3,
+        "letter_template": "",
+        "email_template_text": ""
+    }
+},
+{
+    "model": "subscriptions.subscriptioncategory",
+    "pk": 9,
+    "fields": {
+        "name": "Fit for free",
+        "slug": "fit-for-free",
+        "category": 3,
+        "letter_template": "",
+        "email_template_text": ""
+    }
+},
+{
+    "model": "subscriptions.subscriptioncategory",
+    "pk": 10,
+    "fields": {
+        "name": "Streaming",
+        "slug": "streaming",
+        "category": 4,
+        "letter_template": "",
+        "email_template_text": ""
+    }
+},
+{
+    "model": "subscriptions.subscriptioncategory",
+    "pk": 11,
+    "fields": {
+        "name": "Netflix",
+        "slug": "netflix",
+        "category": 10,
+        "letter_template": "",
+        "email_template_text": ""
+    }
+},
+{
+    "model": "subscriptions.subscriptioncategory",
+    "pk": 12,
+    "fields": {
+        "name": "Disney Plus",
+        "slug": "disney-plus",
+        "category": 10,
+        "letter_template": "",
+        "email_template_text": ""
+    }
+}
+]
