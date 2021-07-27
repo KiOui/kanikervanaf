@@ -231,7 +231,16 @@ def create_deregister_letters(
             pdfs.append(
                 {
                     "item": item,
-                    "pdf": render_deregister_letter(mail_list.user_information, item),
+                    "pdf": render_deregister_letter_pdf(
+                        {
+                            "firstname": mail_list.firstname,
+                            "lastname": mail_list.lastname,
+                            "address": mail_list.address,
+                            "postal_code": mail_list.postal_code,
+                            "residence": mail_list.residence,
+                        },
+                        item,
+                    ),
                 }
             )
             succeeded.append(item)
@@ -256,11 +265,10 @@ def handle_deregister_request(mail_list: QueuedMailList) -> bool:
         succeeded_letters,
         failed_letters,
         pdfs,
-        mail_list.user_information,
+        mail_list,
     )
     for subscription in mail_list.item_list.iterator():
         subscription.deregistered()
-    mail_list.user_information.delete()
     mail_list.delete()
     QueuedMailList.remove_expired()
     return retvalue
@@ -283,10 +291,18 @@ def send_deregister_emails(
 
     for subscription in mail_list.item_list.iterator():
         if subscription.support_email is not None and subscription.support_email != "":
-            deregister_email = create_deregister_email(
-                mail_list.user_information,
+            deregister_email = render_deregister_email(
+                {
+                    "firstname": mail_list.firstname,
+                    "lastname": mail_list.lastname,
+                    "address": mail_list.address,
+                    "postal_code": mail_list.postal_code,
+                    "residence": mail_list.residence,
+                    "forward_address": False
+                    if direct_send
+                    else subscription.support_email,
+                },
                 subscription,
-                forward_address=False if direct_send else subscription.support_email,
             )
             if direct_send:
                 msg = EmailMultiAlternatives(
@@ -294,15 +310,15 @@ def send_deregister_emails(
                     deregister_email,
                     settings.EMAIL_HOST_USER,
                     [subscription.support_email],
-                    cc=[mail_list.user_information.email_address],
-                    reply_to=mail_list.user_information.email_address,
+                    cc=[mail_list.email_address],
+                    reply_to=mail_list.email_address,
                 )
             else:
                 msg = EmailMultiAlternatives(
                     "Kanikervanaf: {}".format(subscription.name),
                     deregister_email,
                     settings.EMAIL_HOST_USER,
-                    [mail_list.user_information.email_address],
+                    [mail_list.email_address],
                 )
             try:
                 msg.send()
@@ -340,6 +356,7 @@ def render_deregister_email(
         "subscription_residence": item_residence,
         "subscription_name": item.name,
         "date": datetime.datetime.now().strftime("%d-%m-%Y"),
+        "forward_address": False,
     }
     context.update(template_context)
 
