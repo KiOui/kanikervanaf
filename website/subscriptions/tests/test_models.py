@@ -5,9 +5,12 @@ from subscriptions.models import (
     SubscriptionObject,
     SubscriptionCategory,
     SubscriptionSearchTerm,
+    TEMPLATE_FILE_DIRECTORY,
 )
 from django.core.files import File
 from django.conf import settings
+import os
+import shutil
 
 from mock import MagicMock
 
@@ -17,19 +20,98 @@ class SubscriptionObjectTest(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.mocked_letter_template = MagicMock(spec=File)
         cls.subscription_mocked_letter_template = Subscription.objects.get(
             slug="basic-fit-belgie"
         )
-
-    def test_upload_file(self):
-        mocked_letter_template = MagicMock(spec=File)
-        mocked_letter_template.name = "letter-template.html"
-        subscription_mocked_letter_template = Subscription.objects.get(
-            slug="basic-fit-belgie"
+        cls.subscription_mocked_email_template = Subscription.objects.get(
+            slug="basic-fit-netherlands"
         )
-        subscription_mocked_letter_template.letter_template = mocked_letter_template
-        print(subscription_mocked_letter_template.letter_template_full_path)
+        # Remove items in the upload folders (in case they exist)
+        shutil.rmtree(
+            os.path.join(
+                settings.MEDIA_ROOT,
+                TEMPLATE_FILE_DIRECTORY
+                + "{}/{}".format(
+                    cls.subscription_mocked_letter_template._meta.model_name,
+                    cls.subscription_mocked_letter_template.slug,
+                ),
+            ),
+            ignore_errors=True,
+        )
+        shutil.rmtree(
+            os.path.join(
+                settings.MEDIA_ROOT,
+                TEMPLATE_FILE_DIRECTORY
+                + "{}/{}".format(
+                    cls.subscription_mocked_email_template._meta.model_name,
+                    cls.subscription_mocked_email_template.slug,
+                ),
+            ),
+            ignore_errors=True,
+        )
+        # Upload files to the respective objects
+        cls.mocked_letter_template = MagicMock(spec=File)
+        cls.mocked_letter_template.name = "this-is-a-random-name.html"
+        cls.subscription_mocked_letter_template.letter_template.save(
+            cls.mocked_letter_template.name, cls.mocked_letter_template
+        )
+        cls.mocked_email_template = MagicMock(spec=File)
+        cls.mocked_email_template.name = "this-is-a-random-name.txt"
+        cls.subscription_mocked_email_template.email_template_text.save(
+            cls.mocked_email_template.name, cls.mocked_email_template
+        )
+
+    def tearDown(self):
+        shutil.rmtree(
+            os.path.join(
+                settings.MEDIA_ROOT,
+                TEMPLATE_FILE_DIRECTORY
+                + "{}/{}".format(
+                    self.subscription_mocked_letter_template._meta.model_name,
+                    self.subscription_mocked_letter_template.slug,
+                ),
+            ),
+            ignore_errors=True,
+        )
+        shutil.rmtree(
+            os.path.join(
+                settings.MEDIA_ROOT,
+                TEMPLATE_FILE_DIRECTORY
+                + "{}/{}".format(
+                    self.subscription_mocked_email_template._meta.model_name,
+                    self.subscription_mocked_email_template.slug,
+                ),
+            ),
+            ignore_errors=True,
+        )
+
+    def test_letter_template_full_path(self):
+        self.assertEquals(
+            self.subscription_mocked_letter_template.letter_template_full_path,
+            os.path.join(
+                settings.MEDIA_ROOT,
+                TEMPLATE_FILE_DIRECTORY
+                + "{}/{}/{}".format(
+                    self.subscription_mocked_letter_template._meta.model_name,
+                    self.subscription_mocked_letter_template.slug,
+                    "letter_template.html",
+                ),
+            ),
+        )
+
+    def test_email_template_full_path(self):
+        self.assertEquals(
+            self.subscription_mocked_email_template.email_template_text_full_path,
+            os.path.join(
+                settings.MEDIA_ROOT,
+                TEMPLATE_FILE_DIRECTORY
+                + "{}/{}/{}".format(
+                    self.subscription_mocked_email_template._meta.model_name,
+                    self.subscription_mocked_email_template.slug,
+                    "email_template.txt",
+                ),
+            ),
+        )
 
 
 class SubscriptionTest(TestCase):
