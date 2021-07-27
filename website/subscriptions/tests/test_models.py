@@ -18,98 +18,130 @@ from mock import MagicMock
 class SubscriptionObjectTest(TestCase):
     fixtures = ["subscriptions.json"]
 
+    @staticmethod
+    def _get_template_name(subscription_object, template_name):
+        return os.path.join(
+            settings.MEDIA_ROOT,
+            TEMPLATE_FILE_DIRECTORY
+            + "{}/{}/{}".format(
+                subscription_object._meta.model_name,
+                subscription_object.slug,
+                template_name,
+            ),
+        )
+
+    @staticmethod
+    def _remove_template_files(subscription_object: SubscriptionObject):
+        shutil.rmtree(
+            os.path.join(
+                settings.MEDIA_ROOT,
+                TEMPLATE_FILE_DIRECTORY
+                + "{}/{}".format(
+                    subscription_object._meta.model_name, subscription_object.slug,
+                ),
+            ),
+            ignore_errors=True,
+        )
+
     @classmethod
     def setUpTestData(cls):
         cls.subscription_mocked_letter_template = Subscription.objects.get(
-            slug="basic-fit-belgie"
+            slug="t-mobile-data"
         )
         cls.subscription_mocked_email_template = Subscription.objects.get(
             slug="basic-fit-netherlands"
         )
+        cls.subscription_category_mocked_templates = SubscriptionCategory.objects.get(
+            slug="multimedia"
+        )
+        cls.subscription_mocked_letter_template_for_category = Subscription.objects.get(
+            slug="t-mobile-phone"
+        )
+        cls.subscription_no_mocked_email_template = Subscription.objects.get(
+            slug="green-card-lottery"
+        )
+
         # Remove items in the upload folders (in case they exist)
-        shutil.rmtree(
-            os.path.join(
-                settings.MEDIA_ROOT,
-                TEMPLATE_FILE_DIRECTORY
-                + "{}/{}".format(
-                    cls.subscription_mocked_letter_template._meta.model_name,
-                    cls.subscription_mocked_letter_template.slug,
-                ),
-            ),
-            ignore_errors=True,
-        )
-        shutil.rmtree(
-            os.path.join(
-                settings.MEDIA_ROOT,
-                TEMPLATE_FILE_DIRECTORY
-                + "{}/{}".format(
-                    cls.subscription_mocked_email_template._meta.model_name,
-                    cls.subscription_mocked_email_template.slug,
-                ),
-            ),
-            ignore_errors=True,
-        )
+        cls._remove_template_files(cls.subscription_mocked_letter_template)
+        cls._remove_template_files(cls.subscription_mocked_email_template)
+        cls._remove_template_files(cls.subscription_category_mocked_templates)
+
         # Upload files to the respective objects
         cls.mocked_letter_template = MagicMock(spec=File)
         cls.mocked_letter_template.name = "this-is-a-random-name.html"
+        cls.mocked_email_template = MagicMock(spec=File)
+        cls.mocked_email_template.name = "this-is-a-random-name.txt"
         cls.subscription_mocked_letter_template.letter_template.save(
             cls.mocked_letter_template.name, cls.mocked_letter_template
         )
-        cls.mocked_email_template = MagicMock(spec=File)
-        cls.mocked_email_template.name = "this-is-a-random-name.txt"
         cls.subscription_mocked_email_template.email_template_text.save(
+            cls.mocked_email_template.name, cls.mocked_email_template
+        )
+        cls.subscription_category_mocked_templates.letter_template.save(
+            cls.mocked_letter_template.name, cls.mocked_letter_template
+        )
+        cls.subscription_category_mocked_templates.email_template_text.save(
             cls.mocked_email_template.name, cls.mocked_email_template
         )
 
     def tearDown(self):
-        shutil.rmtree(
-            os.path.join(
-                settings.MEDIA_ROOT,
-                TEMPLATE_FILE_DIRECTORY
-                + "{}/{}".format(
-                    self.subscription_mocked_letter_template._meta.model_name,
-                    self.subscription_mocked_letter_template.slug,
-                ),
-            ),
-            ignore_errors=True,
-        )
-        shutil.rmtree(
-            os.path.join(
-                settings.MEDIA_ROOT,
-                TEMPLATE_FILE_DIRECTORY
-                + "{}/{}".format(
-                    self.subscription_mocked_email_template._meta.model_name,
-                    self.subscription_mocked_email_template.slug,
-                ),
-            ),
-            ignore_errors=True,
-        )
+        self._remove_template_files(self.subscription_mocked_letter_template)
+        self._remove_template_files(self.subscription_mocked_email_template)
+        self._remove_template_files(self.subscription_category_mocked_templates)
 
     def test_letter_template_full_path(self):
         self.assertEquals(
             self.subscription_mocked_letter_template.letter_template_full_path,
-            os.path.join(
-                settings.MEDIA_ROOT,
-                TEMPLATE_FILE_DIRECTORY
-                + "{}/{}/{}".format(
-                    self.subscription_mocked_letter_template._meta.model_name,
-                    self.subscription_mocked_letter_template.slug,
-                    "letter_template.html",
-                ),
+            self._get_template_name(
+                self.subscription_mocked_letter_template, "letter_template.html"
             ),
         )
 
     def test_email_template_full_path(self):
         self.assertEquals(
             self.subscription_mocked_email_template.email_template_text_full_path,
+            self._get_template_name(
+                self.subscription_mocked_email_template, "email_template.txt"
+            ),
+        )
+
+    def test_get_letter_template(self):
+        self.assertEquals(
+            self.subscription_mocked_letter_template.get_letter_template(),
+            self._get_template_name(
+                self.subscription_mocked_letter_template, "letter_template.html"
+            ),
+        )
+        self.assertEquals(
+            self.subscription_mocked_letter_template_for_category.get_letter_template(),
+            self._get_template_name(
+                self.subscription_category_mocked_templates, "letter_template.html"
+            ),
+        )
+        self.assertEquals(
+            self.subscription_mocked_email_template.get_letter_template(),
             os.path.join(
-                settings.MEDIA_ROOT,
-                TEMPLATE_FILE_DIRECTORY
-                + "{}/{}/{}".format(
-                    self.subscription_mocked_email_template._meta.model_name,
-                    self.subscription_mocked_email_template.slug,
-                    "email_template.txt",
-                ),
+                settings.BASE_DIR, "subscriptions/templates/pdf/deregister_letter.html",
+            ),
+        )
+
+    def test_get_email_template_text(self):
+        self.assertEquals(
+            self.subscription_mocked_email_template.get_email_template_text(),
+            self._get_template_name(
+                self.subscription_mocked_email_template, "email_template.txt"
+            ),
+        )
+        self.assertEquals(
+            self.subscription_mocked_letter_template.get_email_template_text(),
+            self._get_template_name(
+                self.subscription_category_mocked_templates, "email_template.txt"
+            ),
+        )
+        self.assertEquals(
+            self.subscription_no_mocked_email_template.get_email_template_text(),
+            os.path.join(
+                settings.BASE_DIR, "subscriptions/templates/email/deregister_mail.txt",
             ),
         )
 
