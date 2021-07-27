@@ -225,9 +225,7 @@ def verification_send(request):
             reverse("subscriptions:verify", kwargs={"token": mail_list.token})
         )
         if send_verification_email(
-            mail_list.user_information.firstname,
-            mail_list.user_information.email_address,
-            verification_url,
+            mail_list.firstname, mail_list.email_address, verification_url,
         ):
             response = HttpResponseRedirect(
                 reverse("subscriptions:verification_send_succeeded")
@@ -236,7 +234,6 @@ def verification_send(request):
             response.delete_cookie("subscription_items")
             return response
         else:
-            mail_list.user_information.delete()
             mail_list.delete()
             return HttpResponseRedirect(
                 reverse("subscriptions:verification_send_failed")

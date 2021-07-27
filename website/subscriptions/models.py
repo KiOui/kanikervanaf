@@ -459,5 +459,4 @@ class QueuedMailList(models.Model):
         )
         for mail_list in mail_lists.iterator():
             if mail_list.created <= remove_after:
-                mail_list.user_information.delete()
                 mail_list.delete()
