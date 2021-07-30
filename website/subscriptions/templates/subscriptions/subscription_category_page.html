@@ -43,11 +43,3 @@
 {% block sidebar %}
     {% include "subscriptions/subscription_list.html" with next_page="users:enter" button_id="subscription-disable-button-no-items" scroller=True %}
 {% endblock %}
-{% block js %}
-    <script src="{% static 'kanikervanaf/js/general.js' %}"></script>
-    <script src="{% static 'subscriptions/js/categories.js' %}"></script>
-    <script src="{% static 'subscriptions/js/search.js' %}"></script>
-    <script>
-        SEARCH_URL = "{% url 'subscriptions:search' %}";
-    </script>
-{% endblock %}
