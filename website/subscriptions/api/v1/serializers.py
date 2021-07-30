@@ -24,6 +24,9 @@ class SubscriptionSerializer(serializers.ModelSerializer):
             "support_phone_number",
             "cancellation_number",
             "category",
+            "can_generate_letter",
+            "can_generate_email",
+            "explanation_field",
         ]
 
 

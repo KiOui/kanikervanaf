@@ -100,7 +100,32 @@
                     </p>
                 </div>
             {% endif %}
+            {% if subscription.correspondence_address and subscription.correspondence_postal_code %}
+                <div class="subscription-detail">
+                    <div class="subscription-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <p class="m-0">Correspondentie adres:
+                        {{ subscription.correspondence_address }}, {{ subscription.correspondence_postal_code }}{% if subscription.correspondence_city %}, {{ subscription.correspondence_city }}{% endif %}
+                    </p>
+                </div>
+            {% endif %}
+            {% if subscription.support_reply_number and subscription.support_postal_code %}
+                <div class="subscription-detail">
+                    <div class="subscription-icon">
+                        <i class="fas fa-address-card"></i>
+                    </div>
+                    <p class="m-0">Postbus klantenservice:
+                        Postbus {{ subscription.support_reply_number }}, {{ subscription.support_postal_code }}{% if subscription.support_city %}, {{ subscription.support_city }}{% endif %}
+                    </p>
+                </div>
+            {% endif %}
         </div>
+        {% if subscription.explanation_field %}
+            <div class="subscription-explanation">
+                {{ subscription.explanation_field | safe }}
+            </div>
+        {% endif %}
     {% endif %}
 {% endblock %}
 {% block sidebar %}

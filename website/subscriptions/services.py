@@ -227,7 +227,7 @@ def create_deregister_letters(
     failed = list()
     pdfs = list()
     for item in mail_list.item_list.iterator():
-        if item.can_generate_pdf():
+        if item.can_generate_letter:
             try:
                 pdfs.append(
                     {

@@ -166,16 +166,10 @@ function has_price(subscription) {
 }
 
 function has_mail(subscription) {
-	if (subscription.support_email) {
-		return true;
-	}
-	else {
-		return false;
-	}
+	return subscription.can_generate_email;
 }
 function has_letter(subscription) {
-	return !!subscription.support_reply_number && !!subscription.support_postal_code ||
-		!!subscription.correspondence_address && !!subscription.correspondence_postal_code;
+	return subscription.can_generate_letter;
 }
 
 jQuery(document).ready(function($) {

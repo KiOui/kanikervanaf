@@ -297,6 +297,14 @@ optional = false
 python-versions = ">1.1.1"
 
 [[package]]
+name = "django-tinymce"
+version = "3.3.0"
+description = "A Django application that contains a widget to render a form field as a TinyMCE editor."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "djangorestframework"
 version = "3.12.4"
 description = "Web APIs for Django, made easy."
@@ -919,7 +927,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "29143089cd219839adb5e1b8b25e2f73d4fbfe05ceb3f491be09738ccb62d13c"
+content-hash = "a55191852357eb2b961c226250a90c50592528a0f3d3c6ce81b3f671a6ff2c81"
 
 [metadata.files]
 appdirs = [
@@ -1114,6 +1122,10 @@ django-recaptcha = [
 django-robots = [
     {file = "django-robots-4.0.tar.gz", hash = "sha256:4d18ccca0f1fc5bd4a93680e386c3a2fd3bca03fc52f6e3da7b239cf3d456c8c"},
     {file = "django_robots-4.0-py2.py3-none-any.whl", hash = "sha256:71c23147a8619f8b0284476558725d64a4e34ea3972eb4da51271a1537786965"},
+]
+django-tinymce = [
+    {file = "django-tinymce-3.3.0.tar.gz", hash = "sha256:77cca137e97e92e43e42c98a232df3e66b80c987ad0f03709a4b73435f8e4060"},
+    {file = "django_tinymce-3.3.0-py3-none-any.whl", hash = "sha256:3684d6611162cd3566b068cfeaf9309d415f1d415191a1f8a8c9140246774679"},
 ]
 djangorestframework = [
     {file = "djangorestframework-3.12.4-py3-none-any.whl", hash = "sha256:6d1d59f623a5ad0509fe0d6bfe93cbdfe17b8116ebc8eda86d45f6e16e819aaf"},

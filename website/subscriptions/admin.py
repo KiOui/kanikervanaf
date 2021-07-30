@@ -34,8 +34,25 @@ class SubscriptionAdmin(ImportExportModelAdmin):
 
     search_fields = ["name"]
     list_filter = [SubscriptionCategoryFilter, "category"]
-    list_display = ["name", "amount_used", "category"]
+    list_display = [
+        "name",
+        "category",
+        "amount_used",
+        "can_generate_letter",
+        "can_generate_email",
+        "get_has_registered_price",
+    ]
     prepopulated_fields = {"slug": ("name",)}
+    readonly_fields = [
+        "can_generate_letter",
+        "can_generate_email",
+    ]
+
+    def get_has_registered_price(self, obj):
+        return obj.has_registered_price()
+
+    get_has_registered_price.boolean = True
+    get_has_registered_price.short_description = "Has registered price"
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
         """
