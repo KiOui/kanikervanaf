@@ -90,7 +90,7 @@ class SubscriptionObjectTest(TestCase):
         self._remove_template_files(self.subscription_category_mocked_templates)
 
     def test_letter_template_full_path(self):
-        self.assertEquals(
+        self.assertEqual(
             self.subscription_mocked_letter_template.letter_template_full_path,
             self._get_template_name(
                 self.subscription_mocked_letter_template, "letter_template.html"
@@ -98,7 +98,7 @@ class SubscriptionObjectTest(TestCase):
         )
 
     def test_email_template_full_path(self):
-        self.assertEquals(
+        self.assertEqual(
             self.subscription_mocked_email_template.email_template_text_full_path,
             self._get_template_name(
                 self.subscription_mocked_email_template, "email_template.txt"
@@ -106,19 +106,19 @@ class SubscriptionObjectTest(TestCase):
         )
 
     def test_get_letter_template(self):
-        self.assertEquals(
+        self.assertEqual(
             self.subscription_mocked_letter_template.get_letter_template(),
             self._get_template_name(
                 self.subscription_mocked_letter_template, "letter_template.html"
             ),
         )
-        self.assertEquals(
+        self.assertEqual(
             self.subscription_mocked_letter_template_for_category.get_letter_template(),
             self._get_template_name(
                 self.subscription_category_mocked_templates, "letter_template.html"
             ),
         )
-        self.assertEquals(
+        self.assertEqual(
             self.subscription_mocked_email_template.get_letter_template(),
             os.path.join(
                 settings.BASE_DIR, "subscriptions/templates/pdf/deregister_letter.html",
@@ -126,19 +126,19 @@ class SubscriptionObjectTest(TestCase):
         )
 
     def test_get_email_template_text(self):
-        self.assertEquals(
+        self.assertEqual(
             self.subscription_mocked_email_template.get_email_template_text(),
             self._get_template_name(
                 self.subscription_mocked_email_template, "email_template.txt"
             ),
         )
-        self.assertEquals(
+        self.assertEqual(
             self.subscription_mocked_letter_template.get_email_template_text(),
             self._get_template_name(
                 self.subscription_category_mocked_templates, "email_template.txt"
             ),
         )
-        self.assertEquals(
+        self.assertEqual(
             self.subscription_no_mocked_email_template.get_email_template_text(),
             os.path.join(
                 settings.BASE_DIR, "subscriptions/templates/email/deregister_mail.txt",
@@ -192,17 +192,17 @@ class SubscriptionTest(TestCase):
         self.assertTrue(has_price.has_registered_price())
 
     def test_get_address_information(self):
-        self.assertEquals(
+        self.assertEqual(
             Subscription.objects.get(slug="basic-fit-belgie").get_address_information(),
             ("Postbus 12345", "1111AA", "Test city",),
         )
-        self.assertEquals(
+        self.assertEqual(
             Subscription.objects.get(
                 slug="basic-fit-netherlands"
             ).get_address_information(),
             ("Test address 1", "2222BB", "Test city",),
         )
-        self.assertEquals(
+        self.assertEqual(
             Subscription.objects.get(
                 slug="fit-for-free-belgium"
             ).get_address_information(),
@@ -210,7 +210,7 @@ class SubscriptionTest(TestCase):
         )
 
     def test_support_reply_number_prefixed(self):
-        self.assertEquals(
+        self.assertEqual(
             Subscription.objects.get(
                 slug="basic-fit-belgie"
             ).support_reply_number_prefixed,
@@ -232,9 +232,9 @@ class SubscriptionTest(TestCase):
         deregistered_subscription_1.deregistered()
         deregistered_subscription_1.deregistered()
         deregistered_subscription_1_created.deregistered()
-        self.assertEquals(deregistered_subscription_6.amount_used, 7)
-        self.assertEquals(deregistered_subscription_1.amount_used, 3)
-        self.assertEquals(deregistered_subscription_1_created.amount_used, 2)
+        self.assertEqual(deregistered_subscription_6.amount_used, 7)
+        self.assertEqual(deregistered_subscription_1.amount_used, 3)
+        self.assertEqual(deregistered_subscription_1_created.amount_used, 2)
 
 
 class SubscriptionCategoryTest(TestCase):
@@ -288,7 +288,7 @@ class SubscriptionCategoryTest(TestCase):
         )
 
     def test_get_path_to_me(self):
-        self.assertEquals(
+        self.assertEqual(
             SubscriptionCategory.objects.get(slug="netflix").get_path_to_me(),
             [
                 SubscriptionCategory.objects.get(slug="multimedia"),
@@ -296,7 +296,7 @@ class SubscriptionCategoryTest(TestCase):
                 SubscriptionCategory.objects.get(slug="netflix"),
             ],
         )
-        self.assertEquals(
+        self.assertEqual(
             SubscriptionCategory.objects.get(slug="basic-fit").get_path_to_me(),
             [
                 SubscriptionCategory.objects.get(slug="fitness"),
