@@ -216,9 +216,7 @@ def verification_send(request):
             urllib.parse.unquote(request.COOKIES.get("subscription_items", ""))
         )
     except Exception as e:
-        return HttpResponseRedirect(
-            reverse("subscriptions:verification_send_failed")
-        )
+        return HttpResponseRedirect(reverse("subscriptions:verification_send_failed"))
 
     mail_list = handle_verification_request(details, items)
     if mail_list:
@@ -240,9 +238,7 @@ def verification_send(request):
                 reverse("subscriptions:verification_send_failed")
             )
     else:
-        return HttpResponseRedirect(
-            reverse("subscriptions:verification_send_failed")
-        )
+        return HttpResponseRedirect(reverse("subscriptions:verification_send_failed"))
 
 
 class RequestView(TemplateView):
