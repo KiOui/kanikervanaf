@@ -28,11 +28,11 @@ class SubscriptionServices(TestCase):
             "This is a line of text, you can insert your name here: {{ name }}."
         )
         with_django_engine = "{% load static %}By loading static we test whether we are rendering with or without the Django engine."
-        self.assertEquals(
+        self.assertEqual(
             render_string(without_django_engine, {"name": "Test name"}),
             "This is a line of text, you can insert your name here: Test name.",
         )
-        self.assertEquals(
+        self.assertEqual(
             render_string(with_django_engine, {}, use_django_engine=True),
             "By loading static we test whether we are rendering with or without the Django engine.",
         )
@@ -49,10 +49,10 @@ class SubscriptionServices(TestCase):
             render_string_to_pdf(template, {"name": "Test name"})
         )
         pdf_reader = PdfFileReader(rendered_pdf_as_bytesio)
-        self.assertEquals(pdf_reader.getNumPages(), 1)
+        self.assertEqual(pdf_reader.getNumPages(), 1)
         page_one = pdf_reader.getPage(0)
         extracted_text = page_one.extractText().replace("\n", "")
-        self.assertEquals(rendered_template, extracted_text)
+        self.assertEqual(rendered_template, extracted_text)
 
     @freeze_time("2020-01-01")
     def test_render_deregister_letter_pdf(self):
@@ -88,10 +88,10 @@ class SubscriptionServices(TestCase):
         )
         temporary_template_file.close()
         pdf_reader = PdfFileReader(rendered_pdf_as_bytesio)
-        self.assertEquals(pdf_reader.getNumPages(), 1)
+        self.assertEqual(pdf_reader.getNumPages(), 1)
         page_one = pdf_reader.getPage(0)
         extracted_text = page_one.extractText().replace("\n", "")
-        self.assertEquals(rendered_template, extracted_text)
+        self.assertEqual(rendered_template, extracted_text)
 
     def test_send_verification_email(self):
         test_name, test_email, test_verification_url = (
@@ -102,7 +102,7 @@ class SubscriptionServices(TestCase):
         self.assertTrue(
             send_verification_email(test_name, test_email, test_verification_url)
         )
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         self.assertCountEqual(mail.outbox[0].to, ["test@test.com"])
 
     def test_send_summary_email(self):
@@ -150,9 +150,9 @@ class SubscriptionServices(TestCase):
                 queued_mail_list,
             )
         )
-        self.assertEquals(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox), 1)
         self.assertCountEqual(mail.outbox[0].to, ["test@test.com"])
-        self.assertEquals(len(mail.outbox[0].attachments), 2)
+        self.assertEqual(len(mail.outbox[0].attachments), 2)
 
     def test_create_deregister_letters(self):
         queued_mail_list = QueuedMailList.generate(
@@ -184,7 +184,7 @@ class SubscriptionServices(TestCase):
                 Subscription.objects.get(slug="lottery-usa"),
             ],
         )
-        self.assertEquals(len(pdfs), 2)
+        self.assertEqual(len(pdfs), 2)
 
     def test_handle_verification_request(self):
         test_deregister_subscriptions = [
@@ -258,4 +258,4 @@ class SubscriptionServices(TestCase):
         temporary_file.seek(0)
 
         read_content = get_file_contents(temporary_file.name)
-        self.assertEquals(test_content, read_content)
+        self.assertEqual(test_content, read_content)

@@ -160,3 +160,5 @@ DEFAULT_TEMPLATE_PARAMETERS = {
     "postal_code": "Postcode",
     "residence": "Woonplaats",
 }
+
+CUSTOMER_SERVICE_EMAIL = "klantenservice@kanikervanaf.nl"
