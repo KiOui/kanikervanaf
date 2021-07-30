@@ -127,7 +127,7 @@
         "slug": "basic-fit-netherlands",
         "category": 8,
         "letter_template": "",
-        "email_template_text": "templates/subscription/basic-fit-netherlands/email_template.txt",
+        "email_template_text": "",
         "price": "0.00",
         "support_email": null,
         "support_reply_number": null,
