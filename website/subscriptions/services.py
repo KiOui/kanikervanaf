@@ -215,7 +215,7 @@ def send_summary_email(
 
 def create_deregister_letters(
     mail_list: QueuedMailList,
-) -> ([Subscription], [Subscription], [Subscription]):
+) -> ([Subscription], [Subscription], [dict]):
     """
     Create deregister letters.
 
@@ -228,22 +228,26 @@ def create_deregister_letters(
     pdfs = list()
     for item in mail_list.item_list.iterator():
         if item.can_generate_pdf():
-            pdfs.append(
-                {
-                    "item": item,
-                    "pdf": render_deregister_letter_pdf(
-                        {
-                            "firstname": mail_list.firstname,
-                            "lastname": mail_list.lastname,
-                            "address": mail_list.address,
-                            "postal_code": mail_list.postal_code,
-                            "residence": mail_list.residence,
-                        },
-                        item,
-                    ),
-                }
-            )
-            succeeded.append(item)
+            try:
+                pdfs.append(
+                    {
+                        "item": item,
+                        "pdf": render_deregister_letter_pdf(
+                            {
+                                "firstname": mail_list.firstname,
+                                "lastname": mail_list.lastname,
+                                "address": mail_list.address,
+                                "postal_code": mail_list.postal_code,
+                                "residence": mail_list.residence,
+                            },
+                            item,
+                        ),
+                    }
+                )
+                succeeded.append(item)
+            except TemplateSyntaxError as e:
+                logger.error("Creating a PDF file for {} results in {}".format(item, e))
+                failed.append(item)
         else:
             failed.append(item)
 
