@@ -90,7 +90,12 @@ class User(AbstractUser):
 
         :return: username
         """
-        return self.username
+        if self.first_name and self.last_name:
+            return "{} {}".format(self.first_name, self.last_name)
+        elif self.first_name:
+            return self.first_name
+        else:
+            return self.username
 
     def get_short_name(self):
         """
@@ -98,26 +103,10 @@ class User(AbstractUser):
 
         :return: username
         """
-        return self.username
-
-    def has_perm(self, perm_list, obj=None):
-        """
-        Check if a user has all permissions in perm_list.
-
-        :param perm_list: permission list
-        :param obj: the object over which the permissions must hold
-        :return: True
-        """
-        return True
-
-    def has_module_perms(self, package_name):
-        """
-        Check if a user has all permissions over a package.
-
-        :param package_name: the package name
-        :return: True
-        """
-        return True
+        if self.first_name:
+            return self.first_name
+        else:
+            return self.username
 
     def get_profile(self):
         """

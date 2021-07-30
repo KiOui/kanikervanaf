@@ -51,7 +51,7 @@
                             abonnement nog niet in onze database staat. Wij zullen dan ons best doen om onze database aan te
                             vullen.
                         <p>
-                        <a class='icons' style='cursor: pointer;' href="{% url 'subscriptions:request' %}">
+                        <a class='icons' style='cursor: pointer;' :href=`{% url 'subscriptions:request' %}?subscription=${search_query}`>
                             <i class='fas fa-arrow-right'></i>
                         </a>
                     </div>

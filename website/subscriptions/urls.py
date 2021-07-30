@@ -11,7 +11,6 @@ from .views import (
     ListCategoryPageRedirectView,
     RequestView,
     verification_send,
-    search_database,
     VerificationSendSucceeded,
     verify,
     VerificationSendFailed,
@@ -42,7 +41,6 @@ urlpatterns = [
     ),
     path("summary", SummaryView.as_view(), name="summary",),
     path("send", verification_send, name="send",),
-    path("search", search_database, name="search"),
     path("request", RequestView.as_view(), name="request"),
     path("details", SubscriptionDetailsSearchView.as_view(), name="details_search"),
     path(

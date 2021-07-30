@@ -35,7 +35,13 @@ class ContactView(TemplateView):
         :param kwargs: keyword arguments
         :return: the contact.html page
         """
-        form = ContactForm(None)
+        initial = {
+            "name": request.user.get_full_name()
+            if request.user.is_authenticated
+            else None,
+            "email": request.user.email if request.user.is_authenticated else None,
+        }
+        form = ContactForm(initial=initial)
         context = {"form": form}
         return render(request, self.template_name, context)
 
