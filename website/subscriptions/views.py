@@ -255,8 +255,14 @@ class RequestView(TemplateView):
         :param kwargs: keyword arguments
         :return: the request.html page
         """
-        prefilled_subscription = request.GET.get("subscription", "")
-        form = RequestForm(initial={"subscription_name": prefilled_subscription})
+        initial = {
+            "subscription_name": request.GET.get("subscription", None),
+            "name": request.user.get_full_name()
+            if request.user.is_authenticated
+            else None,
+            "email": request.user.email if request.user.is_authenticated else None,
+        }
+        form = RequestForm(initial=initial)
         context = {"form": form}
         return render(request, self.template_name, context)
 
@@ -371,41 +377,3 @@ class AdminTemplateInformationView(TemplateView):
             return render(request, self.template_name)
         else:
             return HttpResponseForbidden()
-
-
-def search_database(request):
-    """
-    Search all Subscription objects for a specific Subscription.
-
-    :param request: the request, containing a POST parameter query
-    :return: all objects
-    """
-    if request.method == "POST":
-        query = request.POST.get("query", "")
-        request_id = request.POST.get("id", "")
-        try:
-            maximum = int(request.POST.get("maximum", 5))
-        except ValueError:
-            maximum = 5
-        subscriptions = Subscription.objects.filter(
-            Q(name__icontains=query) | Q(subscriptionsearchterm__name__icontains=query)
-        ).order_by("-amount_used")[:maximum]
-        converted_set = convert_list_to_json(subscriptions)
-        json_list = {"items": converted_set, "id": request_id}
-        json_response = json.dumps(json_list)
-        return HttpResponse(json_response, content_type="application/json")
-    else:
-        return HttpResponseRedirect(reverse("home"))
-
-
-def convert_list_to_json(subscriptions):
-    """
-    Convert a list with subscriptions to a JSON compatible dictionary.
-
-    :param subscriptions: a list of subscriptions to convert
-    :return: a JSON string with the list of subscriptions converted to JSON
-    """
-    json_list = []
-    for subscription in subscriptions:
-        json_list.append(subscription.to_json())
-    return json_list
