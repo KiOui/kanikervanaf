@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_filters",
     "oauth2_provider",
+    "tinymce",
     "robots",
     "captcha",
     "kanikervanaf",
@@ -137,6 +138,17 @@ SITE_ID = 1
 
 # Robots app
 ROBOTS_CACHE_TIMEOUT = 60 * 60 * 24
+
+TINYMCE_DEFAULT_CONFIG = {
+    "height": 500,
+    "menubar": "file edit view link format table",
+    "plugins": "advlist autolink lists link image charmap print preview anchor searchreplace visualblocks code "
+    "fullscreen insertdatetime media table paste code help wordcount spellchecker",
+    "toolbar": "undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft "
+    "aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor "
+    "backcolor casechange permanentpen formatpainter removeformat | pagebreak | charmap emoticons | "
+    "link anchor",
+}
 
 RECAPTCHA_PUBLIC_KEY = ""
 RECAPTCHA_PRIVATE_KEY = ""

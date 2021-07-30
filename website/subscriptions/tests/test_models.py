@@ -149,23 +149,41 @@ class SubscriptionObjectTest(TestCase):
 class SubscriptionTest(TestCase):
     fixtures = ["subscriptions.json"]
 
-    def test_can_email(self):
-        cant_generate_mail = Subscription.objects.get(slug="att-mobile")
-        can_generate_mail = Subscription.objects.get(slug="att-data")
-        self.assertFalse(cant_generate_mail.can_email())
-        self.assertTrue(can_generate_mail.can_email())
+    def test_can_generate_email(self):
+        subscription_can_generate_email = Subscription.objects.create(
+            name="can-generate-email",
+            slug="can-generate-email",
+            support_email="something@something.com",
+        )
+        subscription_cant_generate_email = Subscription.objects.create(
+            name="cant-generate-email", slug="cant-generate-email"
+        )
+        self.assertFalse(subscription_cant_generate_email.can_generate_email)
+        self.assertTrue(subscription_can_generate_email.can_generate_email)
 
-    def test_can_letter(self):
-        cant_generate_letter = Subscription.objects.get(slug="att-mobile")
-        can_generate_letter_support_address = Subscription.objects.get(
-            slug="basic-fit-belgie"
+    def test_can_generate_letter(self):
+        subscription_cant_generate_letter = Subscription.objects.create(
+            name="cant-generate-letter", slug="cant-generate-letter"
         )
-        can_generate_letter_correspondence_address = Subscription.objects.get(
-            slug="basic-fit-netherlands"
+        subscription_can_generate_letter_support_address = Subscription.objects.create(
+            name="can-generate-letter-support-address",
+            slug="can-generate-letter-support-address",
+            support_reply_number="12345",
+            support_postal_code="1111AA",
         )
-        self.assertFalse(cant_generate_letter.can_generate_pdf())
-        self.assertTrue(can_generate_letter_support_address.can_generate_pdf())
-        self.assertTrue(can_generate_letter_correspondence_address.can_generate_pdf())
+        subscription_can_generate_letter_correspondence_address = Subscription.objects.create(
+            name="can-generate-letter-correspondence-address",
+            slug="can-generate-letter-correspondence-address",
+            correspondence_address="Test address 1",
+            correspondence_postal_code="2222BB",
+        )
+        self.assertFalse(subscription_cant_generate_letter.can_generate_letter)
+        self.assertTrue(
+            subscription_can_generate_letter_support_address.can_generate_letter
+        )
+        self.assertTrue(
+            subscription_can_generate_letter_correspondence_address.can_generate_letter
+        )
 
     def test_has_price(self):
         has_no_price = Subscription.objects.get(slug="green-card-lottery")

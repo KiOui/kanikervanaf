@@ -16,6 +16,8 @@ from .forms import (
 )
 from .models import User, PasswordReset, EmailUpdate
 from .services import generate_password_reset, send_reset_password, send_update_email
+import json
+from urllib.parse import unquote_plus
 
 
 class BasicUserInformation(TemplateView):
@@ -25,6 +27,18 @@ class BasicUserInformation(TemplateView):
 
     template_name = "users/enter_information.html"
 
+    def _is_cookie_empty(self, cookie):
+        if cookie is not None:
+            try:
+                loaded_data = json.loads(unquote_plus(cookie))
+            except json.JSONDecodeError:
+                return True
+            if type(loaded_data) == dict:
+                for key in loaded_data.keys():
+                    if bool(loaded_data[key]):
+                        return False
+        return True
+
     def get(self, request, **kwargs):
         """
         GET request for user information view.
@@ -33,9 +47,8 @@ class BasicUserInformation(TemplateView):
         :param kwargs: keyword arguments
         :return: render of the enter_information page
         """
-        if (
-            request.COOKIES.get("subscription_details", None) is None
-            and request.user.is_authenticated
+        if request.user.is_authenticated and self._is_cookie_empty(
+            request.COOKIES.get("subscription_details", None)
         ):
             return render(
                 request,

@@ -5,6 +5,7 @@ import secrets
 import datetime
 import pytz
 from django.conf import settings
+from tinymce.models import HTMLField
 
 
 TEMPLATE_FILE_DIRECTORY = "templates/"
@@ -181,6 +182,20 @@ class Subscription(SubscriptionObject):
         default=1,
         help_text="The amount of times the subscription was used at deregistering of customers.",
     )
+    can_generate_letter = models.BooleanField(
+        default=False,
+        help_text="Whether or not this subscription can generate a deregistration letter.",
+        editable=False,
+    )
+    can_generate_email = models.BooleanField(
+        default=False,
+        help_text="Whether or not this subscription can generate a deregistration email.",
+        editable=False,
+    )
+    explanation_field = HTMLField(
+        help_text="Possible explanation of how to deregister from this subscription if deregistering via email or letter is not possible.",
+        blank=True,
+    )
 
     @staticmethod
     def top_category(category, max_items=5, order_by=None):
@@ -200,32 +215,6 @@ class Subscription(SubscriptionObject):
             return queryset[:max_items]
         else:
             return queryset
-
-    def can_email(self):
-        """
-        Check if a subscription can be emailed to.
-
-        :return: True if an email address is specified for the subscription object, False otherwise
-        """
-        return self.support_email is not None and self.support_email != ""
-
-    def can_generate_pdf(self):
-        """
-        Check if a subscription can generate a PDF file.
-
-        :return: True if there is enough information to generate a PDF file, False otherwise
-        """
-        return (
-            self.support_reply_number is not None
-            and self.support_postal_code is not None
-            and self.support_reply_number != ""
-            and self.support_postal_code != ""
-        ) or (
-            self.correspondence_address is not None
-            and self.correspondence_postal_code is not None
-            and self.correspondence_address != ""
-            and self.correspondence_postal_code != ""
-        )
 
     def has_registered_price(self):
         """
@@ -282,22 +271,6 @@ class Subscription(SubscriptionObject):
         """
         self.amount_used += 1
         self.save()
-
-    def to_json(self):
-        """
-        Convert this object to a JSON compatible dictionary.
-
-        :return: a dictionary containing the name, id, price, ability to email and ability to generate a PDF.
-        """
-        return {
-            "name": self.name,
-            "id": self.id,
-            "price": float(self.price),
-            "can_email": self.can_email(),
-            "can_letter": self.can_generate_pdf(),
-            "has_price": self.has_registered_price(),
-            "slug": self.slug,
-        }
 
     class Meta:
         """Meta class."""

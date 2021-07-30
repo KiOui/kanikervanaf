@@ -25,6 +25,7 @@ uritemplate = "^3.0.1"
 pdf2docx = "^0.5.2"
 django-filter = "^2.4.0"
 mock = "^4.0.3"
+django-tinymce = "^3.3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^4.6"

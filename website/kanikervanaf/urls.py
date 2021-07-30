@@ -58,6 +58,7 @@ handler404 = custom_handler404
 handler500 = custom_handler500
 
 urlpatterns = [
+    path("tinymce/", include("tinymce.urls")),
     path("", IndexView.as_view(), name="home"),
     path(
         "sitemap.xml",

@@ -18,7 +18,9 @@
         "correspondence_city": null,
         "support_phone_number": null,
         "cancellation_number": null,
-        "amount_used": 1
+        "amount_used": 1,
+        "can_generate_letter": false,
+        "can_generate_email": false
     }
 },
 {
@@ -40,7 +42,9 @@
         "correspondence_city": null,
         "support_phone_number": null,
         "cancellation_number": null,
-        "amount_used": 1
+        "amount_used": 1,
+        "can_generate_letter": false,
+        "can_generate_email": false
     }
 },
 {
@@ -62,7 +66,9 @@
         "correspondence_city": null,
         "support_phone_number": null,
         "cancellation_number": null,
-        "amount_used": 1
+        "amount_used": 1,
+        "can_generate_letter": false,
+        "can_generate_email": false
     }
 },
 {
@@ -84,7 +90,9 @@
         "correspondence_city": "Test city",
         "support_phone_number": null,
         "cancellation_number": null,
-        "amount_used": 1
+        "amount_used": 1,
+        "can_generate_letter": true,
+        "can_generate_email": false
     }
 },
 {
@@ -106,7 +114,9 @@
         "correspondence_city": null,
         "support_phone_number": null,
         "cancellation_number": null,
-        "amount_used": 1
+        "amount_used": 1,
+        "can_generate_letter": false,
+        "can_generate_email": false
     }
 },
 {
@@ -128,7 +138,9 @@
         "correspondence_city": "Test city",
         "support_phone_number": null,
         "cancellation_number": null,
-        "amount_used": 1
+        "amount_used": 1,
+        "can_generate_letter": true,
+        "can_generate_email": false
     }
 },
 {
@@ -150,7 +162,9 @@
         "correspondence_city": null,
         "support_phone_number": null,
         "cancellation_number": null,
-        "amount_used": 1
+        "amount_used": 1,
+        "can_generate_letter": true,
+        "can_generate_email": false
     }
 },
 {
@@ -172,7 +186,9 @@
         "correspondence_city": null,
         "support_phone_number": null,
         "cancellation_number": null,
-        "amount_used": 1
+        "amount_used": 1,
+        "can_generate_letter": false,
+        "can_generate_email": false
     }
 },
 {
@@ -194,7 +210,9 @@
         "correspondence_city": null,
         "support_phone_number": null,
         "cancellation_number": null,
-        "amount_used": 1
+        "amount_used": 1,
+        "can_generate_letter": false,
+        "can_generate_email": false
     }
 },
 {
@@ -216,7 +234,9 @@
         "correspondence_city": null,
         "support_phone_number": null,
         "cancellation_number": null,
-        "amount_used": 6
+        "amount_used": 6,
+        "can_generate_letter": false,
+        "can_generate_email": false
     }
 },
 {
@@ -238,7 +258,9 @@
         "correspondence_city": null,
         "support_phone_number": null,
         "cancellation_number": null,
-        "amount_used": 1
+        "amount_used": 1,
+        "can_generate_letter": false,
+        "can_generate_email": false
     }
 },
 {
@@ -260,7 +282,9 @@
         "correspondence_city": null,
         "support_phone_number": null,
         "cancellation_number": null,
-        "amount_used": 1
+        "amount_used": 1,
+        "can_generate_letter": false,
+        "can_generate_email": false
     }
 },
 {
@@ -282,7 +306,9 @@
         "correspondence_city": null,
         "support_phone_number": null,
         "cancellation_number": null,
-        "amount_used": 1
+        "amount_used": 1,
+        "can_generate_letter": false,
+        "can_generate_email": true
     }
 },
 {

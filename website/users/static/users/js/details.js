@@ -19,22 +19,22 @@ function update() {
 
 function putback_details() {
 	let cookie = get_details();
-	if (cookie.first_name !== undefined) {
+	if (cookie.first_name) {
 		firstname_select.value = cookie.first_name;
 	}
-	if (cookie.first_name !== undefined) {
+	if (cookie.second_name) {
 		lastname_select.value = cookie.second_name;
 	}
-	if (cookie.first_name !== undefined) {
+	if (cookie.address) {
 		address_select.value = cookie.address;
 	}
-	if (cookie.first_name !== undefined) {
+	if (cookie.postal_code) {
 		postalcode_select.value = cookie.postal_code;
 	}
-	if (cookie.first_name !== undefined) {
+	if (cookie.residence) {
 		residence_select.value = cookie.residence;
 	}
-	if (cookie.first_name !== undefined) {
+	if (cookie.email) {
 		email_select.value = cookie.email;
 	}
 }
