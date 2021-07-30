@@ -210,14 +210,15 @@ def verification_send(request):
     """
     try:
         details = json.loads(
-            urllib.parse.unquote(request.COOKIES.get("subscription_details"))
+            urllib.parse.unquote(request.COOKIES.get("subscription_details", ""))
         )
         items = json.loads(
-            urllib.parse.unquote(request.COOKIES.get("subscription_items"))
+            urllib.parse.unquote(request.COOKIES.get("subscription_items", ""))
         )
-    except ValueError as e:
-        logger.error(e)
-        return HttpResponse(status=500)
+    except Exception as e:
+        return HttpResponseRedirect(
+            reverse("subscriptions:verification_send_failed")
+        )
 
     mail_list = handle_verification_request(details, items)
     if mail_list:
@@ -239,7 +240,9 @@ def verification_send(request):
                 reverse("subscriptions:verification_send_failed")
             )
     else:
-        return HttpResponse(status=500)
+        return HttpResponseRedirect(
+            reverse("subscriptions:verification_send_failed")
+        )
 
 
 class RequestView(TemplateView):
