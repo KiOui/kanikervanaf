@@ -215,7 +215,7 @@ def send_summary_email(
 
 def create_deregister_letters(
     mail_list: QueuedMailList,
-) -> ([Subscription], [Subscription], [Subscription]):
+) -> ([Subscription], [Subscription], [dict]):
     """
     Create deregister letters.
 
@@ -228,22 +228,26 @@ def create_deregister_letters(
     pdfs = list()
     for item in mail_list.item_list.iterator():
         if item.can_generate_pdf():
-            pdfs.append(
-                {
-                    "item": item,
-                    "pdf": render_deregister_letter_pdf(
-                        {
-                            "firstname": mail_list.firstname,
-                            "lastname": mail_list.lastname,
-                            "address": mail_list.address,
-                            "postal_code": mail_list.postal_code,
-                            "residence": mail_list.residence,
-                        },
-                        item,
-                    ),
-                }
-            )
-            succeeded.append(item)
+            try:
+                pdfs.append(
+                    {
+                        "item": item,
+                        "pdf": render_deregister_letter_pdf(
+                            {
+                                "firstname": mail_list.firstname,
+                                "lastname": mail_list.lastname,
+                                "address": mail_list.address,
+                                "postal_code": mail_list.postal_code,
+                                "residence": mail_list.residence,
+                            },
+                            item,
+                        ),
+                    }
+                )
+                succeeded.append(item)
+            except TemplateSyntaxError as e:
+                logger.error("Creating a PDF file for {} results in {}".format(item, e))
+                failed.append(item)
         else:
             failed.append(item)
 
@@ -408,12 +412,11 @@ def send_request_email(
     return True
 
 
-def store_subscription_list(subscription_list: [int]) -> [Subscription]:
+def store_subscription_list(subscription_list: []) -> set:
     """
     Create a set with all ids corresponding to subscription items in subscription_list.
 
-    :param subscription_list: a list of items containing ids corresponding to the subscription objects to add to the
-    returned set
+    :param subscription_list: the list of dictionaries with (at least) id key-values corresponding to subscription objects
     :return: a set with all subscriptions having a corresponding id in the items in subscription_list
     """
     subscription_objects = set()
@@ -425,13 +428,13 @@ def store_subscription_list(subscription_list: [int]) -> [Subscription]:
 
 
 def handle_verification_request(
-    user_information: dict, subscription_list: [int]
+    user_information: dict, subscription_list: []
 ) -> Union[QueuedMailList, bool]:
     """
     Handle a verification request, generate a QueuedMailList.
 
     :param user_information: the user information to add to the QueuedMailList
-    :param subscription_list: the list of items with ids corresponding to subscription objects
+    :param subscription_list: the list of dictionaries with (at least) id key-values corresponding to subscription objects
     :return: True if a QueuedMailList was generated, False otherwise
     """
     subscription_objects = store_subscription_list(subscription_list)

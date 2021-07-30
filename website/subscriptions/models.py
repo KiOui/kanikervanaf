@@ -335,14 +335,6 @@ class SubscriptionCategory(SubscriptionObject):
         """
         return SubscriptionCategory.objects.filter(category=None)
 
-    def get_children(self):
-        """
-        Get all the children of a category.
-
-        :return: a QuerySet with all children of the category
-        """
-        return SubscriptionCategory.objects.filter(category=self)
-
     def get_family_tree(self, already_visited=None):
         """
         Get all family members of a category.
@@ -351,17 +343,21 @@ class SubscriptionCategory(SubscriptionObject):
         :return: a list with all family members of a category.
         """
         if already_visited is None:
-            already_visited = [self]
-        elif self in already_visited:
+            already_visited = []
+
+        if self in already_visited:
             return []
         else:
             already_visited.append(self)
 
-        children = [x for x in self.get_children()]
-        for child in children:
-            children = children + child.get_family_tree(already_visited=already_visited)
+        children_visiting = [x for x in self.get_subcategories(order="id")]
+        all_children = []
+        for child in children_visiting:
+            all_children = all_children + child.get_family_tree(
+                already_visited=already_visited
+            )
 
-        return [self] + children
+        return [self] + all_children
 
     def get_path_to_me(self):
         """
