@@ -49,6 +49,7 @@ class SubscriptionAdmin(ImportExportModelAdmin):
     ]
 
     def get_has_registered_price(self, obj):
+        """Get if a subscription has a registered price."""
         return obj.has_registered_price()
 
     get_has_registered_price.boolean = True
