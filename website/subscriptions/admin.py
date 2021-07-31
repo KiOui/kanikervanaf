@@ -143,7 +143,7 @@ class SubscriptionCategoryAdmin(ImportExportModelAdmin, OrderedModelAdmin):
     """Admin model for subscription categories."""
 
     search_fields = ["name"]
-    list_display = ["name", "category", "move_up_down_links", "order"]
+    list_display = ["name", "category", "move_up_down_links"]
     list_filter = [CategoryParentFilter, "category"]
     prepopulated_fields = {"slug": ("name",)}
     ordering = ["category", "order"]
