@@ -6,6 +6,7 @@ import datetime
 import pytz
 from django.conf import settings
 from tinymce.models import HTMLField
+from ordered_model.models import OrderedModel
 
 
 TEMPLATE_FILE_DIRECTORY = "templates/"
@@ -278,8 +279,10 @@ class Subscription(SubscriptionObject):
         ordering = ["name"]
 
 
-class SubscriptionCategory(SubscriptionObject):
+class SubscriptionCategory(SubscriptionObject, OrderedModel):
     """Category for subscriptions."""
+
+    order_with_respect_to = "category"
 
     class Meta:
         """Enforcing that there can not be two categories under a parent with same slug."""

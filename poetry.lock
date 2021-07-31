@@ -278,6 +278,14 @@ requests = ">=2.13.0"
 six = "*"
 
 [[package]]
+name = "django-ordered-model"
+version = "3.4.3"
+description = "Allows Django models to be ordered and provides a simple admin interface for reordering them."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "django-recaptcha"
 version = "2.0.6"
 description = "Django recaptcha form field/widget app."
@@ -927,7 +935,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pyt
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "a55191852357eb2b961c226250a90c50592528a0f3d3c6ce81b3f671a6ff2c81"
+content-hash = "84b9289787ba49a0d402a725347f2bd375eb264d751222c8e21de37b70da45b8"
 
 [metadata.files]
 appdirs = [
@@ -1115,6 +1123,10 @@ django-import-export = [
 django-oauth-toolkit = [
     {file = "django-oauth-toolkit-1.5.0.tar.gz", hash = "sha256:650e5ef2244d1d8db8f507137e0d1e8b8aad1f4086a4a610526e8851f9a38308"},
     {file = "django_oauth_toolkit-1.5.0-py3-none-any.whl", hash = "sha256:b2e346a7c1e222774bfb370f21b556b92b408395b4c23914e2d1b241b2e5376a"},
+]
+django-ordered-model = [
+    {file = "django-ordered-model-3.4.3.tar.gz", hash = "sha256:3a8a0259bfd73a0c0b124932bb1fe59a6d2f4cbea096b20634d2a2d1f5d585cc"},
+    {file = "django_ordered_model-3.4.3-py3-none-any.whl", hash = "sha256:5aa58277b81b4ca93fb18caf15069af604bac5c5146d2c29aae56da07a86ef1b"},
 ]
 django-recaptcha = [
     {file = "django_recaptcha-2.0.6-py2.py3-none-any.whl", hash = "sha256:567784963fd5400feaf92e8951d8dbbbdb4b4c48a76e225d4baa63a2c9d2cd8c"},

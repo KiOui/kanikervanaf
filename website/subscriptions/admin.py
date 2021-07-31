@@ -4,6 +4,7 @@ from django.urls import reverse, path, register_converter
 from subscriptions import models
 from admin_auto_filters.filters import AutocompleteFilter
 from import_export.admin import ImportExportModelAdmin
+from ordered_model.admin import OrderedModelAdmin
 
 from subscriptions.admin_views import (
     SubscriptionLetterTemplateEditorView,
@@ -138,13 +139,14 @@ class CategoryParentFilter(AutocompleteFilter):
 
 
 @admin.register(models.SubscriptionCategory)
-class SubscriptionCategoryAdmin(ImportExportModelAdmin):
+class SubscriptionCategoryAdmin(ImportExportModelAdmin, OrderedModelAdmin):
     """Admin model for subscription categories."""
 
     search_fields = ["name"]
-    list_display = ["name", "category"]
+    list_display = ["name", "category", "move_up_down_links"]
     list_filter = [CategoryParentFilter, "category"]
     prepopulated_fields = {"slug": ("name",)}
+    ordering = ["category", "order"]
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
         """

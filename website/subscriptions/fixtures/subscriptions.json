@@ -20,7 +20,8 @@
         "cancellation_number": null,
         "amount_used": 1,
         "can_generate_letter": false,
-        "can_generate_email": false
+        "can_generate_email": false,
+        "explanation_field": ""
     }
 },
 {
@@ -44,7 +45,8 @@
         "cancellation_number": null,
         "amount_used": 1,
         "can_generate_letter": false,
-        "can_generate_email": false
+        "can_generate_email": false,
+        "explanation_field": ""
     }
 },
 {
@@ -68,7 +70,8 @@
         "cancellation_number": null,
         "amount_used": 1,
         "can_generate_letter": false,
-        "can_generate_email": false
+        "can_generate_email": false,
+        "explanation_field": ""
     }
 },
 {
@@ -92,7 +95,8 @@
         "cancellation_number": null,
         "amount_used": 1,
         "can_generate_letter": true,
-        "can_generate_email": false
+        "can_generate_email": false,
+        "explanation_field": ""
     }
 },
 {
@@ -116,7 +120,8 @@
         "cancellation_number": null,
         "amount_used": 1,
         "can_generate_letter": false,
-        "can_generate_email": false
+        "can_generate_email": false,
+        "explanation_field": ""
     }
 },
 {
@@ -140,7 +145,8 @@
         "cancellation_number": null,
         "amount_used": 1,
         "can_generate_letter": true,
-        "can_generate_email": false
+        "can_generate_email": false,
+        "explanation_field": ""
     }
 },
 {
@@ -164,7 +170,8 @@
         "cancellation_number": null,
         "amount_used": 1,
         "can_generate_letter": true,
-        "can_generate_email": false
+        "can_generate_email": false,
+        "explanation_field": ""
     }
 },
 {
@@ -188,7 +195,8 @@
         "cancellation_number": null,
         "amount_used": 1,
         "can_generate_letter": false,
-        "can_generate_email": false
+        "can_generate_email": false,
+        "explanation_field": ""
     }
 },
 {
@@ -212,7 +220,8 @@
         "cancellation_number": null,
         "amount_used": 1,
         "can_generate_letter": false,
-        "can_generate_email": false
+        "can_generate_email": false,
+        "explanation_field": ""
     }
 },
 {
@@ -236,7 +245,8 @@
         "cancellation_number": null,
         "amount_used": 6,
         "can_generate_letter": false,
-        "can_generate_email": false
+        "can_generate_email": false,
+        "explanation_field": ""
     }
 },
 {
@@ -260,7 +270,8 @@
         "cancellation_number": null,
         "amount_used": 1,
         "can_generate_letter": false,
-        "can_generate_email": false
+        "can_generate_email": false,
+        "explanation_field": ""
     }
 },
 {
@@ -284,7 +295,8 @@
         "cancellation_number": null,
         "amount_used": 1,
         "can_generate_letter": false,
-        "can_generate_email": false
+        "can_generate_email": false,
+        "explanation_field": ""
     }
 },
 {
@@ -308,13 +320,15 @@
         "cancellation_number": null,
         "amount_used": 1,
         "can_generate_letter": false,
-        "can_generate_email": true
+        "can_generate_email": true,
+        "explanation_field": ""
     }
 },
 {
     "model": "subscriptions.subscriptioncategory",
     "pk": 1,
     "fields": {
+        "order": 0,
         "name": "News papers",
         "slug": "news-papers",
         "category": null,
@@ -326,6 +340,7 @@
     "model": "subscriptions.subscriptioncategory",
     "pk": 2,
     "fields": {
+        "order": 1,
         "name": "Lotteries",
         "slug": "lotteries",
         "category": null,
@@ -337,6 +352,7 @@
     "model": "subscriptions.subscriptioncategory",
     "pk": 3,
     "fields": {
+        "order": 2,
         "name": "Fitness",
         "slug": "fitness",
         "category": null,
@@ -348,6 +364,7 @@
     "model": "subscriptions.subscriptioncategory",
     "pk": 4,
     "fields": {
+        "order": 3,
         "name": "Multimedia",
         "slug": "multimedia",
         "category": null,
@@ -359,6 +376,7 @@
     "model": "subscriptions.subscriptioncategory",
     "pk": 5,
     "fields": {
+        "order": 0,
         "name": "T-Mobile",
         "slug": "t-mobile",
         "category": 4,
@@ -370,6 +388,7 @@
     "model": "subscriptions.subscriptioncategory",
     "pk": 6,
     "fields": {
+        "order": 1,
         "name": "AT&T",
         "slug": "att",
         "category": 4,
@@ -381,6 +400,7 @@
     "model": "subscriptions.subscriptioncategory",
     "pk": 7,
     "fields": {
+        "order": 2,
         "name": "Verizon",
         "slug": "verizon",
         "category": 4,
@@ -392,6 +412,7 @@
     "model": "subscriptions.subscriptioncategory",
     "pk": 8,
     "fields": {
+        "order": 0,
         "name": "Basic Fit",
         "slug": "basic-fit",
         "category": 3,
@@ -403,6 +424,7 @@
     "model": "subscriptions.subscriptioncategory",
     "pk": 9,
     "fields": {
+        "order": 1,
         "name": "Fit for free",
         "slug": "fit-for-free",
         "category": 3,
@@ -414,6 +436,7 @@
     "model": "subscriptions.subscriptioncategory",
     "pk": 10,
     "fields": {
+        "order": 3,
         "name": "Streaming",
         "slug": "streaming",
         "category": 4,
@@ -425,6 +448,7 @@
     "model": "subscriptions.subscriptioncategory",
     "pk": 11,
     "fields": {
+        "order": 0,
         "name": "Netflix",
         "slug": "netflix",
         "category": 10,
@@ -436,6 +460,7 @@
     "model": "subscriptions.subscriptioncategory",
     "pk": 12,
     "fields": {
+        "order": 1,
         "name": "Disney Plus",
         "slug": "disney-plus",
         "category": 10,

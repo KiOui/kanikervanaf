@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django_filters",
     "oauth2_provider",
     "tinymce",
+    "ordered_model",
     "robots",
     "captcha",
     "kanikervanaf",
