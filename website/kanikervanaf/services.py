@@ -8,7 +8,7 @@ from django.template.loader import get_template
 logger = logging.getLogger(__name__)
 
 
-def send_contact_email(name, email_address, title, message):
+def send_contact_email(name: str, email_address: str, title: str, message: str):
     """
     Construct and send a contact email.
 
