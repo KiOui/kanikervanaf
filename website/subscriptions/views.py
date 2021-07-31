@@ -82,7 +82,9 @@ class SubscriptionListView(TemplateView):
         :param kwargs: keyword arguments
         :return: the subscription_select.html page with a top five of all top-level categories
         """
-        top_level_categories = SubscriptionCategory.get_top_level_categories()
+        top_level_categories = SubscriptionCategory.get_top_level_categories().order_by(
+            "order"
+        )
         for category in top_level_categories:
             category.top = Subscription.top_category(category, order_by="-amount_used")
         return render(request, self.template_name, {"categories": top_level_categories})
