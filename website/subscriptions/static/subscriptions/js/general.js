@@ -108,16 +108,13 @@ function set_list(list) {
 
 function refresh_all() {
 	if (typeof subscription_search_vue === "object") {
-		subscription_search_vue.selected_subscriptions = get_list();
+		subscription_search_vue.refresh()
 	}
 	if (typeof subscription_list_vue === "object") {
-		subscription_list_vue.selected_subscriptions = get_list();
+		subscription_list_vue.refresh()
 	}
 	if (typeof renew_categories === "function") {
 		renew_categories();
-	}
-	if (typeof disable_buttons === "function") {
-		disable_buttons();
 	}
 }
 

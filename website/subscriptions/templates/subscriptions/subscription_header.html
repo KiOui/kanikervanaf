@@ -1,6 +1,6 @@
 {% load static %}
 
-<script src="{% static 'kanikervanaf/js/general.js' %}"></script>
+<script src="{% static 'subscriptions/js/general.js' %}"></script>
 
 <div class="container-fluid">
     <h1 class="mb-5"><strong>Selecteer abonnementen</strong></h1>
@@ -61,7 +61,7 @@
             selected_subscriptions: [],
         },
         created() {
-            this.selected_subscriptions = get_list();
+            this.refresh();
         },
         methods: {
             set_timer() {
@@ -98,6 +98,9 @@
                 set_list(list);
                 refresh_all();
             },
+            refresh() {
+                this.selectedSubscriptions = get_list();
+            }
         }
     });
 </script>

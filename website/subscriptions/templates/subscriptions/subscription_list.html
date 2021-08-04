@@ -5,10 +5,10 @@
         <h2>Uw besparing</h2>
         <div class="border"></div>
         <p>Minimaal bespaard bedrag per jaar:</p>
-        <p class="subscriptions-list-total">€<% get_sum() %></p>
+        <p class="subscriptions-list-total">€<% sum %></p>
         <div class="border"></div>
-        <div class="center-button">
-            <a class="mt-3 mb-3 btn btn-primary {{ button_id }}" href="{% url next_page %}">
+        <div v-if="buttonEnabled" class="center-button">
+            <a class="mt-3 mb-3 btn btn-primary" href="{% url next_page %}">
                 {% if button_text %}
                     {{ button_text }}
                 {% else %}
@@ -17,9 +17,9 @@
                 <i class="fas fa-angle-double-right"></i>
             </a>
         </div>
-        <div v-if="selected_subscriptions.length > 0">
-            <div v-for="subscription in selected_subscriptions" class="menu-link">
-                <input name="checkbox-subscripiton-list" type="checkbox" class="normal-checkbox" v-on:click.prevent="toggle_checkbox(this, subscription, true)" checked ></input>
+        <div v-if="selectedSubscriptions.length > 0">
+            <div v-for="subscription in selectedSubscriptions" class="menu-link">
+                <input name="checkbox-subscripiton-list" type="checkbox" class="normal-checkbox" v-on:click.prevent="toggle_checkbox(this, subscription, true)" checked :id=`checkbox-list-${subscription.id}`></input>
                 <label :for="`checkbox-list-${subscription.id}`"><% subscription.name %></label>
                 <div class="icons">
                     <i v-if="subscription.has_price" class='far fa-euro-sign'></i>
@@ -34,7 +34,7 @@
     {% if scroller %}
         <footer class="page-footer navbar navbar-expand-md fixed-bottom d-md-none" style="background-color: black">
             <div class="container">
-                <div class="text-white"><div class="subscriptions-list-total" style="display: inline-block;">€<% get_sum() %></div> bespaard</div>
+                <div class="text-white"><div class="subscriptions-list-total" style="display: inline-block;">€<% sum %></div> bespaard</div>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#footer-menu">
                     Volgende stap <i class="fas fa-angle-double-right"></i>
                 </button>
@@ -51,11 +51,10 @@
                         <h2>Uw besparing</h2>
                         <div class="border"></div>
                         <p>Minimaal bespaard bedrag per jaar:</p>
-                        <p class="subscriptions-list-total">€<% get_sum() %></p>
+                        <p class="subscriptions-list-total">€<% sum %></p>
                         <div class="border"></div>
-                        <div class="center-button">
-                            <a class="mt-3 mb-3 btn btn-primary {{ button_id }}"
-                                    href="{% url next_page %}">
+                        <div v-if="buttonEnabled" class="center-button">
+                            <a class="mt-3 mb-3 btn btn-primary" href="{% url next_page %}">
                                 {% if button_text %}
                                     {{ button_text }}
                                 {% else %}
@@ -64,9 +63,9 @@
                                 <i class="fas fa-angle-double-right"></i>
                             </a>
                         </div>
-                         <div v-if="selected_subscriptions.length > 0">
-                            <div v-for="subscription in selected_subscriptions" class="menu-link">
-                                <input name="checkbox-subscripiton-list" type="checkbox" class="normal-checkbox" v-on:click.prevent="toggle_checkbox(this, subscription, true)" checked ></input>
+                         <div v-if="selectedSubscriptions.length > 0">
+                            <div v-for="subscription in selectedSubscriptions" class="menu-link">
+                                <input name="checkbox-subscripiton-list" type="checkbox" class="normal-checkbox" v-on:click.prevent="toggle_checkbox(this, subscription, true)" checked :id=`checkbox-list-${subscription.id}`></input>
                                 <label :for="`checkbox-list-${subscription.id}`"><% subscription.name %></label>
                                 <div class="icons">
                                     <i v-if="subscription.has_price" class='far fa-euro-sign'></i>
@@ -85,8 +84,7 @@
         </div>
     {% endif %}
 </div>
-<script src="{% static 'kanikervanaf/js/general.js' %}"></script>
-<script src="{% static 'subscriptions/js/buttons.js' %}"></script>
+<script src="{% static 'subscriptions/js/general.js' %}"></script>
 <link rel="stylesheet" href="{% static 'subscriptions/css/categories.css' %}"/>
 <link rel="stylesheet" href="{% static 'subscriptions/css/full-screen-footer.css' %}"/>
 <script>
@@ -94,10 +92,35 @@
         el: '#subscription-list',
         delimiters: ['<%', '%>'],
         data: {
-            selected_subscriptions: [],
+            selectedSubscriptions: [],
+            enteredDetails: {},
         },
         created() {
-            this.selected_subscriptions = get_list();
+            this.refresh();
+        },
+        computed: {
+            sum: function() {
+                if (this.selectedSubscriptions.length == 0) {
+                    return "0,00";
+                }
+                else {
+                    return this.selectedSubscriptions.map(value => {
+                        return value.price
+                    }).reduce((previousValue, currentValue) => {
+                            return previousValue + currentValue
+                        }
+                    ).toFixed(2).toString().replace('.', ',');
+                }
+            },
+            buttonEnabled: function() {
+                {% if button_enabled == "subscriptions" %}
+                    return this.selectedSubscriptions.length > 0;
+                {% elif button_enabled == "details" %}
+                    return this.enteredDetails.email && this.enteredDetails.first_name;
+                {% else %}
+                    return this.selectedSubscriptions.length > 0 && this.enteredDetails.email && this.enteredDetails.first_name;
+                {% endif %}
+            }
         },
         methods: {
             toggle_checkbox(checkbox, subscription, checked) {
@@ -119,18 +142,9 @@
                 set_list(list);
                 refresh_all();
             },
-            get_sum() {
-                if (this.selected_subscriptions.length == 0) {
-                    return "0,00";
-                }
-                else {
-                    return this.selected_subscriptions.map(value => {
-                        return value.price
-                    }).reduce((previousValue, currentValue) => {
-                            return previousValue + currentValue
-                        }
-                    ).toFixed(2).toString().replace('.', ',');
-                }
+            refresh() {
+                this.selectedSubscriptions = get_list();
+                this.enteredDetails = get_details();
             }
         }
     });
