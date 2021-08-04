@@ -37,3 +37,6 @@ django-doctor = "^2.5.0"
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
+
+[tool.djangodoctor]
+disable = ["model-common-prefix"]
