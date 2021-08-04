@@ -154,7 +154,8 @@ class Subscription(SubscriptionObject):
     support_city = models.TextField(
         blank=True, default="", help_text="The city for the support reply number."
     )
-    correspondence_address = models.TextField(
+    correspondence_address = models.CharField(
+        max_length=512,
         blank=True,
         default="",
         help_text="The correspondence address of the subscription provider.",
