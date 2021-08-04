@@ -33,8 +33,9 @@ from subscriptions.sitemaps import (
     SubscriptionDetailsSitemap,
     SubscriptionSummarySitemap,
     SubscriptionRequestSitemap,
+    EnterUserSitemap,
 )
-from users.sitemaps import EnterUserSitemap, UserSitemap
+from users.sitemaps import UserSitemap
 
 sitemaps = {
     "home": HomeSitemap,
@@ -50,7 +51,7 @@ sitemaps = {
     "subscriptions:requets": SubscriptionRequestSitemap,
     "subscriptions:details_search": SubscriptionDetailsSearchSitemap,
     "subscriptions:details": SubscriptionDetailsSitemap,
-    "users:enter": EnterUserSitemap,
+    "subscriptions:enter": EnterUserSitemap,
     "users": UserSitemap,
 }
 

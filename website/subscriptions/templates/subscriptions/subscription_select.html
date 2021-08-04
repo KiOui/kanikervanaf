@@ -28,7 +28,7 @@
 {% endblock %}
 {% block sidebar %}
     <div class="container-scroller">
-        {% include "subscriptions/subscription_list.html" with next_page="users:enter" button_enabled="subscriptions" scroller=True %}
+        {% include "subscriptions/subscription_list.html" with next_page="subscriptions:enter" button_enabled="subscriptions" scroller=True %}
     </div>
 {% endblock %}
 {% block js %}

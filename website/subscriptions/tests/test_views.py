@@ -167,3 +167,7 @@ class SubscriptionViews(TestCase):
             reverse("subscriptions:admin_template_information")
         )
         self.assertEqual(response_authorized.status_code, 200)
+
+    def test_basic_user_information_view(self):
+        response = self.client.get(reverse("subscriptions:enter"))
+        self.assertEqual(response.status_code, 200)

@@ -15,6 +15,7 @@ from .views import (
     verify,
     VerificationSendFailed,
     AdminTemplateInformationView,
+    BasicUserInformation,
 )
 from .converters import SubscriptionConverter, SubscriptionCategoryConverter
 
@@ -64,6 +65,7 @@ urlpatterns = [
         VerificationSendFailed.as_view(),
         name="verification_send_failed",
     ),
+    path("enter", BasicUserInformation.as_view(), name="enter",),
     path(
         "admin/template-information",
         AdminTemplateInformationView.as_view(),

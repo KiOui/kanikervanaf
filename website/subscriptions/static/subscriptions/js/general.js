@@ -108,10 +108,10 @@ function set_list(list) {
 
 function refresh_all() {
 	if (typeof subscription_search_vue === "object") {
-		subscription_search_vue.refresh()
+		subscription_search_vue.refresh();
 	}
 	if (typeof subscription_list_vue === "object") {
-		subscription_list_vue.refresh()
+		subscription_list_vue.refresh();
 	}
 	if (typeof renew_categories === "function") {
 		renew_categories();

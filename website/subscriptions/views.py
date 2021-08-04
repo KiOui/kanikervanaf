@@ -20,11 +20,54 @@ from .services import (
 )
 from django.urls import reverse
 from subscriptions.services import send_verification_email, send_request_email
-from .forms import RequestForm
+from .forms import RequestForm, EnterUserInformationForm
 import logging
 from django.http import HttpResponsePermanentRedirect
+import json
+from urllib.parse import unquote_plus
 
 logger = logging.getLogger(__name__)
+
+
+class BasicUserInformation(TemplateView):
+    """View for entering user information."""
+
+    cookie_name = "subscription_details"
+
+    template_name = "subscriptions/enter_information.html"
+
+    def _is_cookie_empty(self, cookie):
+        if cookie is not None:
+            try:
+                loaded_data = json.loads(unquote_plus(cookie))
+            except json.JSONDecodeError:
+                return True
+            if type(loaded_data) == dict:
+                for key in loaded_data.keys():
+                    if bool(loaded_data[key]):
+                        return False
+        return True
+
+    def get(self, request, **kwargs):
+        """
+        GET request for user information view.
+
+        :param request: the request
+        :param kwargs: keyword arguments
+        :return: render of the enter_information page
+        """
+        if request.user.is_authenticated and self._is_cookie_empty(
+            request.COOKIES.get("subscription_details", None)
+        ):
+            return render(
+                request,
+                self.template_name,
+                {"form": EnterUserInformationForm(user=request.user)},
+            )
+        else:
+            return render(
+                request, self.template_name, {"form": EnterUserInformationForm()}
+            )
 
 
 class SubscriptionDetailsSearchView(TemplateView):
