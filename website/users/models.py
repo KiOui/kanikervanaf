@@ -125,7 +125,9 @@ class User(AbstractUser):
 class PasswordReset(models.Model):
     """Queued password resets object."""
 
-    user = models.ForeignKey(User, related_name="password_resets", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, related_name="password_resets", on_delete=models.CASCADE
+    )
     token = models.CharField(max_length=64, unique=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -169,7 +171,9 @@ class PasswordReset(models.Model):
 class EmailUpdate(models.Model):
     """Queued email update model."""
 
-    user = models.ForeignKey(User, related_name="email_updates", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, related_name="email_updates", on_delete=models.CASCADE
+    )
     token = models.CharField(max_length=64, unique=True)
     created = models.DateTimeField(auto_now_add=True)
     email_address = models.EmailField(max_length=512)

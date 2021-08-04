@@ -17,7 +17,9 @@ class Post(models.Model):
     TIME_FORMAT = "%H:%M"
 
     title = models.CharField(max_length=256)
-    author = models.ForeignKey(User, related_name="posts", on_delete=models.SET_NULL, null=True, blank=True)
+    author = models.ForeignKey(
+        User, related_name="posts", on_delete=models.SET_NULL, null=True, blank=True
+    )
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
     content = models.TextField()

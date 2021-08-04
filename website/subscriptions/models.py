@@ -243,10 +243,7 @@ class Subscription(SubscriptionObject):
         First uses the support address (if complete), then uses the correspondence address
         :return: a tuple (address, postal_code, residence)
         """
-        if (
-            self.support_reply_number != ""
-            and self.support_postal_code != ""
-        ):
+        if self.support_reply_number != "" and self.support_postal_code != "":
             return (
                 self.support_reply_number_prefixed,
                 self.support_postal_code,
