@@ -110,8 +110,8 @@ function refresh_all() {
 	if (typeof subscription_search_vue === "object") {
 		subscription_search_vue.selected_subscriptions = get_list();
 	}
-	if (typeof renew_list === "function") {
-		renew_list();
+	if (typeof subscription_list_vue === "object") {
+		subscription_list_vue.selected_subscriptions = get_list();
 	}
 	if (typeof renew_categories === "function") {
 		renew_categories();
