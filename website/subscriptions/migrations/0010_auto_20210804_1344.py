@@ -3,6 +3,30 @@
 from django.db import migrations, models
 
 
+def set_fields_to_non_null(apps, schema_editor):
+    Subscription = apps.get_model("subscriptions", "Subscription")
+    for subscription in Subscription.objects.all():
+        if subscription.support_email is None:
+            subscription.support_email = ""
+        if subscription.support_reply_number is None:
+            subscription.support_reply_number = ""
+        if subscription.support_postal_code is None:
+            subscription.support_postal_code = ""
+        if subscription.support_city is None:
+            subscription.support_city = ""
+        if subscription.correspondence_address is None:
+            subscription.correspondence_address = ""
+        if subscription.correspondence_postal_code is None:
+            subscription.correspondence_postal_code = ""
+        if subscription.correspondence_city is None:
+            subscription.correspondence_city = ""
+        if subscription.support_phone_number is None:
+            subscription.support_phone_number = ""
+        if subscription.cancellation_number is None:
+            subscription.cancellation_number = ""
+        subscription.save()
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -10,6 +34,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunPython(set_fields_to_non_null, migrations.RunPython.noop),
         migrations.AlterField(
             model_name="queuedmaillist",
             name="address",
