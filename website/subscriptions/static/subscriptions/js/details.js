@@ -12,9 +12,7 @@ function update_cookie(first_name, second_name, address, postal_code, residence,
 
 function update() {
 	update_cookie(firstname_select.value, lastname_select.value, address_select.value, postalcode_select.value, residence_select.value, email_select.value);
-	if (typeof disable_buttons === "function") {
-		disable_buttons();
-	}
+	refresh_all();
 }
 
 function putback_details() {

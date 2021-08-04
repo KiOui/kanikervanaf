@@ -24,10 +24,10 @@
 {% endblock %}
 
 {% block sidebar %}
-    {% include "subscriptions/subscription_list.html" with next_page="subscriptions:summary" button_id="subscription-disable-button-no-details" scroller=False %}
+    {% include "subscriptions/subscription_list.html" with next_page="subscriptions:summary" button_enabled="details" scroller=False %}
 {% endblock %}
 
 {% block js %}
-    <script src="{% static 'kanikervanaf/js/general.js' %}"></script>
-    <script src="{% static 'users/js/details.js' %}"></script>
+    <script src="{% static 'subscriptions/js/general.js' %}"></script>
+    <script src="{% static 'subscriptions/js/details.js' %}"></script>
 {% endblock %}

@@ -1,6 +1,6 @@
 {% load static %}
 
-<script src="{% static 'kanikervanaf/js/general.js' %}"></script>
+<script src="{% static 'subscriptions/js/general.js' %}"></script>
 
 <div class="container-fluid">
     <h1 class="mb-5"><strong>Selecteer abonnementen</strong></h1>
@@ -25,7 +25,7 @@
     <div id="selection-container-id" v-if="search_query != ''">
         <template v-if="subscriptions.length > 0">
             <div v-for="subscription in subscriptions" class="menu-link">
-                <input name="checkbox-search-list" type="checkbox" class="normal-checkbox" v-on:change="toggle_checkbox(this, subscription, in_list(selected_subscriptions, subscription.id))" :checked="in_list(selected_subscriptions, subscription.id)" :id="`checkbox-search-${subscription.id}`"></input>
+                <input name="checkbox-search-list" type="checkbox" class="normal-checkbox" v-on:click="toggle_checkbox(this, subscription, in_list(selectedSubscriptions, subscription.id))" :checked="in_list(selectedSubscriptions, subscription.id)" :id="`checkbox-search-${subscription.id}`"></input>
                 <label :for="`checkbox-search-${subscription.id}`"><% subscription.name %></label>
                 <div class="icons">
                     <i v-if="has_price(subscription)" class='far fa-euro-sign'></i>
@@ -58,10 +58,10 @@
             search_query: "",
             typing_timer: null,
             loading: false,
-            selected_subscriptions: [],
+            selectedSubscriptions: [],
         },
         created() {
-            this.selected_subscriptions = get_list();
+            this.refresh();
         },
         methods: {
             set_timer() {
@@ -83,7 +83,7 @@
                 let list = get_list();
                 if (!checked) {
                     if (!in_list(list, subscription.id)) {
-                        list.push({"id": subscription.id, "price": subscription.price, "name": subscription.name, "has_email": has_mail(subscription), "has_letter": has_letter(subscription), "has_price": has_price(subscription)});
+                        list.push({"id": subscription.id, "price": parseFloat(subscription.price), "name": subscription.name, "has_email": has_mail(subscription), "has_letter": has_letter(subscription), "has_price": has_price(subscription)});
                     }
                 }
                 else {
@@ -98,6 +98,9 @@
                 set_list(list);
                 refresh_all();
             },
+            refresh() {
+                this.selectedSubscriptions = get_list();
+            }
         }
     });
 </script>

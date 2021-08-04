@@ -28,10 +28,10 @@
 {% endblock %}
 {% block sidebar %}
     <div class="container-scroller">
-        {% include "subscriptions/subscription_list.html" with next_page="users:enter" button_id="subscription-disable-button-no-items" scroller=True %}
+        {% include "subscriptions/subscription_list.html" with next_page="subscriptions:enter" button_enabled="subscriptions" scroller=True %}
     </div>
 {% endblock %}
 {% block js %}
-    <script src="{% static 'kanikervanaf/js/general.js' %}"></script>
+    <script src="{% static 'subscriptions/js/general.js' %}"></script>
     <script src="{% static 'subscriptions/js/categories.js' %}"></script>
 {% endblock %}
