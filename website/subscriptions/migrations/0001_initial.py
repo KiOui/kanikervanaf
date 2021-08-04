@@ -69,7 +69,9 @@ class Migration(migrations.Migration):
                 ("amount_used", models.PositiveIntegerField(default=1)),
                 ("slug", models.SlugField(max_length=100, unique=True)),
             ],
-            options={"ordering": ["name"],},
+            options={
+                "ordering": ["name"],
+            },
         ),
         migrations.CreateModel(
             name="SubscriptionSearchTerm",

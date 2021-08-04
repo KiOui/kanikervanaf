@@ -23,8 +23,16 @@ register_converter(SubscriptionConverter, "subscription")
 register_converter(SubscriptionCategoryConverter, "category")
 
 urlpatterns = [
-    path("", SubscriptionListView.as_view(), name="overview",),
-    path("<category:category>", ListCategoryView.as_view(), name="overview_category",),
+    path(
+        "",
+        SubscriptionListView.as_view(),
+        name="overview",
+    ),
+    path(
+        "<category:category>",
+        ListCategoryView.as_view(),
+        name="overview_category",
+    ),
     path(
         "<int:category>",
         ListCategoryRedirectView.as_view(),
@@ -40,8 +48,16 @@ urlpatterns = [
         ListCategoryPageRedirectView.as_view(),
         name="overview_category_page_redirect",
     ),
-    path("summary", SummaryView.as_view(), name="summary",),
-    path("send", verification_send, name="send",),
+    path(
+        "summary",
+        SummaryView.as_view(),
+        name="summary",
+    ),
+    path(
+        "send",
+        verification_send,
+        name="send",
+    ),
     path("request", RequestView.as_view(), name="request"),
     path("details", SubscriptionDetailsSearchView.as_view(), name="details_search"),
     path(
@@ -54,7 +70,11 @@ urlpatterns = [
         SubscriptionDetailsRedirectView.as_view(),
         name="details_redirect",
     ),
-    path("verify/<str:token>", verify, name="verify",),
+    path(
+        "verify/<str:token>",
+        verify,
+        name="verify",
+    ),
     path(
         "verification-request/succeeded",
         VerificationSendSucceeded.as_view(),
@@ -65,7 +85,11 @@ urlpatterns = [
         VerificationSendFailed.as_view(),
         name="verification_send_failed",
     ),
-    path("enter", BasicUserInformation.as_view(), name="enter",),
+    path(
+        "enter",
+        BasicUserInformation.as_view(),
+        name="enter",
+    ),
     path(
         "admin/template-information",
         AdminTemplateInformationView.as_view(),

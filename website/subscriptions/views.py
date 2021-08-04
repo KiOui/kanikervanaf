@@ -269,7 +269,9 @@ def verification_send(request):
             reverse("subscriptions:verify", kwargs={"token": mail_list.token})
         )
         if send_verification_email(
-            mail_list.firstname, mail_list.email_address, verification_url,
+            mail_list.firstname,
+            mail_list.email_address,
+            verification_url,
         ):
             response = HttpResponseRedirect(
                 reverse("subscriptions:verification_send_succeeded")

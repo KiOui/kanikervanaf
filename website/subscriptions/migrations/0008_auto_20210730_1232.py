@@ -29,7 +29,10 @@ class Migration(migrations.Migration):
             name="explanation_field",
             field=tinymce.models.HTMLField(
                 blank=True,
-                help_text="Possible explanation of how to deregister from this subscription if deregistering via email or letter is not possible.",
+                help_text=(
+                    "Possible explanation of how to deregister from this subscription if"
+                    " deregistering via email or letter is not possible."
+                ),
             ),
         ),
         migrations.AddField(
@@ -38,7 +41,9 @@ class Migration(migrations.Migration):
             field=models.BooleanField(
                 default=False,
                 editable=False,
-                help_text="Whether or not this subscription can generate a deregistration email.",
+                help_text=(
+                    "Whether or not this subscription can generate a deregistration email."
+                ),
             ),
         ),
         migrations.AddField(
@@ -47,8 +52,10 @@ class Migration(migrations.Migration):
             field=models.BooleanField(
                 default=False,
                 editable=False,
-                help_text="Whether or not this subscription can generate a deregistration letter.",
+                help_text=(
+                    "Whether or not this subscription can generate a deregistration letter."
+                ),
             ),
         ),
-        migrations.RunPython(resave_subscriptions),
+        migrations.RunPython(resave_subscriptions, migrations.RunPython.noop),
     ]

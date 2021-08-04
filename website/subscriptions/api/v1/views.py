@@ -174,7 +174,10 @@ class SubscriptionRenderEmailAPIView(APIView):
         context = {}
         context.update(settings.DEFAULT_TEMPLATE_PARAMETERS)
         context.update(request.data.get("context", {}))
-        email = render_deregister_email(context, instance,)
+        email = render_deregister_email(
+            context,
+            instance,
+        )
         return Response(
             status=status.HTTP_200_OK, data=email, content_type="text/plain"
         )

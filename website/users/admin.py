@@ -22,7 +22,13 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ["email"]
 
     add_fieldsets = (
-        (None, {"classes": ("wide",), "fields": ("username", "email", "first_name"),}),
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": ("username", "email", "first_name"),
+            },
+        ),
     )
     inlines = (ProfileInline,)
 

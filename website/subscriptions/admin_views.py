@@ -28,7 +28,11 @@ class SubscriptionLetterTemplateEditorView(PermissionRequiredMixin, TemplateView
         """Get request."""
         instance = self.get_instance_obj()
         saved_template = self.get_saved_template()
-        (address, postal_code, city,) = self.get_default_address_information()
+        (
+            address,
+            postal_code,
+            city,
+        ) = self.get_default_address_information()
         return render(
             request,
             self.template_name,
@@ -58,7 +62,11 @@ class SubscriptionLetterTemplateEditorView(PermissionRequiredMixin, TemplateView
         """Post request."""
         instance = self.get_instance_obj()
         saved_template = self.get_saved_template()
-        (address, postal_code, city,) = self.get_default_address_information()
+        (
+            address,
+            postal_code,
+            city,
+        ) = self.get_default_address_information()
         if "source" in request.POST.keys():
             self.save(request.POST["source"])
             return render(

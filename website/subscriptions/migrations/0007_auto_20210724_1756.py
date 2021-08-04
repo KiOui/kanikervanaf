@@ -23,6 +23,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(move_user_information),
-        migrations.RemoveField(model_name="queuedmaillist", name="user_information",),
+        migrations.RunPython(move_user_information, migrations.RunPython.noop),
+        migrations.RemoveField(model_name="queuedmaillist", name="user_information"),
     ]

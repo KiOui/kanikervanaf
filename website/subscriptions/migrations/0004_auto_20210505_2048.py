@@ -41,24 +41,32 @@ def change_db_file_locations(apps, schema_editor):
     SubscriptionCategory = apps.get_model("subscriptions", "SubscriptionCategory")
     for subscription in Subscription.objects.all():
         if subscription.letter_template:
-            subscription.letter_template = subscription.letter_template.__str__().replace(
-                "subscription", Subscription._meta.model_name, 1
+            subscription.letter_template = (
+                subscription.letter_template.__str__().replace(
+                    "subscription", Subscription._meta.model_name, 1
+                )
             )
         if subscription.email_template_text:
-            subscription.email_template_text = subscription.email_template_text.__str__().replace(
-                "subscription", Subscription._meta.model_name, 1
+            subscription.email_template_text = (
+                subscription.email_template_text.__str__().replace(
+                    "subscription", Subscription._meta.model_name, 1
+                )
             )
         if subscription.letter_template or subscription.email_template_text:
             subscription.save()
 
     for subscription_category in SubscriptionCategory.objects.all():
         if subscription_category.letter_template:
-            subscription_category.letter_template = subscription_category.letter_template.__str__().replace(
-                "subscription-category", SubscriptionCategory._meta.model_name, 1
+            subscription_category.letter_template = (
+                subscription_category.letter_template.__str__().replace(
+                    "subscription-category", SubscriptionCategory._meta.model_name, 1
+                )
             )
         if subscription_category.email_template_text:
-            subscription_category.email_template_text = subscription_category.email_template_text.__str__().replace(
-                "subscription-category", SubscriptionCategory._meta.model_name, 1
+            subscription_category.email_template_text = (
+                subscription_category.email_template_text.__str__().replace(
+                    "subscription-category", SubscriptionCategory._meta.model_name, 1
+                )
             )
         if (
             subscription_category.letter_template
@@ -74,6 +82,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(move_media_folders),
-        migrations.RunPython(change_db_file_locations),
+        migrations.RunPython(move_media_folders, migrations.RunPython.noop),
+        migrations.RunPython(change_db_file_locations, migrations.RunPython.noop),
     ]

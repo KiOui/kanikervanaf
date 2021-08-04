@@ -16,11 +16,11 @@ class Post(models.Model):
     DATE_FORMAT = "%Y-%m-%d"
     TIME_FORMAT = "%H:%M"
 
-    title = models.CharField(max_length=256, blank=False, null=False)
+    title = models.CharField(max_length=256)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
-    content = models.TextField(blank=False, null=False)
+    content = models.TextField()
     response_to = models.ForeignKey(
         "self",
         on_delete=models.CASCADE,

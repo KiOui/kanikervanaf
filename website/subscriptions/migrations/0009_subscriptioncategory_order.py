@@ -29,5 +29,7 @@ class Migration(migrations.Migration):
             ),
             preserve_default=False,
         ),
-        migrations.RunPython(reorder_subscription_category_model),
+        migrations.RunPython(
+            reorder_subscription_category_model, migrations.RunPython.noop
+        ),
     ]
