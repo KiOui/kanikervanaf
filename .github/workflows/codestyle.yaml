@@ -41,4 +41,4 @@ jobs:
       run: "poetry run pydocstyle --explain --add-ignore=D100,D104 --match-dir='(?!migrations).*' website"
       
     - name: "Run Django Doctor"
-      run: "django_doctor check"
+      run: "poetry run django_doctor check"
