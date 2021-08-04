@@ -233,10 +233,11 @@ class SubscriptionTest(TestCase):
             ).support_reply_number_prefixed,
             "Postbus 12345",
         )
-        self.assertIsNone(
+        self.assertEqual(
             Subscription.objects.get(
                 slug="basic-fit-netherlands"
-            ).support_reply_number_prefixed
+            ).support_reply_number_prefixed,
+            "",
         )
 
     def test_deregistered(self):

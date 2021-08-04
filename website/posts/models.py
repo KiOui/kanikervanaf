@@ -17,7 +17,7 @@ class Post(models.Model):
     TIME_FORMAT = "%H:%M"
 
     title = models.CharField(max_length=256)
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    author = models.ForeignKey(User, related_name="posts", on_delete=models.SET_NULL, null=True, blank=True)
     updated_on = models.DateTimeField(auto_now=True)
     created_on = models.DateTimeField(auto_now_add=True)
     content = models.TextField()
@@ -36,6 +36,19 @@ class Post(models.Model):
         "not anonymously placed).",
     )
 
+    class Meta:
+        """Meta class for Post objects."""
+
+        ordering = ["-created_on"]
+
+    def __str__(self):
+        """
+        Convert this object to string.
+
+        :return: a string format of this object
+        """
+        return "{} - {}".format(self.title, self.post_date)
+
     def save(self, *args, **kwargs):
         """Save method."""
         if self.author is not None:
@@ -48,15 +61,6 @@ class Post(models.Model):
         super(Post, self).save(*args, **kwargs)
 
     @property
-    def post_date(self):
-        """
-        Get the posts date of this object.
-
-        :return: a formatted posts date of this object
-        """
-        return "{}".format(self.created_on.strftime(self.DATE_FORMAT))
-
-    @property
     def author_name(self):
         """
         Get the posts author.
@@ -65,15 +69,11 @@ class Post(models.Model):
         """
         return self.author.username
 
-    def __str__(self):
+    @property
+    def post_date(self):
         """
-        Convert this object to string.
+        Get the posts date of this object.
 
-        :return: a string format of this object
+        :return: a formatted posts date of this object
         """
-        return "{} - {}".format(self.title, self.post_date)
-
-    class Meta:
-        """Meta class for Post objects."""
-
-        ordering = ["-created_on"]
+        return "{}".format(self.created_on.strftime(self.DATE_FORMAT))

@@ -53,6 +53,12 @@ class SubscriptionObject(models.Model):
         help_text="The template of the email to generate (as text).",
     )
 
+    class Meta:
+        """Meta class."""
+
+        unique_together = ("slug", "category")
+        abstract = True
+
     def __str__(self):
         """
         Convert this object to string.
@@ -110,12 +116,6 @@ class SubscriptionObject(models.Model):
                 settings.BASE_DIR,
                 "subscriptions/templates/email/deregister_mail.txt",
             )
-
-    class Meta:
-        """Meta class."""
-
-        unique_together = ("slug", "category")
-        abstract = True
 
 
 class Subscription(SubscriptionObject):
@@ -204,6 +204,11 @@ class Subscription(SubscriptionObject):
         blank=True,
     )
 
+    class Meta:
+        """Meta class."""
+
+        ordering = ["name"]
+
     @staticmethod
     def top_category(category, max_items=5, order_by=None):
         """
@@ -239,9 +244,7 @@ class Subscription(SubscriptionObject):
         :return: a tuple (address, postal_code, residence)
         """
         if (
-            self.support_reply_number is not None
-            and self.support_postal_code is not None
-            and self.support_reply_number != ""
+            self.support_reply_number != ""
             and self.support_postal_code != ""
         ):
             return (
@@ -265,8 +268,8 @@ class Subscription(SubscriptionObject):
         """
         return (
             "Postbus {}".format(self.support_reply_number)
-            if self.support_reply_number is not None and self.support_reply_number != ""
-            else self.support_reply_number
+            if self.support_reply_number != ""
+            else ""
         )
 
     def deregistered(self):
@@ -278,11 +281,6 @@ class Subscription(SubscriptionObject):
         """
         self.amount_used += 1
         self.save()
-
-    class Meta:
-        """Meta class."""
-
-        ordering = ["name"]
 
 
 class SubscriptionCategory(SubscriptionObject, OrderedModel):
@@ -382,6 +380,14 @@ class QueuedMailList(models.Model):
     postal_code = models.CharField(max_length=256, blank=True)
     residence = models.CharField(max_length=512, blank=True)
 
+    def __str__(self):
+        """
+        Convert this object to a string.
+
+        :return: a string with the token and the creation time
+        """
+        return "{}, created: {}".format(self.token, self.created)
+
     @staticmethod
     def generate(
         firstname: str,
@@ -418,14 +424,6 @@ class QueuedMailList(models.Model):
         for item in subscription_list:
             mail_list.item_list.add(item)
         return mail_list
-
-    def __str__(self):
-        """
-        Convert this object to a string.
-
-        :return: a string with the token and the creation time
-        """
-        return "{}, created: {}".format(self.token, self.created)
 
     @staticmethod
     def remove_expired():
