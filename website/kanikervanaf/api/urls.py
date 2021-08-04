@@ -4,7 +4,11 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path(
         "",
-        include([path("v1/", include("kanikervanaf.api.v1.urls", namespace="v1")),]),
+        include(
+            [
+                path("v1/", include("kanikervanaf.api.v1.urls", namespace="v1")),
+            ]
+        ),
     ),  # noqa
     path(
         "docs",

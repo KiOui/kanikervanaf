@@ -37,7 +37,8 @@ class SubscriptionObjectTest(TestCase):
                 settings.MEDIA_ROOT,
                 TEMPLATE_FILE_DIRECTORY
                 + "{}/{}".format(
-                    subscription_object._meta.model_name, subscription_object.slug,
+                    subscription_object._meta.model_name,
+                    subscription_object.slug,
                 ),
             ),
             ignore_errors=True,
@@ -121,7 +122,8 @@ class SubscriptionObjectTest(TestCase):
         self.assertEqual(
             self.subscription_mocked_email_template.get_letter_template(),
             os.path.join(
-                settings.BASE_DIR, "subscriptions/templates/pdf/deregister_letter.html",
+                settings.BASE_DIR,
+                "subscriptions/templates/pdf/deregister_letter.html",
             ),
         )
 
@@ -141,7 +143,8 @@ class SubscriptionObjectTest(TestCase):
         self.assertEqual(
             self.subscription_no_mocked_email_template.get_email_template_text(),
             os.path.join(
-                settings.BASE_DIR, "subscriptions/templates/email/deregister_mail.txt",
+                settings.BASE_DIR,
+                "subscriptions/templates/email/deregister_mail.txt",
             ),
         )
 
@@ -171,11 +174,13 @@ class SubscriptionTest(TestCase):
             support_reply_number="12345",
             support_postal_code="1111AA",
         )
-        subscription_can_generate_letter_correspondence_address = Subscription.objects.create(
-            name="can-generate-letter-correspondence-address",
-            slug="can-generate-letter-correspondence-address",
-            correspondence_address="Test address 1",
-            correspondence_postal_code="2222BB",
+        subscription_can_generate_letter_correspondence_address = (
+            Subscription.objects.create(
+                name="can-generate-letter-correspondence-address",
+                slug="can-generate-letter-correspondence-address",
+                correspondence_address="Test address 1",
+                correspondence_postal_code="2222BB",
+            )
         )
         self.assertFalse(subscription_cant_generate_letter.can_generate_letter)
         self.assertTrue(
@@ -194,19 +199,31 @@ class SubscriptionTest(TestCase):
     def test_get_address_information(self):
         self.assertEqual(
             Subscription.objects.get(slug="basic-fit-belgie").get_address_information(),
-            ("Postbus 12345", "1111AA", "Test city",),
+            (
+                "Postbus 12345",
+                "1111AA",
+                "Test city",
+            ),
         )
         self.assertEqual(
             Subscription.objects.get(
                 slug="basic-fit-netherlands"
             ).get_address_information(),
-            ("Test address 1", "2222BB", "Test city",),
+            (
+                "Test address 1",
+                "2222BB",
+                "Test city",
+            ),
         )
         self.assertEqual(
             Subscription.objects.get(
                 slug="fit-for-free-belgium"
             ).get_address_information(),
-            ("Postbus 12346", "3322AB", "Test city",),
+            (
+                "Postbus 12346",
+                "3322AB",
+                "Test city",
+            ),
         )
 
     def test_support_reply_number_prefixed(self):
@@ -216,17 +233,19 @@ class SubscriptionTest(TestCase):
             ).support_reply_number_prefixed,
             "Postbus 12345",
         )
-        self.assertIsNone(
+        self.assertEqual(
             Subscription.objects.get(
                 slug="basic-fit-netherlands"
-            ).support_reply_number_prefixed
+            ).support_reply_number_prefixed,
+            "",
         )
 
     def test_deregistered(self):
         deregistered_subscription_6 = Subscription.objects.get(slug="new-york-times")
         deregistered_subscription_1 = Subscription.objects.get(slug="the-guardian")
         deregistered_subscription_1_created = Subscription.objects.create(
-            name="Dutch news", slug="dutch-news",
+            name="Dutch news",
+            slug="dutch-news",
         )
         deregistered_subscription_6.deregistered()
         deregistered_subscription_1.deregistered()

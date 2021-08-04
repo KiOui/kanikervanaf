@@ -44,7 +44,13 @@ LOGGING = {
             "filename": "/kanikervanaf/log/django.log",
         },
     },
-    "loggers": {"": {"handlers": ["file"], "level": "DEBUG", "propagate": True,},},
+    "loggers": {
+        "": {
+            "handlers": ["file"],
+            "level": "DEBUG",
+            "propagate": True,
+        },
+    },
 }
 
 if os.environ.get("GOOGLE_ANALYTICS_KEY"):

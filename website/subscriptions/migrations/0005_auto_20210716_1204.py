@@ -13,7 +13,9 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RenameField(
-            model_name="subscriptioncategory", old_name="parent", new_name="category",
+            model_name="subscriptioncategory",
+            old_name="parent",
+            new_name="category",
         ),
         migrations.AlterField(
             model_name="subscription",
@@ -66,7 +68,8 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AlterUniqueTogether(
-            name="subscriptioncategory", unique_together=set(),
+            name="subscriptioncategory",
+            unique_together=set(),
         ),
         migrations.AlterField(
             model_name="subscriptioncategory",

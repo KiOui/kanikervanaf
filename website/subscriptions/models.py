@@ -35,8 +35,8 @@ def template_filename(instance, filename):
 class SubscriptionObject(models.Model):
     """Abstract model for overlapping Subscriptions and SubscriptionCategories."""
 
-    name = models.CharField(max_length=1024)
-    slug = models.SlugField(null=False, blank=False, unique=True, max_length=100,)
+    name = models.CharField(max_length=512)
+    slug = models.SlugField(unique=True, max_length=100)
     category = models.ForeignKey(
         "SubscriptionCategory", null=True, blank=True, on_delete=models.SET_NULL
     )
@@ -52,6 +52,12 @@ class SubscriptionObject(models.Model):
         blank=True,
         help_text="The template of the email to generate (as text).",
     )
+
+    class Meta:
+        """Meta class."""
+
+        unique_together = ("slug", "category")
+        abstract = True
 
     def __str__(self):
         """
@@ -90,7 +96,8 @@ class SubscriptionObject(models.Model):
             return self.category.get_letter_template()
         else:
             return os.path.join(
-                settings.BASE_DIR, "subscriptions/templates/pdf/deregister_letter.html",
+                settings.BASE_DIR,
+                "subscriptions/templates/pdf/deregister_letter.html",
             )
 
     def get_email_template_text(self):
@@ -106,14 +113,9 @@ class SubscriptionObject(models.Model):
             return self.category.get_email_template_text()
         else:
             return os.path.join(
-                settings.BASE_DIR, "subscriptions/templates/email/deregister_mail.txt",
+                settings.BASE_DIR,
+                "subscriptions/templates/email/deregister_mail.txt",
             )
-
-    class Meta:
-        """Meta class."""
-
-        unique_together = ("slug", "category")
-        abstract = True
 
 
 class Subscription(SubscriptionObject):
@@ -127,56 +129,61 @@ class Subscription(SubscriptionObject):
     )
     support_email = models.EmailField(
         blank=True,
-        null=True,
-        help_text="The support email address for the subscription. If enabled in the website settings, this is also the"
-        " email address where the deregister emails are sent to.",
+        default="",
+        help_text=(
+            "The support email address for the subscription. If enabled in the website"
+            " settings, this is also the email address where the deregister emails are"
+            " sent to."
+        ),
     )
     support_reply_number = models.CharField(
         max_length=10,
         blank=True,
-        null=True,
-        help_text="The reply number (Postbus) for the subscription provider (to send the customers letter to).",
+        default="",
+        help_text=(
+            "The reply number (Postbus) for the subscription provider (to send the"
+            " customers letter to)."
+        ),
     )
     support_postal_code = models.CharField(
         max_length=64,
         blank=True,
-        null=True,
+        default="",
         help_text="The postal code for the support reply number.",
     )
-    support_city = models.CharField(
-        max_length=1024,
-        blank=True,
-        null=True,
-        help_text="The city for the support reply number.",
+    support_city = models.TextField(
+        blank=True, default="", help_text="The city for the support reply number."
     )
     correspondence_address = models.CharField(
-        max_length=1024,
+        max_length=512,
         blank=True,
-        null=True,
+        default="",
         help_text="The correspondence address of the subscription provider.",
     )
     correspondence_postal_code = models.CharField(
         max_length=64,
         blank=True,
-        null=True,
-        help_text="The postal code for the correspondence address of the subscription provider.",
+        default="",
+        help_text=(
+            "The postal code for the correspondence address of the subscription provider."
+        ),
     )
     correspondence_city = models.CharField(
-        max_length=1024,
+        max_length=512,
         blank=True,
-        null=True,
+        default="",
         help_text="The city for the correspondence address of the subscription provider.",
     )
     support_phone_number = models.CharField(
-        max_length=1024,
+        max_length=512,
         blank=True,
-        null=True,
+        default="",
         help_text="The support phone number (not paid).",
     )
     cancellation_number = models.CharField(
-        max_length=1024,
+        max_length=512,
         blank=True,
-        null=True,
+        default="",
         help_text="The cancellation number (possibly paid).",
     )
     amount_used = models.PositiveIntegerField(
@@ -197,6 +204,11 @@ class Subscription(SubscriptionObject):
         help_text="Possible explanation of how to deregister from this subscription if deregistering via email or letter is not possible.",
         blank=True,
     )
+
+    class Meta:
+        """Meta class."""
+
+        ordering = ["name"]
 
     @staticmethod
     def top_category(category, max_items=5, order_by=None):
@@ -232,12 +244,7 @@ class Subscription(SubscriptionObject):
         First uses the support address (if complete), then uses the correspondence address
         :return: a tuple (address, postal_code, residence)
         """
-        if (
-            self.support_reply_number is not None
-            and self.support_postal_code is not None
-            and self.support_reply_number != ""
-            and self.support_postal_code != ""
-        ):
+        if self.support_reply_number != "" and self.support_postal_code != "":
             return (
                 self.support_reply_number_prefixed,
                 self.support_postal_code,
@@ -259,8 +266,8 @@ class Subscription(SubscriptionObject):
         """
         return (
             "Postbus {}".format(self.support_reply_number)
-            if self.support_reply_number is not None and self.support_reply_number != ""
-            else self.support_reply_number
+            if self.support_reply_number != ""
+            else ""
         )
 
     def deregistered(self):
@@ -272,11 +279,6 @@ class Subscription(SubscriptionObject):
         """
         self.amount_used += 1
         self.save()
-
-    class Meta:
-        """Meta class."""
-
-        ordering = ["name"]
 
 
 class SubscriptionCategory(SubscriptionObject, OrderedModel):
@@ -351,7 +353,7 @@ class SubscriptionCategory(SubscriptionObject, OrderedModel):
 class SubscriptionSearchTerm(models.Model):
     """Additional search terms for a Subscription."""
 
-    name = models.CharField(max_length=1024)
+    name = models.CharField(max_length=512)
     subscription = models.ManyToManyField("Subscription")
 
     def __str__(self):
@@ -366,15 +368,23 @@ class SubscriptionSearchTerm(models.Model):
 class QueuedMailList(models.Model):
     """Submitted user list with subscriptions to deregister from."""
 
-    token = models.CharField(max_length=64, null=False, blank=False, unique=True)
+    token = models.CharField(max_length=64, unique=True)
     item_list = models.ManyToManyField(Subscription)
     created = models.DateTimeField(auto_now_add=True)
-    firstname = models.CharField(max_length=1024)
-    lastname = models.CharField(max_length=1024, blank=True)
-    email_address = models.EmailField(max_length=1024)
-    address = models.CharField(max_length=1024, blank=True)
+    firstname = models.CharField(max_length=512)
+    lastname = models.CharField(max_length=512, blank=True)
+    email_address = models.EmailField(max_length=512)
+    address = models.CharField(max_length=512, blank=True)
     postal_code = models.CharField(max_length=256, blank=True)
-    residence = models.CharField(max_length=1024, blank=True)
+    residence = models.CharField(max_length=512, blank=True)
+
+    def __str__(self):
+        """
+        Convert this object to a string.
+
+        :return: a string with the token and the creation time
+        """
+        return "{}, created: {}".format(self.token, self.created)
 
     @staticmethod
     def generate(
@@ -412,14 +422,6 @@ class QueuedMailList(models.Model):
         for item in subscription_list:
             mail_list.item_list.add(item)
         return mail_list
-
-    def __str__(self):
-        """
-        Convert this object to a string.
-
-        :return: a string with the token and the creation time
-        """
-        return "{}, created: {}".format(self.token, self.created)
 
     @staticmethod
     def remove_expired():

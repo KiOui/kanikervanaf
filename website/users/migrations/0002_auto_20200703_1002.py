@@ -12,8 +12,14 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="user", name="active",),
-        migrations.RemoveField(model_name="user", name="timestamp",),
+        migrations.RemoveField(
+            model_name="user",
+            name="active",
+        ),
+        migrations.RemoveField(
+            model_name="user",
+            name="timestamp",
+        ),
         migrations.CreateModel(
             name="Profile",
             fields=[

@@ -125,9 +125,19 @@ class User(AbstractUser):
 class PasswordReset(models.Model):
     """Queued password resets object."""
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    token = models.CharField(max_length=64, null=False, blank=False, unique=True)
+    user = models.ForeignKey(
+        User, related_name="password_resets", on_delete=models.CASCADE
+    )
+    token = models.CharField(max_length=64, unique=True)
     created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        """
+        Convert this object to string.
+
+        :return: a string format of the username and the creation timestamp
+        """
+        return "{}, created: {}".format(self.user.username, self.created)
 
     @staticmethod
     def generate(user):
@@ -140,14 +150,6 @@ class PasswordReset(models.Model):
         random_token = secrets.token_hex(32)
         reset = PasswordReset.objects.create(token=random_token, user=user)
         return reset
-
-    def __str__(self):
-        """
-        Convert this object to string.
-
-        :return: a string format of the username and the creation timestamp
-        """
-        return "{}, created: {}".format(self.user.username, self.created)
 
     @staticmethod
     def remove_expired():
@@ -169,10 +171,20 @@ class PasswordReset(models.Model):
 class EmailUpdate(models.Model):
     """Queued email update model."""
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    token = models.CharField(max_length=64, null=False, blank=False, unique=True)
+    user = models.ForeignKey(
+        User, related_name="email_updates", on_delete=models.CASCADE
+    )
+    token = models.CharField(max_length=64, unique=True)
     created = models.DateTimeField(auto_now_add=True)
-    email_address = models.EmailField(max_length=1024)
+    email_address = models.EmailField(max_length=512)
+
+    def __str__(self):
+        """
+        Convert this object to string.
+
+        :return: a string format of the username and the creation timestamp
+        """
+        return "{}, created: {}".format(self.user.username, self.created)
 
     @staticmethod
     def generate(user, email_address):
@@ -198,14 +210,6 @@ class EmailUpdate(models.Model):
         self.user.email = self.email_address
         self.user.save()
 
-    def __str__(self):
-        """
-        Convert this object to string.
-
-        :return: a string format of the username and the creation timestamp
-        """
-        return "{}, created: {}".format(self.user.username, self.created)
-
     @staticmethod
     def remove_expired():
         """
@@ -227,9 +231,9 @@ class Profile(models.Model):
     """Profile of a user."""
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    address = models.CharField(max_length=1024, blank=True)
+    address = models.CharField(max_length=512, blank=True)
     postal_code = models.CharField(max_length=256, blank=True)
-    residence = models.CharField(max_length=1024, blank=True)
+    residence = models.CharField(max_length=512, blank=True)
 
     def __str__(self):
         """

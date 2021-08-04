@@ -313,7 +313,10 @@ class AccountView(LoginRequiredMixin, TemplateView):
                 )
             else:
                 context["messages"].append(
-                    {"error": True, "message": "Email-adres bijwerken mislukt",}
+                    {
+                        "error": True,
+                        "message": "Email-adres bijwerken mislukt",
+                    }
                 )
         else:
             context["messages"].append(

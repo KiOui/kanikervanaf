@@ -30,5 +30,9 @@ urlpatterns = [
         SubscriptionCategoryRetrieveAPIView.as_view(),
         name="subscription_category_retrieve",
     ),
-    path("render-template", TemplateAPIView.as_view(), name="render_template",),
+    path(
+        "render-template",
+        TemplateAPIView.as_view(),
+        name="render_template",
+    ),
 ]
