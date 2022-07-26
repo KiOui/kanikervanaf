@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.core.exceptions import ValidationError
 from django.urls import reverse, path, register_converter
 from subscriptions import models
 from admin_auto_filters.filters import AutocompleteFilter

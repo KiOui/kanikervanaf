@@ -3,7 +3,6 @@ import json
 
 from django.core.paginator import Paginator
 from django.http import (
-    HttpResponse,
     HttpResponseRedirect,
     Http404,
     HttpResponseForbidden,
@@ -13,7 +12,6 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 
 from .models import Subscription, SubscriptionCategory, QueuedMailList
-from django.db.models import Q
 from .services import (
     handle_verification_request,
     handle_deregister_request,
@@ -23,7 +21,6 @@ from subscriptions.services import send_verification_email, send_request_email
 from .forms import RequestForm, EnterUserInformationForm
 import logging
 from django.http import HttpResponsePermanentRedirect
-import json
 from urllib.parse import unquote_plus
 
 logger = logging.getLogger(__name__)
@@ -260,7 +257,7 @@ def verification_send(request):
         items = json.loads(
             urllib.parse.unquote(request.COOKIES.get("subscription_items", ""))
         )
-    except Exception as e:
+    except Exception:
         return HttpResponseRedirect(reverse("subscriptions:verification_send_failed"))
 
     mail_list = handle_verification_request(details, items)

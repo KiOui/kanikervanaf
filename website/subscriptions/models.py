@@ -204,7 +204,8 @@ class Subscription(SubscriptionObject):
         editable=False,
     )
     explanation_field = HTMLField(
-        help_text="Possible explanation of how to deregister from this subscription if deregistering via email or letter is not possible.",
+        help_text="Possible explanation of how to deregister from this subscription if deregistering via email or "
+        "letter is not possible.",
         blank=True,
     )
 

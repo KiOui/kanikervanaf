@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.7]
+        python-version: ['3.10']
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -46,4 +46,4 @@ jobs:
       run: "poetry run coverage run website/manage.py test website/"
 
     - name: "Check Coverage report"
-      run: "poetry run coverage report"
+      run: "poetry run coverage report -i"

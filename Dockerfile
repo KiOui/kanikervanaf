@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM python:3.10
 MAINTAINER Lars van Rhijn
 
 ENV PYTHONUNBUFFERED 1
@@ -20,7 +20,8 @@ RUN apt-get update && \
     mkdir --parents /kanikervanaf/static/ && \
     chmod +x /usr/local/bin/entrypoint.sh && \
     \
-    curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python && \
+    curl -sSL https://install.python-poetry.org | python && \
+    export PATH="/root/.local/bin:$PATH" && \
     poetry config --no-interaction --no-ansi virtualenvs.create false && \
     poetry install --no-interaction --no-ansi --no-dev
 

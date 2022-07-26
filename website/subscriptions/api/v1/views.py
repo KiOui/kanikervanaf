@@ -1,10 +1,8 @@
 import datetime
-import os
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
 
 import django.template.exceptions
-from django.conf import settings
 from rest_framework import status
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAdminUser
