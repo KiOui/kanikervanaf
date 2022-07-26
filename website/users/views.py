@@ -15,8 +15,6 @@ from .forms import (
 )
 from .models import User, PasswordReset, EmailUpdate
 from .services import generate_password_reset, send_reset_password, send_update_email
-import json
-from urllib.parse import unquote_plus
 
 
 class LoginView(TemplateView):

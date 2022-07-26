@@ -4,7 +4,6 @@ from subscriptions.models import (
     Subscription,
     SubscriptionObject,
     SubscriptionCategory,
-    SubscriptionSearchTerm,
     TEMPLATE_FILE_DIRECTORY,
 )
 from django.core.files import File

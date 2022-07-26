@@ -27,7 +27,10 @@ class SubscriptionServices(TestCase):
         without_django_engine = (
             "This is a line of text, you can insert your name here: {{ name }}."
         )
-        with_django_engine = "{% load static %}By loading static we test whether we are rendering with or without the Django engine."
+        with_django_engine = (
+            "{% load static %}By loading static we test whether we are rendering with or without "
+            "the Django engine. "
+        )
         self.assertEqual(
             render_string(without_django_engine, {"name": "Test name"}),
             "This is a line of text, you can insert your name here: Test name.",
@@ -49,15 +52,18 @@ class SubscriptionServices(TestCase):
             render_string_to_pdf(template, {"name": "Test name"})
         )
         pdf_reader = PdfFileReader(rendered_pdf_as_bytesio)
-        self.assertEqual(pdf_reader.getNumPages(), 1)
-        page_one = pdf_reader.getPage(0)
-        extracted_text = page_one.extractText().replace("\n", "")
-        self.assertEqual(rendered_template, extracted_text)
+        self.assertEqual(len(pdf_reader.pages), 1)
+        page_one = pdf_reader.pages[0]
+        extracted_text = page_one.extract_text().replace("\n", "").replace(" ", "")
+        self.assertEqual(rendered_template.replace(" ", ""), extracted_text)
 
     @freeze_time("2020-01-01")
     def test_render_deregister_letter_pdf(self):
         test_subscription = Subscription.objects.get(slug="basic-fit-belgie")
-        template = "{{ subscription_address }} {{ subscription_postal_code }} {{ subscription_residence }} {{ subscription_name }} {{ date }} {{ name }}"
+        template = (
+            "{{ subscription_address }} {{ subscription_postal_code }} {{ subscription_residence }} {{ "
+            "subscription_name }} {{ date }} {{ name }} "
+        )
         (
             item_address,
             item_postal_code,
@@ -88,10 +94,10 @@ class SubscriptionServices(TestCase):
         )
         temporary_template_file.close()
         pdf_reader = PdfFileReader(rendered_pdf_as_bytesio)
-        self.assertEqual(pdf_reader.getNumPages(), 1)
-        page_one = pdf_reader.getPage(0)
-        extracted_text = page_one.extractText().replace("\n", "")
-        self.assertEqual(rendered_template, extracted_text)
+        self.assertEqual(len(pdf_reader.pages), 1)
+        page_one = pdf_reader.pages[0]
+        extracted_text = page_one.extract_text().replace("\n", "").replace(" ", "")
+        self.assertEqual(rendered_template.replace(" ", ""), extracted_text)
 
     def test_send_verification_email(self):
         test_name, test_email, test_verification_url = (
@@ -107,15 +113,13 @@ class SubscriptionServices(TestCase):
 
     def test_send_summary_email(self):
         succeeded_mails, failed_mails, succeeded_letters, failed_letters, pdfs = (
-            set([Subscription.objects.get(slug="basic-fit-belgie")]),
+            {Subscription.objects.get(slug="basic-fit-belgie")},
             set([]),
-            set(
-                [
-                    Subscription.objects.get(slug="basic-fit-belgie"),
-                    Subscription.objects.get(slug="new-york-times"),
-                ],
-            ),
-            set([Subscription.objects.get(slug="lottery-usa")]),
+            {
+                Subscription.objects.get(slug="basic-fit-belgie"),
+                Subscription.objects.get(slug="new-york-times"),
+            },
+            {Subscription.objects.get(slug="lottery-usa")},
             [
                 {
                     "item": Subscription.objects.get(slug="basic-fit-belgie"),
@@ -241,11 +245,6 @@ class SubscriptionServices(TestCase):
             Subscription.objects.get(slug="the-guardian"),
         ]
         test_subscription_items_list = [{"id": x.id} for x in test_subscription_list]
-        test_subscription_items_list_with_fakes = [
-            {"id": Subscription.objects.get(slug="t-mobile-data")},
-            {"something-else": "something-different"},
-            {"id": -5},
-        ]
         self.assertCountEqual(
             store_subscription_list(test_subscription_items_list),
             set(test_subscription_list),

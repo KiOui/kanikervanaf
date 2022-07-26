@@ -26,6 +26,11 @@ urlpatterns = [
         name="subscription_render_email",
     ),
     path(
+        "categories",
+        SubscriptionCategoryListAPIView.as_view(),
+        name="subscription_category_list",
+    ),
+    path(
         "categories/<int:pk>",
         SubscriptionCategoryRetrieveAPIView.as_view(),
         name="subscription_category_retrieve",

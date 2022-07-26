@@ -1,4 +1,4 @@
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from rest_framework.renderers import BaseRenderer
 
 
@@ -29,7 +29,7 @@ class PlainTextRenderer(BaseRenderer):
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
         """Return text data as smart text."""
-        return smart_text(data, encoding=self.charset)
+        return smart_str(data, encoding=self.charset)
 
 
 class WordDocumentRenderer(BaseRenderer):

@@ -1,9 +1,9 @@
 import os
 
 from django.contrib.sites.models import Site
-from django.template import Template, Context, Engine
+from django.template import Template, Context, Engine, TemplateSyntaxError
 from weasyprint import HTML
-from .models import QueuedMailList, Subscription, SubscriptionObject
+from .models import QueuedMailList, Subscription
 from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
@@ -100,7 +100,8 @@ def render_deregister_letter_docx(
     # Then save the PDF temporarily
     pdf_file = tempfile.NamedTemporaryFile()
     pdf_file.write(pdf)
-    # Now create a temporary file for storing the docx document as the library only support reading from/writing to files
+    # Now create a temporary file for storing the docx document as the library only support reading from/writing to
+    # files
     docx_file = tempfile.NamedTemporaryFile()
     # Convert the document
     parse(pdf_file.name, docx_file.name)
@@ -416,8 +417,8 @@ def store_subscription_list(subscription_list: []) -> set:
     """
     Create a set with all ids corresponding to subscription items in subscription_list.
 
-    :param subscription_list: the list of dictionaries with (at least) id key-values corresponding to subscription objects
-    :return: a set with all subscriptions having a corresponding id in the items in subscription_list
+    :param subscription_list: the list of dictionaries with (at least) id key-values corresponding to subscription
+    objects :return: a set with all subscriptions having a corresponding id in the items in subscription_list
     """
     subscription_objects = set()
     for item in subscription_list:
@@ -433,9 +434,9 @@ def handle_verification_request(
     """
     Handle a verification request, generate a QueuedMailList.
 
-    :param user_information: the user information to add to the QueuedMailList
-    :param subscription_list: the list of dictionaries with (at least) id key-values corresponding to subscription objects
-    :return: True if a QueuedMailList was generated, False otherwise
+    :param user_information: the user information to add to the QueuedMailList :param subscription_list: the list of
+    dictionaries with (at least) id key-values corresponding to subscription objects :return: True if a
+    QueuedMailList was generated, False otherwise
     """
     subscription_objects = store_subscription_list(subscription_list)
     if "email" in user_information and "first_name" in user_information:
