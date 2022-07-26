@@ -29,7 +29,7 @@ class SubscriptionServices(TestCase):
         )
         with_django_engine = (
             "{% load static %}By loading static we test whether we are rendering with or without "
-            "the Django engine. "
+            "the Django engine."
         )
         self.assertEqual(
             render_string(without_django_engine, {"name": "Test name"}),
