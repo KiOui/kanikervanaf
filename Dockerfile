@@ -12,7 +12,7 @@ COPY resources/entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY poetry.lock pyproject.toml /kanikervanaf/src/
 
 RUN apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install --yes --quiet --no-install-recommends postgresql-client ffmpeg libsm6 libxext6 && \
+    DEBIAN_FRONTEND=noninteractive apt-get install --yes --quiet --no-install-recommends postgresql-client libgl1 && \
     rm --recursive --force /var/lib/apt/lists/* && \
     \
     mkdir --parents /kanikervanaf/src/ && \

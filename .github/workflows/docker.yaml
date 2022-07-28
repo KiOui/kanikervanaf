@@ -1,29 +1,28 @@
 ---
 
-name: Build Production Docker Image
+name: "Build Production Docker Image"
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+
+env:
+  DOCKER_IMAGE: "docker.pkg.github.com/kioui/kanikervanaf/kanikervanaf:latest"
+  DOCKER_IMAGE_CRON: "docker.pkg.github.com/kioui/kanikervanaf/kanikervanaf:latest"
 
 jobs:
-    build-docker:
-        name: "Build Production Docker Image"
-        runs-on: "ubuntu-latest"
-        env:
-            DOCKER_LATEST: docker.pkg.github.com/kioui/kanikervanaf/kanikervanaf:latest
-            DOCKER_TAG_PRODUCTION: docker.pkg.github.com/kioui/kanikervanaf/kanikervanaf:${{ github.sha }}
-        steps:
-            - name: "Checkout repository"
-              uses: "actions/checkout@v2"
+  build-docker:
+    name: "Build Docker image"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout the repository"
+        uses: "actions/checkout@v1"
 
-            - name: "Build Docker image"
-              run: docker build --tag "${DOCKER_LATEST}" .
+      - name: "Login to GitHub Packages"
+        run: "echo \"${{ secrets.GITHUB_TOKEN }}\" | docker login https://docker.pkg.github.com --username ${{ github.repository_owner }} --password-stdin"
 
-            - name: "Login to GitHub"
-              run: echo "${{ secrets.GH_TOKEN }}" | docker login docker.pkg.github.com -u KiOui --password-stdin
-            
-            - name: "Tag and publish"
-              run: |
-                  docker tag "${DOCKER_LATEST}" "${DOCKER_TAG_PRODUCTION}"
-                  docker push "${DOCKER_TAG_PRODUCTION}"
-                  docker push "${DOCKER_LATEST}"
+      - name: "Build Docker image"
+        run: "docker build --build-arg commit_hash=\"${{ github.sha }}\" --tag \"${DOCKER_IMAGE}\" ."
+
+      - name: "Push Docker image"
+        run: "docker push ${DOCKER_IMAGE}"
